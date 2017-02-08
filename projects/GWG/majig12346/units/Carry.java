@@ -42,6 +42,17 @@ public interface Carry {
 	public default void addUnit(Unit u){
 		this.getUnits().add(u);
 	}
+	
+	/**
+	 * Drops off one carried Unit in valid Manhattan adjacent tile
+	 * can still move after this action; this can drop off multiple Units given space
+	 * Precondition: This Carry is carrying at least one Unit for which
+	 * it can be dropped in a Manhattan adjacent tile
+	 */
+	public default void drop(){
+		//TODO Implement me
+	}
+	
 	/**
 	 * @return whether or not this Carry can carry the Unit
 	 */

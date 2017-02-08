@@ -18,9 +18,12 @@ package info.gridworld.gui;
 
 import info.gridworld.grid.Grid;
 import info.gridworld.grid.Location;
-import majig12346.terrain.properties.Factory;
+import majig12346.terrain.Terrain;
+import majig12346.terrain.properties.Property;
+import majig12346.units.Carry;
 import majig12346.units.Unit;
 import majig12346.units.land.Infantry;
+import majig12346.weapons.WeaponType;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -34,6 +37,7 @@ import java.beans.PropertyEditorSupport;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
@@ -41,6 +45,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.ResourceBundle;
+
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -91,8 +96,10 @@ public class MenuMaker<T>
      * @param occupant the unit whose available actions should be displayed
      * @param loc the location that the Unit would move to
      * @return the menu to pop up
+     * @throws SecurityException 
+     * @throws NoSuchMethodException 
      */
-    public JPopupMenu makeMoveMenu(T occupant, Location loc)
+    public JPopupMenu makeMoveMenu(T occupant, Location loc) throws NoSuchMethodException, SecurityException
     {
         this.occupant = occupant;
         this.currentLocation = loc;
@@ -117,9 +124,9 @@ public class MenuMaker<T>
     
     
     
-    private Method[] getValidMethods()
+    private Method[] getValidMethods() throws NoSuchMethodException, SecurityException
     {
-    	Unit u;
+    	Unit u = null;
     	try{
     		u = (Unit)occupant;
     	}catch(ClassCastException e){
@@ -128,14 +135,47 @@ public class MenuMaker<T>
     		System.exit(-1);
     	}
         Class cl = occupant.getClass();
-        Method[] methods = cl.getMethods();
-
+        ArrayList<Method> ans = new ArrayList<Method>();
         //every unit has the move method
-        
-        
-        switch(u.getUnitType()){
-        
+        ans.add(Unit.class.getMethod("move", Terrain.class));
+        //units can fire on enemies if not unarmed and in range
+        if(u.getWeapons()[0].getWeaponType()!=WeaponType.NONE||null!=u.getWeapons()[1]){
+        	if(u.canTarget((Unit) u.getGrid().get(currentLocation))){
+        		ans.add(Unit.class.getMethod("fire", Unit.class));
+        	}
         }
+        //if unit can be carried
+        if(u.getGrid().get(currentLocation)instanceof Carry){
+        	Carry c = (Carry) u.getGrid().get(currentLocation);
+        	if(c.canCarry(u)){
+        		ans.add(Unit.class.getMethod("load", Carry.class));
+        	}
+        }
+        //if unit is carry, can drop something off
+        DROPOFF:
+	        if(u instanceof Carry){
+	        	Carry c = (Carry) u;
+	        	if(!(c.getUnits().isEmpty())){
+	        		for(Unit carried:c.getUnits()){
+	        			Terrain t = (Terrain) currentLocation;
+	        			if(t.getMoveCost(carried.getMovementType())!=999){
+	        				ans.add(Carry.class.getMethod("drop"));
+	        				break DROPOFF;
+	        			}
+	        		}
+	        	}
+	        }
+        //TODO stealth functions
+        
+        
+        //infantry can capture
+        if(u instanceof Infantry)
+        	if(currentLocation instanceof Property && 
+        			((Property) currentLocation).getOwner()!=u.getOwner()){
+        		ans.add(Infantry.class.getMethod("capture"));
+        	}
+        return (Method[]) ans.toArray();
+    }
         
         
         
@@ -163,8 +203,8 @@ public class MenuMaker<T>
 //                    return 1 + depth(cl.getSuperclass());
 //            }
 //        });
-        return methods;
-    }
+//        return methods;
+//}
     
     
     

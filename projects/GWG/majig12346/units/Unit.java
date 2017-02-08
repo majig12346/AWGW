@@ -385,8 +385,9 @@ public abstract class Unit extends Actor{
 	 * Gets invoked in GUI by player
 	 * Precondition: the unit has enough mobility to make it to the Terrain toMoveto
 	 * Postcondition: the unit moves to the Terrain toMoveTo, traversing each terrain in a good path
+	 * @throws Exception 
 	 */
-	public void move(Terrain toMoveTo){
+	public void move(Terrain toMoveTo) throws Exception{
 		move(findPathTo(toMoveTo));
 	}
 
@@ -436,39 +437,67 @@ public abstract class Unit extends Actor{
 			}
 		}
 		return ans;
-
-
 	}
+	
+	private int totalCost(Queue<Terrain> path){
+		if(null==path||path.isEmpty()){
+			return 0;
+		}else{
+			int ans=0;
+			Terrain[] arr = (Terrain[]) path.toArray();
+			for(Terrain t: arr){
+				ans+=t.getMoveCost(getMovementType());
+			}return ans;
+		}
+	}
+	
 	/**
 	 * Precondition: the unit has enough mobility to reach the Terrain that the path is being found to.
-	 * The returned path will be good if not optimal
+	 * The returned path will be good if not optimal, uses A*
 	 * @return a queue of Terrains that could be traversed to reach the destination
+	 * @throws Exception 
 	 */
-	private Queue<Terrain> findPathTo(Terrain t){
+	private Queue<Terrain> findPathTo(Terrain target) throws Exception{
 		Queue<Terrain> ans = new LinkedList<>();
 		Map<Terrain, Queue<Terrain>> savedPaths = new HashMap<>();
 		@SuppressWarnings({ "unchecked", "rawtypes" })
-		Comparator<Terrain> c = new Comparator(){
+		Comparator<Terrain> comp = new Comparator(){
 			@Override
+			/**
+			 * Approximates which path is better
+			 */
 			public int compare(Object o1, Object o2) {
-				Integer c1 = totalCost(savedPaths.get((Terrain) o1));
-				Integer c2 = totalCost(savedPaths.get((Terrain) o1));
+				Terrain t1 = (Terrain) o1;
+				Terrain t2 = (Terrain) o2;
+				Integer c1 = totalCost(savedPaths.get(t1))+t1.distanceTo(target);
+				Integer c2 = totalCost(savedPaths.get(t2))+t2.distanceTo(target);
 				return c1.compareTo(c2);
 			}
-			private int totalCost(Queue<Terrain> path){
-				if(null==path||path.isEmpty()){
-					return 0;
+		};
+		PriorityQueue<Terrain> toCheck= new PriorityQueue<Terrain>(9,comp);
+		toCheck.add((Terrain) getLocation());
+		while(!toCheck.isEmpty()){
+			Terrain current = toCheck.poll();
+			for(Terrain t : current.getAllAdjacentTerrains()){
+				Queue<Terrain> path;
+				if(savedPaths.containsKey(t)){
+					path = savedPaths.get(t);
 				}else{
-					int ans=0;
-					Terrain[] arr = (Terrain[]) path.toArray();
-					for(Terrain t: arr){
-						ans+=t.getMoveCost(getMovementType());
-					}return ans;
+					path = new LinkedList<Terrain>();
+				}
+				path.add(t);
+				if(t==target){
+					return path;
+				}
+				savedPaths.put(t, path);
+				if(totalCost(path)<=getMobility()){
+					toCheck.add(t);
 				}
 			}
-		};
-		PriorityQueue<Terrain> toCheck= new PriorityQueue<Terrain>(8,c);
-		
+		}
+		//if you got here, then there is no path
+		//See Precondition: there is a path, checked by getValidMoveSpaces
+		throw new Exception("no path, precondition not met");
 		
 	}
 
@@ -523,5 +552,18 @@ public abstract class Unit extends Actor{
 			this.setDirection(t.getDirectionToward(path.peek()));
 		}
 		return move(path);
+	}
+	/**
+	 * Precondition: Carry c canCarry(this) is true
+	 * @param c the Carry that this Unit will be loaded into
+	 * @throws Exception 
+	 */
+	public void load(Carry c) throws Exception{
+		if(c.canCarry(this)){
+			c.addUnit(this);
+		}else{
+			throw new Exception("cannot be carried, precondition not met");
+		}
+		this.canMove = false;
 	}
 }

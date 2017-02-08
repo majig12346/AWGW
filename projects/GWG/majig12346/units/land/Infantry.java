@@ -64,7 +64,7 @@ public class Infantry extends Unit {
 			Property p = (Property)t;
 			p.tickCapTimer(this);
 		}
-		
+		this.canMove = false;
 	}
 
 
