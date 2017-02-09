@@ -18,8 +18,11 @@
 
 package info.gridworld.gui;
 
+import info.gridworld.actor.Actor;
 import info.gridworld.grid.Grid;
 import info.gridworld.grid.Location;
+import info.gridworld.world.AVWorld;
+import majig12346.TerrainGrid;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -65,7 +68,9 @@ PseudoInfiniteViewport.Pannable
 	private static final int DEFAULT_CELL_SIZE = 48;
 	private static final int DEFAULT_CELL_COUNT = 10;
 	private static final int TIP_DELAY = 1000;
-
+	
+	public AVWorld avw;
+	
 	private Grid<?> grid;
 	private int numRows, numCols, originRow, originCol;
 	private int cellSize; // the size of each cell, EXCLUDING the gridlines
@@ -456,7 +461,12 @@ PseudoInfiniteViewport.Pannable
 	 */
 	public Location getCurrentLocation()
 	{
-		return currentLocation;
+		if(!(avw.getGrid() instanceof TerrainGrid)){
+			return currentLocation;
+		}
+		TerrainGrid<Actor> tg = (TerrainGrid<Actor>) avw.getGrid();
+		return tg.getLocationArray()[currentLocation.getRow()][currentLocation.getCol()];
+		
 	}
 
 	/**

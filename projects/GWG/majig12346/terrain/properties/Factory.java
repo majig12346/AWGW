@@ -3,7 +3,10 @@ package majig12346.terrain.properties;
 import info.gridworld.actor.Actor;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Set;
+
+import javax.swing.JOptionPane;
 
 import majig12346.TerrainGrid;
 import majig12346.PassiveFlag.UnitType;
@@ -31,5 +34,18 @@ public abstract class Factory extends Property {
 	  */
 	public Set<Constructor<? extends Unit>> getBuildableUnits() {
 		return this.buildableUnits;
+	}
+	public void buildUnit(Constructor<? extends Unit> constructor){
+		try {
+			Unit u = constructor.newInstance(getOwner());
+			if(u.getBuildCost()>getOwner().getMoney()){
+				JOptionPane.showMessageDialog(null, "not enough money");
+				return;
+			}
+			
+		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException
+				| InvocationTargetException e) {
+			e.printStackTrace();
+		}
 	}
 }

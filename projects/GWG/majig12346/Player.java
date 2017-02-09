@@ -37,6 +37,7 @@ public class Player {
 		this.CO = commandingOfficer;
 		this.teamColor = teamColor;
 		this.unitsControlled = new ArrayList<Unit>();
+		this.propertiesOwned = new ArrayList<Property>();
 	}
 	/**
 	 * @return the player's team color

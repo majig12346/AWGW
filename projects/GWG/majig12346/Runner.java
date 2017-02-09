@@ -24,17 +24,34 @@ public class Runner {
 	public static void main(String[] args){
 		AVWorld avw = new AVWorld();
 		Player p1 = new Player(new TestCO(),9999,null);
+		Player p2 = new Player(new TestCO(), 9999, Color.green);
 		TerrainGrid<Actor> g = new TerrainGrid<Actor>(10,10);
+		customFill(g,p1,p2);
+		avw.setGrid(g);
+		avw.show();
+		//I will fix this
+		while(true){
+			avw.go();
+		}
+	}
+
+	
+	
+	
+	private static void customFill(TerrainGrid g, Player p1, Player p2){
 		Infantry inf1 = new Infantry(p1);
 		fillTerrainGrid(g);
+		Property prop1 = (Property) g.getLocationArray()[1][1];
+		prop1.setOwner(p2);
 		inf1.putSelfInGrid(g, g.getLocationArray()[1][1]);
 		System.out.println(g.get(g.getLocationArray()[1][1]));
 		System.out.println("no crashes yet");
-		avw.setGrid(g);
-		avw.show();
-		avw.go();
+		
+		Infantry inf2 = new Infantry(p2);
+		inf2.putSelfInGrid(g, g.getLocationArray()[2][2]);
+		System.out.println(g.getLocationArray()[2][2].getClass().getName());
+		System.out.println(g.getLocationArray()[1][1].getClass().getName());
 	}
-
 	
 	
 	public static void fillTerrainGrid(TerrainGrid g){
@@ -66,6 +83,8 @@ public class Runner {
 		switch (terrainType) {
 		case "Beach":
 			return new Beach(r, c, hostGrid);
+		case "Plains":
+			return new Plains(r,c,hostGrid);
 		case "Bridge":
 			return new Bridge(r, c, hostGrid);
 		case "Forest":

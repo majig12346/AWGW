@@ -18,9 +18,11 @@ public class AVWorld extends MouseWorld {
 	}
 	public void go(){
 		WorldFrame wf = (WorldFrame) frame;
-		wf.control.display.originalLocation = getLocationWhenClicked();
+		//wf.control.display.originalLocation = getLocationWhenClicked();
+		wf.control.display.avw = this;
 		wf.control.display.setCurrentLocation(getLocationWhenClicked());
 		wf.control.editLocation();
+		resetClickedLocation();
 	}
 
 }

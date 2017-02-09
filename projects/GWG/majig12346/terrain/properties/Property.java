@@ -55,13 +55,12 @@ public class Property extends Terrain{
 	public Player getOwner() {
 		return this.owner;
 	}
-	
 	/**
 	 * Sets the owner of the property. 
 	 * Should only be invoked internally by tickCapTimer()
 	 * Precondition: Player p is not null
 	 */
-	private void setOwner(Player p){
+	public void setOwner(Player p){
 		this.owner = p;
 		if(null!=owner){
 			p.getPropertiesOwned().add(this);

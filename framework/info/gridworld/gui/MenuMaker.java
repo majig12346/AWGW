@@ -19,6 +19,7 @@ package info.gridworld.gui;
 import info.gridworld.grid.Grid;
 import info.gridworld.grid.Location;
 import majig12346.terrain.Terrain;
+import majig12346.terrain.properties.Factory;
 import majig12346.terrain.properties.Property;
 import majig12346.units.Carry;
 import majig12346.units.Unit;
@@ -102,22 +103,24 @@ public class MenuMaker<T>
     public JPopupMenu makeMoveMenu(T occupant, Location loc) throws NoSuchMethodException, SecurityException
     {
         this.occupant = occupant;
+        System.out.println("line 106 Menu: currentLocation set to loc\nloc is "+loc.getClass().getName());
         this.currentLocation = loc;
         JPopupMenu menu = new JPopupMenu();
         Method[] methods = getValidMethods();
+        System.out.println("methods is "+methods.length+" size.");
         //Method[] methods = getMethods();
-        Class oldDcl = null;
+//        Class oldDcl = null;
         for (int i = 0; i < methods.length; i++)
         {
-            Class dcl = methods[i].getDeclaringClass();
-            if (dcl != Object.class)
-            {
+//            Class dcl = methods[i].getDeclaringClass();
+//            if (dcl != Object.class)
+//            {
 //                if (i > 0 && dcl != oldDcl)
 //                    menu.addSeparator();
                 menu.add(new MethodItem(methods[i]));
                 System.out.println("added method, see line 118 of MenuMaker");
-            }
-            oldDcl = dcl;
+//            }
+//            oldDcl = dcl;
         }
         return menu;
     }
@@ -140,11 +143,13 @@ public class MenuMaker<T>
         //every unit has the move method
         ans.add(Unit.class.getMethod("move", Terrain.class));
         //units can fire on enemies if not unarmed and in range
+        System.out.println("checking weps");
         if(u.getWeapons()[0].getWeaponType()!=WeaponType.NONE||null!=u.getWeapons()[1]){
         	if(u.canTarget((Unit) u.getGrid().get(currentLocation))){
         		ans.add(Unit.class.getMethod("fire", Unit.class));
         	}
         }
+        System.out.println("checking carriability");
         //if unit can be carried
         if(u.getGrid().get(currentLocation)instanceof Carry){
         	Carry c = (Carry) u.getGrid().get(currentLocation);
@@ -168,14 +173,15 @@ public class MenuMaker<T>
 	        }
         //TODO stealth functions
         
-        
+        System.out.println(currentLocation.getClass().getName());
+        System.out.println(currentLocation instanceof Property);
         //infantry can capture
-        if(u instanceof Infantry)
+        if(u instanceof Infantry){
         	if(currentLocation instanceof Property && 
         			((Property) currentLocation).getOwner()!=u.getOwner()){
         		ans.add(Infantry.class.getMethod("capture"));
         	}
-        
+        }
         //wow do I really need to do this
         Method[] realAns = new Method[ans.size()];
         for(int i=0;i<realAns.length;i++){
@@ -275,23 +281,48 @@ public class MenuMaker<T>
     public JPopupMenu makeConstructorMenu(Collection<Class> classes,
             Location loc)
     {
+    	System.out.println("making constructor menu. See line 278 of MenuMaker");
         this.currentLocation = loc;
         JPopupMenu menu = new JPopupMenu();
-        boolean first = true;
-        Iterator<Class> iter = classes.iterator();
-        while (iter.hasNext())
-        {
-            if (first)
-                first = false;
-            else
-                menu.addSeparator();
-            Class cl = iter.next();
-            Constructor[] cons = (Constructor[]) cl.getConstructors();
-            for (int i = 0; i < cons.length; i++)
-            {
-                menu.add(new OccupantConstructorItem(cons[i]));
-            }
+        //???
+        //boolean first = true;
+        
+        //
+        if(!(loc instanceof Factory)){
+    		return menu;
+    	}
+        try{
+        	Factory fac = (Factory) loc;
+        	for(Constructor<? extends Unit> : fac.getBuildableUnits()){
+        		menu.add(arg0)
+        	}
+        	
+        }catch(Exception e){
+        	e.printStackTrace();
         }
+        
+        
+        
+        
+        
+        
+        //
+//        Iterator<Class> iter = classes.iterator();
+//        while (iter.hasNext())
+//        {
+//            if (first)
+//                first = false;
+//            else
+//                menu.addSeparator();
+//            Class cl = iter.next();
+//            Constructor[] cons = (Constructor[]) cl.getConstructors();
+//            for (int i = 0; i < cons.length; i++)
+//            {
+//                menu.add(new OccupantConstructorItem(cons[i]));
+//            }
+//        }
+        
+        
         return menu;
     }
 

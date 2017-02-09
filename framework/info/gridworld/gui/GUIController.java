@@ -303,9 +303,10 @@ public class GUIController<T>
         if (loc != null)
         {
             //TODO
-        	//T occupant = world.getGrid().get(loc);
-        	T occupant = world.getGrid().get(display.originalLocation);
-            if (occupant == null)
+        	T occupant = world.getGrid().get(loc);
+        	//T occupant = world.getGrid().get(display.originalLocation);
+            
+        	if (occupant == null)
             {
                 MenuMaker<T> maker = new MenuMaker<T>(parentFrame, resources,
                         displayMap);
