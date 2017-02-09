@@ -40,10 +40,14 @@ import java.awt.event.MouseEvent;
 import java.awt.font.FontRenderContext;
 import java.awt.font.LineMetrics;
 import java.awt.geom.Rectangle2D;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
+import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 import javax.swing.JToolTip;
 import javax.swing.JViewport;
@@ -68,9 +72,9 @@ PseudoInfiniteViewport.Pannable
 	private static final int DEFAULT_CELL_SIZE = 48;
 	private static final int DEFAULT_CELL_COUNT = 10;
 	private static final int TIP_DELAY = 1000;
-	
+
 	public AVWorld avw;
-	
+
 	private Grid<?> grid;
 	private int numRows, numCols, originRow, originCol;
 	private int cellSize; // the size of each cell, EXCLUDING the gridlines
@@ -112,13 +116,32 @@ PseudoInfiniteViewport.Pannable
 		g2.fillRect(insets.left, insets.top, numCols * (cellSize + 1) + 1, numRows
 				* (cellSize + 1) + 1);
 
+		//made by me
+		drawBG(g2,insets);
+
 		drawWatermark(g2);
-		
+
 		//comment out following line to hide grid lines
-		drawGridlines(g2);
+		//drawGridlines(g2);
 		drawOccupants(g2);
 		drawCurrentLocation(g2);
 	}
+
+	private void drawBG(Graphics2D g2,Insets insets){
+		BufferedImage img = null;
+		try {
+			//TODO insert map pic here
+			img = ImageIO.read(new File("projects/GWG/resources/map_pic/demo1.gif"));
+
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.out.println("file not found");
+		}
+		g2.drawImage(img, insets.left, insets.top, numCols * (cellSize + 1) + 1, numRows
+				* (cellSize + 1) + 1, 0, 0, img.getWidth(), img.getHeight(), null);
+	}
+
+
 
 	/**
 	 * Draw one occupant object. First verify that the object is actually
@@ -216,8 +239,8 @@ PseudoInfiniteViewport.Pannable
 					cellSize + 3, cellSize + 3);
 		}
 	}
-	
-	
+
+
 	/**
 	 * Draws a square that marks the current location.
 	 * @param g2 the graphics context
@@ -466,7 +489,7 @@ PseudoInfiniteViewport.Pannable
 		}
 		TerrainGrid<Actor> tg = (TerrainGrid<Actor>) avw.getGrid();
 		return tg.getLocationArray()[currentLocation.getRow()][currentLocation.getCol()];
-		
+
 	}
 
 	/**
