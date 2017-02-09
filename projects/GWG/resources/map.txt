@@ -1,8 +1,8 @@
 10
 10
-test,test,test,test,test,test,test,test,test,test
-test,Property,Plains,test,test,test,test,test,test,test
-test,test,test,test,test,test,test,test,test,test
+Barracks,test,test,test,test,test,test,test,test,test
+test,Property,test,test,test,test,test,test,test,test
+test,test,Plains,test,test,test,test,test,test,test
 test,test,test,test,test,test,test,test,test,test
 test,test,test,test,test,test,test,test,test,test
 test,test,test,test,test,test,test,test,test,test

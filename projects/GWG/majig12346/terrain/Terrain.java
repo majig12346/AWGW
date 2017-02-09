@@ -127,5 +127,5 @@ public abstract class Terrain extends Location{
 		}
 		return adjacent;
 	}
-	private TerrainGrid hostGrid;
+	protected TerrainGrid hostGrid;
 }

@@ -39,9 +39,12 @@ public abstract class Factory extends Property {
 		try {
 			Unit u = constructor.newInstance(getOwner());
 			if(u.getBuildCost()>getOwner().getMoney()){
+				System.out.println("costs "+u.getBuildCost());
+				System.out.println("when money = "+getOwner().getMoney());
 				JOptionPane.showMessageDialog(null, "not enough money");
 				return;
 			}
+			u.putSelfInGrid(hostGrid, this);
 			
 		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException
 				| InvocationTargetException e) {

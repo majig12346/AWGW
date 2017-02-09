@@ -30,8 +30,10 @@ public class Player {
 	 */
 	public Player(CO commandingOfficer, int startingMoney, Color teamColor){
 		//if error when setting starting funds, set to 0
-		if(setMoney(startingMoney)!=-1){
+		if(setMoney(startingMoney)==-1){
 			setMoney(0);
+		}else{
+			setMoney(startingMoney);
 		}
 		this.ID = ++Player.numberOfPlayers;
 		this.CO = commandingOfficer;

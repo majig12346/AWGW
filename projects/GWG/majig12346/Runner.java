@@ -2,22 +2,14 @@ package majig12346;
 
 import java.awt.Color;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Scanner;
 
-import javax.swing.JOptionPane;
-
 import info.gridworld.actor.Actor;
-import info.gridworld.grid.BoundedGrid;
-import info.gridworld.grid.Grid;
-import info.gridworld.gui.WorldFrame;
 import info.gridworld.world.AVWorld;
-import info.gridworld.world.MouseWorld;
 import majig12346.CO.TestCO;
 import majig12346.terrain.*;
 import majig12346.terrain.properties.*;
-import majig12346.units.Unit;
+import majig12346.units.land.AntiAir;
 import majig12346.units.land.Infantry;
 
 public class Runner {
@@ -39,15 +31,23 @@ public class Runner {
 	
 	
 	private static void customFill(TerrainGrid g, Player p1, Player p2){
+		AntiAir aa1 = new AntiAir(p1);
+		aa1.resetMovement();
+		//TODO
 		Infantry inf1 = new Infantry(p1);
+		inf1.resetMovement();
 		fillTerrainGrid(g);
 		Property prop1 = (Property) g.getLocationArray()[1][1];
 		prop1.setOwner(p2);
+		Property prop2 = (Property) g.getLocationArray()[0][0];
+		prop2.setOwner(p1);
 		inf1.putSelfInGrid(g, g.getLocationArray()[1][1]);
 		System.out.println(g.get(g.getLocationArray()[1][1]));
 		System.out.println("no crashes yet");
 		
 		Infantry inf2 = new Infantry(p2);
+		inf1.resetMovement();
+		inf2.resetMovement();
 		inf2.putSelfInGrid(g, g.getLocationArray()[2][2]);
 		System.out.println(g.getLocationArray()[2][2].getClass().getName());
 		System.out.println(g.getLocationArray()[1][1].getClass().getName());

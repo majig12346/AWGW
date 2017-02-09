@@ -391,7 +391,12 @@ public abstract class Unit extends Actor{
 	 * @throws Exception 
 	 */
 	public void move(Terrain toMoveTo) throws Exception{
-		move(findPathTo(toMoveTo));
+		Terrain t = (Terrain) getLocation();
+		if(move(findPathTo(toMoveTo))){
+			canMove = false;
+		}else{
+			System.out.println("move failed, see line 397 of Unit");
+		}
 	}
 
 	/**

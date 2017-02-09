@@ -32,6 +32,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.beans.PropertyChangeListener;
 import java.beans.PropertyEditor;
 import java.beans.PropertyEditorManager;
 import java.beans.PropertyEditorSupport;
@@ -47,6 +48,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.ResourceBundle;
 
+import javax.swing.Action;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -140,12 +142,66 @@ public class MenuMaker<T>
     	}
         Class cl = occupant.getClass();
         ArrayList<Method> ans = new ArrayList<Method>();
-        //every unit has the move method
-        ans.add(Unit.class.getMethod("move", Terrain.class));
+        //every unit has the move method if it can Move
+        if(u.canMove()){
+        	ans.add(Unit.class.getMethod("move", Terrain.class));
+        }
         //units can fire on enemies if not unarmed and in range
         System.out.println("checking weps");
         if(u.getWeapons()[0].getWeaponType()!=WeaponType.NONE||null!=u.getWeapons()[1]){
         	if(u.canTarget((Unit) u.getGrid().get(currentLocation))){
+        		
+        		Action a = new Action(){
+        			public boolean enabled = true;
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						// TODO Auto-generated method stub
+						
+					}
+
+					@Override
+					public void addPropertyChangeListener(
+							PropertyChangeListener listener) {
+						// TODO Auto-generated method stub
+						
+					}
+
+					@Override
+					public Object getValue(String key) {
+						// TODO Auto-generated method stub
+						return null;
+					}
+
+					@Override
+					public boolean isEnabled() {
+						// TODO Auto-generated method stub
+						return false;
+					}
+
+					@Override
+					public void putValue(String key, Object value) {
+						// TODO Auto-generated method stub
+						
+					}
+
+					@Override
+					public void removePropertyChangeListener(
+							PropertyChangeListener listener) {
+						// TODO Auto-generated method stub
+						
+					}
+
+					@Override
+					public void setEnabled(boolean b) {
+						enabled = b;
+					}
+        			
+        		};
+        		JMenuItem tmp = new JMenuItem();
+        		
+        		
+        		
+        		
         		ans.add(Unit.class.getMethod("fire", Unit.class));
         	}
         }
@@ -293,14 +349,49 @@ public class MenuMaker<T>
     	}
         try{
         	Factory fac = (Factory) loc;
-        	for(Constructor<? extends Unit> : fac.getBuildableUnits()){
-        		menu.add(arg0)
+        	for(Constructor<? extends Unit> constructor: fac.getBuildableUnits()){
+        		JMenuItem tmp = new JMenuItem();
+        		Action a = new Action() {
+        			public boolean enabled = true;
+        			@Override
+					public void actionPerformed(ActionEvent e) {
+						fac.buildUnit(constructor);
+					}
+					@Override
+					public void setEnabled(boolean b) {
+						enabled = b;
+					}
+					@Override
+					public void removePropertyChangeListener(PropertyChangeListener listener) {	
+					}
+					@Override
+					public void putValue(String key, Object value) {	
+					}
+					@Override
+					public boolean isEnabled() {
+						return enabled;
+					}
+					
+					@Override
+					public Object getValue(String key) {
+						return null;
+					}
+					
+					@Override
+					public void addPropertyChangeListener(PropertyChangeListener listener) {
+					}
+				};
+				a.setEnabled(true);
+        		tmp.setAction(a);
+        		tmp.setText(constructor.getName());
+        		//tmp.setIcon();
+        		menu.add(tmp);
         	}
         	
         }catch(Exception e){
         	e.printStackTrace();
         }
-        
+        return menu;
         
         
         
@@ -323,7 +414,7 @@ public class MenuMaker<T>
 //        }
         
         
-        return menu;
+        
     }
 
     /**
