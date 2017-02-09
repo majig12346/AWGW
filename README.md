@@ -1,6 +1,14 @@
 # README #
 
 by: George Tong pd2
+today is thursday 2/9/17 for check #1
+idk if it runs well enough but I have lots of backend code
+
+
+
+
+
+
 
 This README would normally document whatever steps are necessary to get your application up and running.
 
