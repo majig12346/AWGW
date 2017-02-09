@@ -115,6 +115,7 @@ public class MenuMaker<T>
 //                if (i > 0 && dcl != oldDcl)
 //                    menu.addSeparator();
                 menu.add(new MethodItem(methods[i]));
+                System.out.println("added method, see line 118 of MenuMaker");
             }
             oldDcl = dcl;
         }
@@ -174,7 +175,16 @@ public class MenuMaker<T>
         			((Property) currentLocation).getOwner()!=u.getOwner()){
         		ans.add(Infantry.class.getMethod("capture"));
         	}
-        return (Method[]) ans.toArray();
+        
+        //wow do I really need to do this
+        Method[] realAns = new Method[ans.size()];
+        for(int i=0;i<realAns.length;i++){
+        	realAns[i] = ans.get(i);
+        }
+        return realAns;
+        
+        
+        //return (Method[]) (ans.toArray());
     }
         
         
@@ -224,26 +234,35 @@ public class MenuMaker<T>
      * @param occupant the object whose methods should be displayed
      * @param loc the location of the occupant
      * @return the menu to pop up
+     * @throws SecurityException 
+     * @throws NoSuchMethodException 
      */
-    public JPopupMenu makeMethodMenu(T occupant, Location loc)
+    public JPopupMenu makeMethodMenu(T occupant, Location loc) throws NoSuchMethodException, SecurityException
     {
-        this.occupant = occupant;
-        this.currentLocation = loc;
-        JPopupMenu menu = new JPopupMenu();
-        Method[] methods = getMethods();
-        Class oldDcl = null;
-        for (int i = 0; i < methods.length; i++)
-        {
-            Class dcl = methods[i].getDeclaringClass();
-            if (dcl != Object.class)
-            {
-                if (i > 0 && dcl != oldDcl)
-                    menu.addSeparator();
-                menu.add(new MethodItem(methods[i]));
-            }
-            oldDcl = dcl;
-        }
-        return menu;
+    	
+    	return makeMoveMenu(occupant, loc);
+    	//old code
+    	
+//        this.occupant = occupant;
+//        this.currentLocation = loc;
+//        JPopupMenu menu = new JPopupMenu();
+//        Method[] methods = getMethods();
+//        Class oldDcl = null;
+//        for (int i = 0; i < methods.length; i++)
+//        {
+//            Class dcl = methods[i].getDeclaringClass();
+//            if (dcl != Object.class)
+//            {
+//                if (i > 0 && dcl != oldDcl)
+//                    menu.addSeparator();
+//                menu.add(new MethodItem(methods[i]));
+//            }
+//            oldDcl = dcl;
+//        }
+//        return menu;
+        
+        
+        
     }
 
     /**
@@ -304,8 +323,10 @@ public class MenuMaker<T>
     private Method[] getMethods()
     {
         Class cl = occupant.getClass();
+        //TODO ???
         Method[] methods = cl.getMethods();
-
+     //   Method[] methods = new Method[];
+        
         Arrays.sort(methods, new Comparator<Method>()
         {
             public int compare(Method m1, Method m2)

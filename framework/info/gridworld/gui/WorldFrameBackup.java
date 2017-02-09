@@ -72,9 +72,9 @@ import java.io.StringWriter;
  * implementation details that are not intended to be understood by AP CS
  * students.
  */
-public class WorldFrame<T> extends JFrame
+public class WorldFrameBackup<T> extends JFrame
 {
-    public GUIController<T> control;
+    private GUIController<T> control;
     private GridPanel display;
     private JTextArea messageArea;
     private ArrayList<JMenuItem> menuItemsDisabledDuringRun;
@@ -91,7 +91,7 @@ public class WorldFrame<T> extends JFrame
      * Constructs a WorldFrame that displays the occupants of a world
      * @param world the world to display
      */
-    public WorldFrame(World<T> world)
+    public WorldFrameBackup(World<T> world)
     {
         this.world = world;
         count++;
@@ -593,7 +593,7 @@ public class WorldFrame<T> extends JFrame
                     JOptionPane.ERROR_MESSAGE, JOptionPane.YES_NO_OPTION, null,
                     new String[]
                         { copyOption, resources.getString("cancel") });
-            pane.createDialog(WorldFrame.this, e.toString()).setVisible(true);
+            pane.createDialog(WorldFrameBackup.this, e.toString()).setVisible(true);
             if (copyOption.equals(pane.getValue()))
             {
                 area.setSelectionStart(0);

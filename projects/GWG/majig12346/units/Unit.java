@@ -140,6 +140,9 @@ public abstract class Unit extends Actor{
 	 */
 	public boolean canTarget(Unit u){
 		Terrain home = (Terrain) (this.getLocation());
+		if(null==u){
+			return false; //can't target nothing
+		}
 		return home.distanceTo((Terrain) u.getLocation())==1;
 	}
 	/**
@@ -444,8 +447,7 @@ public abstract class Unit extends Actor{
 			return 0;
 		}else{
 			int ans=0;
-			Terrain[] arr = (Terrain[]) path.toArray();
-			for(Terrain t: arr){
+			for(Terrain t: path){
 				ans+=t.getMoveCost(getMovementType());
 			}return ans;
 		}
@@ -459,6 +461,18 @@ public abstract class Unit extends Actor{
 	 */
 	private Queue<Terrain> findPathTo(Terrain target) throws Exception{
 		Queue<Terrain> ans = new LinkedList<>();
+		
+		//temp
+		//FIXME
+		if(null==target){
+			return new LinkedList<Terrain>();
+		}
+		
+		
+		if(target==getLocation()){
+			//you are already here
+			return ans;
+		}
 		Map<Terrain, Queue<Terrain>> savedPaths = new HashMap<>();
 		@SuppressWarnings({ "unchecked", "rawtypes" })
 		Comparator<Terrain> comp = new Comparator(){
@@ -518,6 +532,10 @@ public abstract class Unit extends Actor{
 	 * @param path A {@link Queue} of adjacent {@link Terrain}s
 	 */
 	public boolean move(Queue<Terrain> path){
+		if(0==path.size()){
+			//already done
+			return true;
+		}
 		Terrain t = path.poll();
 		Grid<Actor> gr = this.getGrid();
 		//reached end of path, success

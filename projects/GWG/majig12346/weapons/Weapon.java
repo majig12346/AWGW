@@ -21,13 +21,15 @@ public class Weapon {
 	
 	//get max ammo
 	public int getMaxAmmo(){
-		ResourceBundle b = ResourceBundle.getBundle("weapon_ammo");
-		return Integer.parseInt(b.getString(weaponType));
+		return 5;
+		//TODO fix
+//		ResourceBundle b = ResourceBundle.getBundle("weapon_ammo");
+//		return Integer.parseInt(b.getString(weaponType));
 	}
 	
 	//load damage values
 	protected double[] loadDmgValues(){
-		ResourceBundle b = ResourceBundle.getBundle("weapon_damage");
+		ResourceBundle b = ResourceBundle.getBundle("weapon_dmg");
 		String[] tmp = b.getString(weaponType).split(",");
 		double[] ans = new double[tmp.length];
 		for (int i = 0; i<tmp.length;i++){

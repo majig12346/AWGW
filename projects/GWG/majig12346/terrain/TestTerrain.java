@@ -23,6 +23,10 @@ public class TestTerrain extends Terrain {
 	protected double getMoveCostTreads() {
 		return 1;
 	}
+	@Override
+	protected double getMoveCostBoat() {
+		return 1;
+	}
 
 	@Override
 	public int getDefense() {

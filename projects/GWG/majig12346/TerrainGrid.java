@@ -49,6 +49,9 @@ public class TerrainGrid<E> extends AbstractGrid<E>
 
     public boolean isValid(Location loc)
     {
+    	if(null==loc){
+    		return false;
+    	}
         return 0 <= loc.getRow() && loc.getRow() < getNumRows()
                 && 0 <= loc.getCol() && loc.getCol() < getNumCols();
     }
@@ -74,6 +77,7 @@ public class TerrainGrid<E> extends AbstractGrid<E>
 
     public E get(Location loc)
     {
+    	//TODO
         if (!isValid(loc))
             throw new IllegalArgumentException("Location " + loc
                     + " is not valid");
@@ -84,13 +88,14 @@ public class TerrainGrid<E> extends AbstractGrid<E>
     {
         if (!isValid(loc))
             throw new IllegalArgumentException("Location " + loc
-                    + " is not valid");
+                    + " is not valid, cannot put in grid");
         if (obj == null)
-            throw new NullPointerException("obj == null");
+            throw new NullPointerException("obj == null, cannot put in grid");
 
         // Add the object to the grid.
         E oldOccupant = get(loc);
         occupantArray[loc.getRow()][loc.getCol()] = obj;
+        System.out.println("success putting in unit. See line 98 of TerrainGrid");
         return oldOccupant;
     }
 

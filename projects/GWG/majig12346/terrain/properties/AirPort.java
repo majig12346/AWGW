@@ -24,8 +24,8 @@ public class AirPort extends Factory{
 	 * @throws SecurityException 
 	 * @throws NoSuchMethodException 
 	  */
-	public AirPort(int r, int c, TerrainGrid<Actor> hostGrid)throws NoSuchMethodException, SecurityException {
-		super(r, c, hostGrid);
+	public AirPort(int r, int c, TerrainGrid<Actor> hostGrid,Player owner)throws NoSuchMethodException, SecurityException {
+		super(r, c, hostGrid,owner);
 		this.buildableUnits = new HashSet<Constructor<? extends Unit>>();
 		buildableUnits.add(TCopter.class.getConstructor(Player.class));
 		buildableUnits.add(BCopter.class.getConstructor(Player.class));

@@ -9,6 +9,7 @@ import majig12346.Player;
 import majig12346.TerrainGrid;
 import majig12346.units.Unit;
 import majig12346.units.land.*;
+import majig12346.weapons.Suit;
 
 /**
  * A Barracks is a factory
@@ -24,10 +25,10 @@ public class Barracks extends Factory{
 	 * @throws SecurityException 
 	 * @throws NoSuchMethodException 
 	  */
-	public Barracks(int r, int c, TerrainGrid<Actor> hostGrid)throws NoSuchMethodException, SecurityException {
-		super(r, c, hostGrid);
+	public Barracks(int r, int c, TerrainGrid<Actor> hostGrid,Player owner)throws NoSuchMethodException, SecurityException {
+		super(r, c, hostGrid,owner);
 		this.buildableUnits = new HashSet<Constructor<? extends Unit>>();
-		buildableUnits.add(Infantry.class.getConstructor(Player.class));
+		buildableUnits.add(Infantry.class.getConstructor(Player.class,Suit.class));
 		buildableUnits.add(Mech.class.getConstructor(Player.class));
 		buildableUnits.add(Recon.class.getConstructor(Player.class));
 		buildableUnits.add(APC.class.getConstructor(Player.class));

@@ -23,9 +23,11 @@ public class Property extends Terrain{
 	  * Constructs a Property with given row and column coordinates.
 	  * @param r the row
 	  * @param c the column
+	  * @param owner owner of property, null if neutral
 	  */
-	public Property(int r, int c, TerrainGrid<Actor> hostGrid) {
+	public Property(int r, int c, TerrainGrid<Actor> hostGrid, Player owner) {
 		super(r, c, hostGrid);
+		this.setOwner(owner);
 	}
 
 	//cap timer
@@ -61,7 +63,9 @@ public class Property extends Terrain{
 	 */
 	private void setOwner(Player p){
 		this.owner = p;
-		p.getPropertiesOwned().add(this);
+		if(null!=owner){
+			p.getPropertiesOwned().add(this);
+		}
 	}
 	
 	/**

@@ -55,7 +55,7 @@ public class GUIController<T>
     private Timer timer;
     private JButton stepButton, runButton, stopButton;
     private JComponent controlPanel;
-    private GridPanel display;
+    public GridPanel display;
     private WorldFrame<T> parentFrame;
     private int numStepsToRun, numStepsSoFar;
     private ResourceBundle resources;
@@ -302,7 +302,9 @@ public class GUIController<T>
         Location loc = display.getCurrentLocation();
         if (loc != null)
         {
-            T occupant = world.getGrid().get(loc);
+            //TODO
+        	//T occupant = world.getGrid().get(loc);
+        	T occupant = world.getGrid().get(display.originalLocation);
             if (occupant == null)
             {
                 MenuMaker<T> maker = new MenuMaker<T>(parentFrame, resources,
@@ -316,7 +318,14 @@ public class GUIController<T>
             {
                 MenuMaker<T> maker = new MenuMaker<T>(parentFrame, resources,
                         displayMap);
-                JPopupMenu popup = maker.makeMethodMenu(occupant, loc);
+                System.out.println("invoking makeMethodMenu, see line 324 of GUIController");
+                JPopupMenu popup = null;
+				try {
+					popup = maker.makeMethodMenu(occupant, loc);
+				} catch (NoSuchMethodException | SecurityException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
                 Point p = display.pointForLocation(loc);
                 popup.show(display, p.x, p.y);
             }

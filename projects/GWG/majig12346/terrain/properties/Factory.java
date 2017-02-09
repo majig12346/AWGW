@@ -7,6 +7,7 @@ import java.util.Set;
 
 import majig12346.TerrainGrid;
 import majig12346.PassiveFlag.UnitType;
+import majig12346.Player;
 import majig12346.units.Unit;
 
 /**
@@ -20,8 +21,8 @@ public abstract class Factory extends Property {
 	  * @param r the row
 	  * @param c the column
 	  */
-	public Factory(int r, int c, TerrainGrid<Actor> hostGrid) {
-		super(r, c, hostGrid);
+	public Factory(int r, int c, TerrainGrid<Actor> hostGrid,Player owner) {
+		super(r, c, hostGrid,owner);
 	}
 	protected Set<Constructor<? extends Unit>> buildableUnits;
 	/**

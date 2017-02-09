@@ -2,69 +2,94 @@ package majig12346;
 
 import java.awt.Color;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 
 import javax.swing.JOptionPane;
 
 import info.gridworld.actor.Actor;
+import info.gridworld.grid.BoundedGrid;
 import info.gridworld.grid.Grid;
+import info.gridworld.gui.WorldFrame;
+import info.gridworld.world.AVWorld;
+import info.gridworld.world.MouseWorld;
 import majig12346.CO.TestCO;
 import majig12346.terrain.*;
 import majig12346.terrain.properties.*;
 import majig12346.units.Unit;
+import majig12346.units.land.Infantry;
 
 public class Runner {
 	public static void main(String[] args){
-		Player a = new Player(new TestCO(), 1000, Color.GREEN);
-		Player b = new Player(new TestCO(), 1000, Color.RED);
-		Grid<Unit> g = new TerrainGrid<Unit>(10,10);
-		
+		AVWorld avw = new AVWorld();
+		Player p1 = new Player(new TestCO(),9999,null);
+		TerrainGrid<Actor> g = new TerrainGrid<Actor>(10,10);
+		Infantry inf1 = new Infantry(p1);
+		fillTerrainGrid(g);
+		inf1.putSelfInGrid(g, g.getLocationArray()[1][1]);
+		System.out.println(g.get(g.getLocationArray()[1][1]));
+		System.out.println("no crashes yet");
+		avw.setGrid(g);
+		avw.show();
+		avw.go();
 	}
+
 	
-	 public static void fillTerrainGrid(TerrainGrid g){
-		
-		 String fileName = JOptionPane.showInputDialog("file name");
-		 try{
-			 Scanner sc = new Scanner(new File(fileName));
-			 if(!(g.getNumRows()==sc.nextInt()&&g.getNumCols()==sc.nextInt())){
-				 throw new Exception("map size != grid size");
-			 }
-			 for(int r = 0;r<g.getNumRows();r++){
-				 String[] rowStringForm = sc.nextLine().split(",");
-				 for(int c = 0;c<g.getNumCols();c++){
-					 g.getLocationArray()[r][c] = makeTerrain(r, c, g, rowStringForm[c]);
-				 }
-			 }
-		 }catch(Exception e){
-			 System.out.println(e.getStackTrace());
-		 }
-	 }
-	 public static Terrain makeTerrain(int r, int c, TerrainGrid<Actor> hostGrid, String terrainType) throws NoSuchMethodException, SecurityException{
-		 switch (terrainType) {
-		 case "Beach":
+	
+	public static void fillTerrainGrid(TerrainGrid g){
+
+		//String fileName = JOptionPane.showInputDialog("file name");
+		String fileName = "projects/GWG/resources/map.txt";
+		try{
+			Scanner sc = new Scanner(new File(fileName));
+			if(!(g.getNumRows()==sc.nextInt()&&g.getNumCols()==sc.nextInt())){
+				throw new Exception("map size != grid size");
+			}
+			//hmm??? good
+			sc.nextLine();
+			for(int r = 0;r<g.getNumRows();r++){
+				
+				String[] rowStringForm = sc.nextLine().split(",");
+				//System.out.println("good\n");
+				//System.out.print(new ArrayList<String>(Arrays.asList(rowStringForm)));
+				for(int c = 0;c<g.getNumCols();c++){
+					g.getLocationArray()[r][c] = makeTerrain(r, c, g, rowStringForm[c]);
+				}
+			}
+		}catch(Exception e){
+			System.out.println("error reading file");
+			e.printStackTrace();
+		}
+	}
+	public static Terrain makeTerrain(int r, int c, TerrainGrid<Actor> hostGrid, String terrainType) throws NoSuchMethodException, SecurityException{
+		switch (terrainType) {
+		case "Beach":
 			return new Beach(r, c, hostGrid);
-		 case "Bridge":
-				return new Bridge(r, c, hostGrid);
-		 case "Forest":
-				return new Forest(r, c, hostGrid);
-		 case "Mountain":
-				return new Mountain(r, c, hostGrid);
-		 case "Ocean":
-				return new Ocean(r, c, hostGrid);
-		 case "River":
-				return new River(r, c, hostGrid);
-		 case "Road":
-				return new Road(r, c, hostGrid);
-		 case "AirPort":
-				return new AirPort(r, c, hostGrid);
-		 case "SeaPort":
-				return new SeaPort(r, c, hostGrid);
-		 case "Barracks":
-				return new Barracks(r, c, hostGrid);
-		 case "Property":
-				return new Property(r, c, hostGrid);
+		case "Bridge":
+			return new Bridge(r, c, hostGrid);
+		case "Forest":
+			return new Forest(r, c, hostGrid);
+		case "Mountain":
+			return new Mountain(r, c, hostGrid);
+		case "Ocean":
+			return new Ocean(r, c, hostGrid);
+		case "River":
+			return new River(r, c, hostGrid);
+		case "Road":
+			return new Road(r, c, hostGrid);
+		case "AirPort":
+			return new AirPort(r, c, hostGrid,null);
+		case "SeaPort":
+			return new SeaPort(r, c, hostGrid,null);
+		case "Barracks":
+			return new Barracks(r, c, hostGrid,null);
+		case "Property":
+			return new Property(r, c, hostGrid,null);
+		case "HQ":
+			return new HQ(r,c,hostGrid,null);
 		default:
 			return new TestTerrain(r, c, hostGrid);
 		}
-	 }
+	}
 }

@@ -73,6 +73,7 @@ PseudoInfiniteViewport.Pannable
 	private Color backgroundColor = Color.WHITE;
 	private ResourceBundle resources;
 	private DisplayMap displayMap;
+	public Location originalLocation;
 	private Location currentLocation;
 	private Timer tipTimer;
 	private JToolTip tip;
@@ -107,7 +108,9 @@ PseudoInfiniteViewport.Pannable
 				* (cellSize + 1) + 1);
 
 		drawWatermark(g2);
-		//drawGridlines(g2);
+		
+		//comment out following line to hide grid lines
+		drawGridlines(g2);
 		drawOccupants(g2);
 		drawCurrentLocation(g2);
 	}

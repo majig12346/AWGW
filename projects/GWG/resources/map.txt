@@ -1,0 +1,12 @@
+10
+10
+test,HQ,test,test,test,test,test,test,test,test
+test,Barracks,test,AirPort,test,SeaPort,test,test,test,test
+test,test,test,test,test,test,test,test,test,test
+test,test,test,test,test,test,test,test,test,test
+test,test,test,test,test,test,test,test,test,test
+test,test,test,test,test,test,test,test,test,test
+test,test,test,test,test,test,test,test,test,test
+test,test,test,test,test,test,test,test,test,test
+test,test,test,test,test,test,test,test,test,test
+test,test,test,test,test,test,test,test,test,test
