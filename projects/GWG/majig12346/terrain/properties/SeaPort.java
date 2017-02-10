@@ -33,5 +33,9 @@ public class SeaPort extends Factory{
 		buildableUnits.add(BattleShip.class.getConstructor(Player.class));
 		buildableUnits.add(Carrier.class.getConstructor(Player.class));
 	}
+	@Override
+	protected double getMoveCostBoat() {
+		return 1;
+	}
 
 }

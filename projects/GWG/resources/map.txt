@@ -1,6 +1,6 @@
 10
 10
-Barracks,test,test,test,test,test,test,test,test,test
+Barracks,test,test,test,test,test,test,SeaPort,test,AirPort
 test,Property,test,test,test,test,test,test,test,test
 test,test,Plains,test,test,test,test,test,test,test
 test,test,test,test,test,test,test,test,test,test

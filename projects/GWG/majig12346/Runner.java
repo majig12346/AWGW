@@ -40,6 +40,10 @@ public class Runner {
 		prop1.setOwner(p2);
 		Property prop2 = (Property) g.getLocationArray()[0][0];
 		prop2.setOwner(p1);
+		Property prop3 = (Property) g.getLocationArray()[0][9];
+		prop3.setOwner(p1);
+		Property prop4 = (Property) g.getLocationArray()[0][7];
+		prop4.setOwner(p1);
 		inf1.putSelfInGrid(g, g.getLocationArray()[1][1]);
 		aa1.putSelfInGrid(g, g.getLocationArray()[0][1]);
 		System.out.println(g.get(g.getLocationArray()[1][1]));
