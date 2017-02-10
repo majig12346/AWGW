@@ -20,6 +20,7 @@ package info.gridworld.gui;
 
 import info.gridworld.grid.*;
 import info.gridworld.world.World;
+import majig12346.units.Unit;
 
 import java.awt.Dimension;
 import java.awt.Point;
@@ -304,6 +305,7 @@ public class GUIController<T>
         {
             //TODO
         	T occupant = world.getGrid().get(loc);
+        	
         	//T occupant = world.getGrid().get(display.originalLocation);
             
         	if (occupant == null)
@@ -317,6 +319,11 @@ public class GUIController<T>
             }
             else
             {
+            	//XXX testing
+             	if(!((Unit)(occupant)).canMove()){
+            		System.out.println("line 309 GUIController, already cant move huh??");
+            	}
+            	
                 MenuMaker<T> maker = new MenuMaker<T>(parentFrame, resources,
                         displayMap);
                 System.out.println("invoking makeMethodMenu, see line 324 of GUIController");

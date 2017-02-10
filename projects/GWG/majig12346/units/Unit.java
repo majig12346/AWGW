@@ -37,6 +37,9 @@ public abstract class Unit extends Actor{
 		getOwner().getUnitsControlled().add(this);
 		this.setDailyCost(loadDailyCost());
 		this.setMaxMobility(loadMaxMobility());
+		//this.canMove = true;
+		this.setFuel(99);
+		this.resetMovement();
 	}
 
 	//ownership

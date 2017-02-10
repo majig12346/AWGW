@@ -144,7 +144,10 @@ public class MenuMaker<T>
         ArrayList<Method> ans = new ArrayList<Method>();
         //every unit has the move method if it can Move
         if(u.canMove()){
+        	System.out.println("can move, added!");
         	ans.add(Unit.class.getMethod("move", Terrain.class));
+        }else{
+        	System.out.println("cant move");
         }
         //units can fire on enemies if not unarmed and in range
         System.out.println("checking weps");
@@ -201,7 +204,6 @@ public class MenuMaker<T>
         		
         		
         		
-        		
         		ans.add(Unit.class.getMethod("fire", Unit.class));
         	}
         }
@@ -229,8 +231,6 @@ public class MenuMaker<T>
 	        }
         //TODO stealth functions
         
-        System.out.println(currentLocation.getClass().getName());
-        System.out.println(currentLocation instanceof Property);
         //infantry can capture
         if(u instanceof Infantry){
         	if(currentLocation instanceof Property && 

@@ -22,7 +22,7 @@ public class Infantry extends Unit {
 	 *Constructs an Infantry owned by owner
 	 *also sets the correct weapons
 	*/
-	public Infantry(Player p, Suit...suit) {
+	public Infantry(Player p) {
 		super(p);
 		setWeapon(0, WeaponType.NONE); //no primary -- secondary has infinite ammo
 		setWeapon(1, WeaponType.RIFLE);

@@ -9,15 +9,20 @@ import info.gridworld.world.AVWorld;
 import majig12346.CO.TestCO;
 import majig12346.terrain.*;
 import majig12346.terrain.properties.*;
-import majig12346.units.land.AntiAir;
-import majig12346.units.land.Infantry;
+import majig12346.units.Unit;
+
 
 public class Runner {
+	public static Player[] players;
 	public static void main(String[] args){
 		AVWorld avw = new AVWorld();
+		players = new Player[4];
 		Player p1 = new Player(new TestCO(),9999,null);
-		Player p2 = new Player(new TestCO(), 9999, Color.green);
+		Player p2 = new Player(new TestCO(), 9999, new Color(100, 200, 255));
+		players[p1.ID] = p1;
+		players[p2.ID] = p2;
 		TerrainGrid<Actor> g = new TerrainGrid<Actor>(10,10);
+		fillTerrainGrid(g);
 		customFill(g,p1,p2);
 		avw.setGrid(g);
 		avw.show();
@@ -27,37 +32,21 @@ public class Runner {
 		}
 	}
 
-	
-	
-	
+
+
+
 	private static void customFill(TerrainGrid g, Player p1, Player p2){
-		AntiAir aa1 = new AntiAir(p1);
-		aa1.resetMovement();
-		Infantry inf1 = new Infantry(p1);
-		inf1.resetMovement();
-		fillTerrainGrid(g);
-		Property prop1 = (Property) g.getLocationArray()[1][1];
-		prop1.setOwner(p2);
-		Property prop2 = (Property) g.getLocationArray()[0][0];
-		prop2.setOwner(p1);
-		Property prop3 = (Property) g.getLocationArray()[0][9];
-		prop3.setOwner(p1);
-		Property prop4 = (Property) g.getLocationArray()[0][7];
-		prop4.setOwner(p1);
-		inf1.putSelfInGrid(g, g.getLocationArray()[1][1]);
-		aa1.putSelfInGrid(g, g.getLocationArray()[0][1]);
-		System.out.println(g.get(g.getLocationArray()[1][1]));
-		System.out.println("no crashes yet");
-		
-		Infantry inf2 = new Infantry(p2);
-		inf1.resetMovement();
-		inf2.resetMovement();
-		inf2.putSelfInGrid(g, g.getLocationArray()[2][2]);
-		System.out.println(g.getLocationArray()[2][2].getClass().getName());
-		System.out.println(g.getLocationArray()[1][1].getClass().getName());
+		for(Player p:players){
+			if(null!=p){
+				for(Unit u:p.getUnitsControlled()){
+					u.resetMovement();
+				}
+			}
+			
+		}
 	}
-	
-	
+
+
 	public static void fillTerrainGrid(TerrainGrid g){
 
 		//String fileName = JOptionPane.showInputDialog("file name");
@@ -70,7 +59,7 @@ public class Runner {
 			//hmm??? good
 			sc.nextLine();
 			for(int r = 0;r<g.getNumRows();r++){
-				
+
 				String[] rowStringForm = sc.nextLine().split(",");
 				//System.out.println("good\n");
 				//System.out.print(new ArrayList<String>(Arrays.asList(rowStringForm)));
@@ -83,7 +72,7 @@ public class Runner {
 			e.printStackTrace();
 		}
 	}
-	public static Terrain makeTerrain(int r, int c, TerrainGrid<Actor> hostGrid, String terrainType) throws NoSuchMethodException, SecurityException{
+	public static Terrain makeTerrain(int r, int c, TerrainGrid<Actor> hostGrid, String terrainType) throws Exception{
 		switch (terrainType) {
 		case "Beach":
 			return new Beach(r, c, hostGrid);
@@ -101,18 +90,29 @@ public class Runner {
 			return new River(r, c, hostGrid);
 		case "Road":
 			return new Road(r, c, hostGrid);
-		case "AirPort":
-			return new AirPort(r, c, hostGrid,null);
-		case "SeaPort":
-			return new SeaPort(r, c, hostGrid,null);
-		case "Barracks":
-			return new Barracks(r, c, hostGrid,null);
-		case "Property":
-			return new Property(r, c, hostGrid,null);
-		case "HQ":
-			return new HQ(r,c,hostGrid,null);
-		default:
+		case "Test":
 			return new TestTerrain(r, c, hostGrid);
+		default:
+			String[] propProp = terrainType.split("_");
+			if(propProp.length!=2){
+				throw new Exception("error reading file, bad property?");
+			}else{
+				Player ownerOfProp = players[Integer.parseInt(propProp[1])];
+				switch(propProp[0]){
+				case "Property":
+					return new Property(r,c,hostGrid,ownerOfProp);
+				case "Barracks":
+					return new Barracks(r,c,hostGrid,ownerOfProp);
+				case "SeaPort":
+					return new SeaPort(r,c,hostGrid,ownerOfProp);
+				case "AirPort":
+					return new AirPort(r,c,hostGrid,ownerOfProp);
+				case "HQ":
+					return new HQ(r,c,hostGrid,ownerOfProp);
+				default:
+					throw new Exception("error reading file, bad property?");
+				}
+			}
 		}
 	}
 }

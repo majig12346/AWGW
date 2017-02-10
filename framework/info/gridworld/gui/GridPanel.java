@@ -131,7 +131,7 @@ PseudoInfiniteViewport.Pannable
 		BufferedImage img = null;
 		try {
 			//TODO insert map pic here
-			img = ImageIO.read(new File("projects/GWG/resources/map_pic/demo1.gif"));
+			img = ImageIO.read(new File("projects/GWG/resources/map_pic/demo2.gif"));
 
 		} catch (IOException e) {
 			e.printStackTrace();
