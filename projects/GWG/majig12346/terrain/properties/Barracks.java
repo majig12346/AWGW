@@ -28,7 +28,7 @@ public class Barracks extends Factory{
 	public Barracks(int r, int c, TerrainGrid<Actor> hostGrid,Player owner)throws NoSuchMethodException, SecurityException {
 		super(r, c, hostGrid,owner);
 		this.buildableUnits = new HashSet<Constructor<? extends Unit>>();
-		buildableUnits.add(Infantry.class.getConstructor(Player.class,Suit.class));
+		buildableUnits.add(Infantry.class.getConstructor(Player.class));
 		buildableUnits.add(Mech.class.getConstructor(Player.class));
 		buildableUnits.add(Recon.class.getConstructor(Player.class));
 		buildableUnits.add(APC.class.getConstructor(Player.class));

@@ -10,6 +10,7 @@ import majig12346.CO.TestCO;
 import majig12346.terrain.*;
 import majig12346.terrain.properties.*;
 import majig12346.units.Unit;
+import majig12346.units.land.Infantry;
 
 
 public class Runner {
@@ -36,14 +37,8 @@ public class Runner {
 
 
 	private static void customFill(TerrainGrid g, Player p1, Player p2){
-		for(Player p:players){
-			if(null!=p){
-				for(Unit u:p.getUnitsControlled()){
-					u.resetMovement();
-				}
-			}
-			
-		}
+		Infantry inf1 = new Infantry(players[1]);
+		inf1.putSelfInGrid(g,g.getLocationArray()[1][1]);
 	}
 
 
