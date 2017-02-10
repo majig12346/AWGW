@@ -27,6 +27,7 @@ public class Cruiser extends Sea implements Carry {
 		super(owner);
 		setWeapon(0, WeaponType.DEPTH_CHARGE);
 		setWeapon(1, WeaponType.FLAK);
+		carried = new ArrayList<Unit>();
 	}
 
 	private ArrayList<Unit> carried;

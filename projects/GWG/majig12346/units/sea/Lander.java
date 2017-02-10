@@ -26,6 +26,7 @@ public class Lander extends Sea implements Carry {
 	public Lander(Player owner) {
 		super(owner);
 		setWeapon(0, WeaponType.NONE);
+		carried = new ArrayList<Unit>();
 	}
 
 	private ArrayList<Unit> carried;

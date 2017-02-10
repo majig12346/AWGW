@@ -26,6 +26,7 @@ public class APC extends Unit implements Carry {
 	public APC(Player owner) {
 		super(owner);
 		setWeapon(0, WeaponType.NONE); //unarmed
+		carried = new ArrayList<Unit>();
 	}
 
 	private ArrayList<Unit> carried;

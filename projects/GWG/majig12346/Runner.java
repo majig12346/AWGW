@@ -33,7 +33,6 @@ public class Runner {
 	private static void customFill(TerrainGrid g, Player p1, Player p2){
 		AntiAir aa1 = new AntiAir(p1);
 		aa1.resetMovement();
-		//TODO
 		Infantry inf1 = new Infantry(p1);
 		inf1.resetMovement();
 		fillTerrainGrid(g);
@@ -42,6 +41,7 @@ public class Runner {
 		Property prop2 = (Property) g.getLocationArray()[0][0];
 		prop2.setOwner(p1);
 		inf1.putSelfInGrid(g, g.getLocationArray()[1][1]);
+		aa1.putSelfInGrid(g, g.getLocationArray()[0][1]);
 		System.out.println(g.get(g.getLocationArray()[1][1]));
 		System.out.println("no crashes yet");
 		

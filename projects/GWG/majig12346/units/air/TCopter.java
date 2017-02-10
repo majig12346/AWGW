@@ -25,6 +25,7 @@ public class TCopter extends Air implements Carry {
 	public TCopter(Player owner) {
 		super(owner);
 		setWeapon(0, WeaponType.NONE); // unarmed
+		carried = new ArrayList<Unit>();
 	}
 	private ArrayList<Unit> carried;
 	@Override

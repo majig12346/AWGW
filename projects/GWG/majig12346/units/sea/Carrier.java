@@ -28,6 +28,7 @@ public class Carrier extends Sea implements Carry {
 	public Carrier(Player owner) {
 		super(owner);
 		setWeapon(0, WeaponType.ROTARY);
+		carried = new ArrayList<Unit>();
 	}
 
 	ArrayList<Unit> carried;
