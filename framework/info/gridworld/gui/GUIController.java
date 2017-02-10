@@ -209,17 +209,19 @@ public class GUIController<T>
         
         controlPanel.add(Box.createRigidArea(spacer));
 
-        controlPanel.add(stepButton);
+        //TODO
+        //controlPanel.add(stepButton);
         controlPanel.add(Box.createRigidArea(spacer));
-        controlPanel.add(runButton);
+        //controlPanel.add(runButton);
         controlPanel.add(Box.createRigidArea(spacer));
-        controlPanel.add(stopButton);
+        //controlPanel.add(stopButton);
         runButton.setEnabled(false);
         stepButton.setEnabled(false);
         stopButton.setEnabled(false);
 
         controlPanel.add(Box.createRigidArea(spacer));
-        controlPanel.add(new JLabel(resources.getString("slider.gui.slow")));
+        //TODO
+        //controlPanel.add(new JLabel(resources.getString("slider.gui.slow")));
         JSlider speedSlider = new JSlider(MIN_DELAY_MSECS, MAX_DELAY_MSECS,
                 INITIAL_DELAY);
         speedSlider.setInverted(true);
@@ -237,8 +239,9 @@ public class GUIController<T>
             map = map.getParent();
         }
 
-        controlPanel.add(speedSlider);
-        controlPanel.add(new JLabel(resources.getString("slider.gui.fast")));
+        //TODO
+        //controlPanel.add(speedSlider);
+        //controlPanel.add(new JLabel(resources.getString("slider.gui.fast")));
         controlPanel.add(Box.createRigidArea(new Dimension(5, 0)));
 
         stepButton.addActionListener(new ActionListener()

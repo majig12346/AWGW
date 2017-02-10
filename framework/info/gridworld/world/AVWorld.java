@@ -11,6 +11,7 @@ public class AVWorld extends MouseWorld {
 	public AVWorld(Grid g) {
 		super(g);
 		// TODO Auto-generated constructor stub
+		
 	}
 	@Override
 	public void show() {
@@ -23,6 +24,7 @@ public class AVWorld extends MouseWorld {
 		wf.control.display.setCurrentLocation(getLocationWhenClicked());
 		wf.control.editLocation();
 		resetClickedLocation();
+		setMessage("Use mouse or arrowkeys+enter+esc");
 	}
 
 }

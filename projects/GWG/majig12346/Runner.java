@@ -30,6 +30,7 @@ public class Runner {
 		fillTerrainGrid(g);
 		customFill(g,p1,p2);
 		avw.setGrid(g);
+		avw.setMessage("Use mouse or arrowkeys+enter+esc");
 		avw.show();
 		//I will fix this
 		while(true){
