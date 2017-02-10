@@ -18,6 +18,8 @@ package info.gridworld.gui;
 
 import info.gridworld.grid.Grid;
 import info.gridworld.grid.Location;
+import majig12346.Player;
+import majig12346.CO.TestCO;
 import majig12346.terrain.Terrain;
 import majig12346.terrain.properties.Factory;
 import majig12346.terrain.properties.Property;
@@ -61,6 +63,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.text.PlainDocument;
 
 /**
  * Makes the menus for constructing new occupants and grids, and for invoking
@@ -383,7 +386,16 @@ public class MenuMaker<T>
 				};
 				a.setEnabled(true);
         		tmp.setAction(a);
-        		tmp.setText(constructor.getName());
+        		String[] nameParts = constructor.getName().split("\\.");
+        		String name = nameParts[nameParts.length-1];
+        		Player[] p = {null};
+        		Unit u = constructor.newInstance(p);
+        		int cost = u.getBuildCost();
+        		String spaces = (cost<1000?"  ":"");
+        		name = +cost+spaces+" | "+name;
+        		//ResourceBundle b = new ResourceBundle("")
+        		//TODO nicer naming, picture
+        		tmp.setText(name);
         		//tmp.setIcon();
         		menu.add(tmp);
         	}

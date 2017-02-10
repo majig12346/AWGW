@@ -3,6 +3,7 @@ package majig12346.terrain.properties;
 import info.gridworld.actor.Actor;
 
 import java.lang.reflect.Constructor;
+import java.util.ArrayList;
 import java.util.HashSet;
 
 import majig12346.Player;
@@ -27,7 +28,7 @@ public class Barracks extends Factory{
 	  */
 	public Barracks(int r, int c, TerrainGrid<Actor> hostGrid,Player owner)throws NoSuchMethodException, SecurityException {
 		super(r, c, hostGrid,owner);
-		this.buildableUnits = new HashSet<Constructor<? extends Unit>>();
+		this.buildableUnits = new ArrayList<Constructor<? extends Unit>>();
 		buildableUnits.add(Infantry.class.getConstructor(Player.class));
 		buildableUnits.add(Mech.class.getConstructor(Player.class));
 		buildableUnits.add(Recon.class.getConstructor(Player.class));

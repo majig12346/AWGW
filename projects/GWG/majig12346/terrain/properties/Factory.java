@@ -4,6 +4,7 @@ import info.gridworld.actor.Actor;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.Set;
 
 import javax.swing.JOptionPane;
@@ -27,12 +28,12 @@ public abstract class Factory extends Property {
 	public Factory(int r, int c, TerrainGrid<Actor> hostGrid,Player owner) {
 		super(r, c, hostGrid,owner);
 	}
-	protected Set<Constructor<? extends Unit>> buildableUnits;
+	protected ArrayList<Constructor<? extends Unit>> buildableUnits;
 	/**
 	  * @return a set of constructors for units that 
 	  * can be built on this factory
 	  */
-	public Set<Constructor<? extends Unit>> getBuildableUnits() {
+	public ArrayList<Constructor<? extends Unit>> getBuildableUnits() {
 		return this.buildableUnits;
 	}
 	public void buildUnit(Constructor<? extends Unit> constructor){

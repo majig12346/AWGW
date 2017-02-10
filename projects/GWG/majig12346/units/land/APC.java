@@ -84,8 +84,7 @@ public class APC extends Unit implements Carry {
 
 	@Override
 	public int getBuildCost() {
-		// TODO Auto-generated method stub
-		return 0;
+		return 500;
 	}
 
 	@Override

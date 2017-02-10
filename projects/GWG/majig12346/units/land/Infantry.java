@@ -59,10 +59,13 @@ public class Infantry extends Unit {
      * Ticks the cap timer of the Property with tickCapTimer()
      */
 	public void capture(){
+		System.out.println("capturing city");
 		Terrain t = (Terrain) this.getLocation();
 		if(t instanceof Property){
 			Property p = (Property)t;
+			System.out.println("capTimer = "+p.getCapTimer());
 			p.tickCapTimer(this);
+			System.out.println("property's capture timer down to "+p.getCapTimer());
 		}
 		this.canMove = false;
 	}

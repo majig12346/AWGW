@@ -3,6 +3,7 @@ package majig12346.terrain.properties;
 import info.gridworld.actor.Actor;
 
 import java.lang.reflect.Constructor;
+import java.util.ArrayList;
 import java.util.HashSet;
 
 import majig12346.Player;
@@ -26,7 +27,7 @@ public class AirPort extends Factory{
 	  */
 	public AirPort(int r, int c, TerrainGrid<Actor> hostGrid,Player owner)throws NoSuchMethodException, SecurityException {
 		super(r, c, hostGrid,owner);
-		this.buildableUnits = new HashSet<Constructor<? extends Unit>>();
+		this.buildableUnits = new ArrayList<Constructor<? extends Unit>>();
 		buildableUnits.add(TCopter.class.getConstructor(Player.class));
 		buildableUnits.add(BCopter.class.getConstructor(Player.class));
 		buildableUnits.add(SCopter.class.getConstructor(Player.class));

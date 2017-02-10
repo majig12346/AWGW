@@ -33,14 +33,21 @@ public abstract class Unit extends Actor{
 	 *also loads the values for daily fuel cost and max mobility
 	 */
 	public Unit(Player owner){
-		setOwner(owner);
-		getOwner().getUnitsControlled().add(this);
-		this.setDailyCost(loadDailyCost());
-		this.setMaxMobility(loadMaxMobility());
-		//this.canMove = true;
-		this.setFuel(99);
-		this.resetMovement();
+		if(null!=owner){
+			setOwner(owner);
+			this.setDailyCost(loadDailyCost());
+			this.setMaxMobility(loadMaxMobility());
+			//this.canMove = true;
+			this.setFuel(99);
+			this.resetMovement();
+		}else{
+			//TEST PURPOSES ONLY
+			//System.out.println("Warning: owner is null");
+			//throw new IllegalArgumentException("owner is null");
+
+		}
 	}
+
 
 	//ownership
 	private Player owner;
@@ -50,6 +57,7 @@ public abstract class Unit extends Actor{
 	public void setOwner(Player newOwner){
 		if(null!=newOwner){
 			this.owner = newOwner;
+			this.owner.getUnitsControlled().add(this);
 			this.setColor(owner.getTeamColor());
 		}else{
 			throw new IllegalArgumentException("owner is null");
@@ -449,7 +457,7 @@ public abstract class Unit extends Actor{
 		}
 		return ans;
 	}
-	
+
 	private int totalCost(Queue<Terrain> path){
 		if(null==path||path.isEmpty()){
 			return 0;
@@ -460,7 +468,7 @@ public abstract class Unit extends Actor{
 			}return ans;
 		}
 	}
-	
+
 	/**
 	 * Precondition: the unit has enough mobility to reach the Terrain that the path is being found to.
 	 * The returned path will be good if not optimal, uses A*
@@ -469,14 +477,14 @@ public abstract class Unit extends Actor{
 	 */
 	private Queue<Terrain> findPathTo(Terrain target) throws Exception{
 		Queue<Terrain> ans = new LinkedList<>();
-		
+
 		//temp
 		//FIXME
 		if(null==target){
 			return new LinkedList<Terrain>();
 		}
-		
-		
+
+
 		if(target==getLocation()){
 			//you are already here
 			return ans;
@@ -520,7 +528,7 @@ public abstract class Unit extends Actor{
 		//if you got here, then there is no path
 		//See Precondition: there is a path, checked by getValidMoveSpaces
 		throw new Exception("no path, precondition not met");
-		
+
 	}
 
 	/**

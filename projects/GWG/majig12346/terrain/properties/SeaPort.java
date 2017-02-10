@@ -3,6 +3,7 @@ package majig12346.terrain.properties;
 import info.gridworld.actor.Actor;
 
 import java.lang.reflect.Constructor;
+import java.util.ArrayList;
 import java.util.HashSet;
 
 import majig12346.Player;
@@ -26,7 +27,7 @@ public class SeaPort extends Factory{
 	  */
 	public SeaPort(int r, int c, TerrainGrid<Actor> hostGrid,Player owner)throws NoSuchMethodException, SecurityException {
 		super(r, c, hostGrid,owner);
-		this.buildableUnits = new HashSet<Constructor<? extends Unit>>();
+		this.buildableUnits = new ArrayList<Constructor<? extends Unit>>();
 		buildableUnits.add(Lander.class.getConstructor(Player.class));
 		buildableUnits.add(Cruiser.class.getConstructor(Player.class));
 		buildableUnits.add(Sub.class.getConstructor(Player.class));

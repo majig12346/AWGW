@@ -28,6 +28,7 @@ public class Property extends Terrain{
 	public Property(int r, int c, TerrainGrid<Actor> hostGrid, Player owner) {
 		super(r, c, hostGrid);
 		this.setOwner(owner);
+		this.capTimer = 200;
 	}
 
 	//cap timer
