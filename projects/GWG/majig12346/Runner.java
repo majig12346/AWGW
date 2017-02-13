@@ -9,7 +9,6 @@ import info.gridworld.world.AVWorld;
 import majig12346.CO.TestCO;
 import majig12346.terrain.*;
 import majig12346.terrain.properties.*;
-import majig12346.units.Unit;
 import majig12346.units.land.Infantry;
 
 
