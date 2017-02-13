@@ -315,6 +315,7 @@ public class GUIController<T>
             {
                 MenuMaker<T> maker = new MenuMaker<T>(parentFrame, resources,
                         displayMap);
+                maker.display = this.display;
                 JPopupMenu popup = maker.makeConstructorMenu(occupantClasses,
                         loc);
                 Point p = display.pointForLocation(loc);

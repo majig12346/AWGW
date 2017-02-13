@@ -29,6 +29,8 @@ import majig12346.weapons.WeaponType;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -48,6 +50,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.Set;
 
 import javax.swing.Action;
 import javax.swing.JComboBox;
@@ -86,7 +89,7 @@ public class MenuMaker<T>
         this.resources = resources;
         this.displayMap = displayMap;
     }
-
+    public GridPanel display;
     
     
     
@@ -107,24 +110,31 @@ public class MenuMaker<T>
     public JPopupMenu makeMoveMenu(T occupant, Location loc) throws NoSuchMethodException, SecurityException
     {
         this.occupant = occupant;
+        //new ver
+
+        display.currentLocation = loc;
+        display.repaint();
+        
+        
+        	
+        	
+        	
+        
+        
+        
+        
+        
+        
+        
         System.out.println("line 106 Menu: currentLocation set to loc\nloc is "+loc.getClass().getName());
         this.currentLocation = loc;
         JPopupMenu menu = new JPopupMenu();
         Method[] methods = getValidMethods();
         System.out.println("methods is "+methods.length+" size.");
-        //Method[] methods = getMethods();
-//        Class oldDcl = null;
         for (int i = 0; i < methods.length; i++)
         {
-//            Class dcl = methods[i].getDeclaringClass();
-//            if (dcl != Object.class)
-//            {
-//                if (i > 0 && dcl != oldDcl)
-//                    menu.addSeparator();
                 menu.add(new MethodItem(methods[i]));
-                System.out.println("added method, see line 118 of MenuMaker");
-//            }
-//            oldDcl = dcl;
+                System.out.println("added method, see line 137 of MenuMaker");
         }
         return menu;
     }

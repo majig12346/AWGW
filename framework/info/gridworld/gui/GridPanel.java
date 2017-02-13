@@ -23,6 +23,8 @@ import info.gridworld.grid.Grid;
 import info.gridworld.grid.Location;
 import info.gridworld.world.AVWorld;
 import majig12346.TerrainGrid;
+import majig12346.terrain.Terrain;
+import majig12346.units.Unit;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -46,6 +48,7 @@ import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+import java.util.Set;
 
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
@@ -83,7 +86,7 @@ PseudoInfiniteViewport.Pannable
 	private ResourceBundle resources;
 	private DisplayMap displayMap;
 	public Location originalLocation;
-	private Location currentLocation;
+	public Location currentLocation;
 	private Timer tipTimer;
 	private JToolTip tip;
 	private JPanel glassPane;
@@ -125,6 +128,26 @@ PseudoInfiniteViewport.Pannable
 		//drawGridlines(g2);
 		drawOccupants(g2);
 		drawCurrentLocation(g2);
+		drawBoxesFromLocation(g2,currentLocation);
+	}
+
+	//XXX made by me
+	private void drawBoxesFromLocation(Graphics2D g2,Location loc){
+		if(loc!=null){
+			try{
+				Unit u = (Unit) avw.getGrid().get(loc);
+				Set<Terrain> validMoveSpaces = u.getValidMoveSpaces();
+				for(Terrain t:validMoveSpaces){
+					Location l = t;
+					Point p = pointForLocation(l);
+					g2.drawRect(p.x - cellSize / 2 - 2, p.y - cellSize / 2 - 2,
+							cellSize + 3, cellSize + 3);
+				}
+			}catch(Exception e){
+				System.out.println("some error, see drawBoxesFromLocation() in GridPanel");
+				e.printStackTrace();
+			}
+		}
 	}
 
 	private void drawBG(Graphics2D g2,Insets insets){
@@ -256,6 +279,8 @@ PseudoInfiniteViewport.Pannable
 					cellSize + 3, cellSize + 3);
 		}
 	}
+
+
 
 	/**
 	 * Draws a watermark that shows the version number if it is < 1.0
