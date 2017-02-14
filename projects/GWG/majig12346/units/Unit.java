@@ -416,6 +416,7 @@ public abstract class Unit extends Actor{
 	 * terrain, units, and current mobility level
 	 */
 	public Set<Terrain> getValidMoveSpaces(){
+		//FIXME something is broken
 		Stack<Terrain> toCheck = new Stack<Terrain>();
 		toCheck.push((Terrain) this.getLocation());
 		Map<Terrain, Double> distances = new HashMap<>();
