@@ -112,7 +112,9 @@ public class MenuMaker<T>
         this.occupant = occupant;
         //new ver
 
+        
         display.currentLocation = loc;
+        
         display.repaint();
         
         

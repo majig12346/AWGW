@@ -15,10 +15,10 @@ import majig12346.units.land.Infantry;
 public class Runner {
 	public static Player[] players;
 	public static void main(String[] args){
-		System.out.println("Currently 6151355 PLANCK_TIMEs behind! Are we on "
-				+ "5nm or is Quantum tunneling somehow an issue "
-				+ "on Skylake's 14nm? Wait a PLANCK_TIME,"
-				+ " this is a Core 2 Duo!");
+		//System.out.println("Currently 6151355 PLANCK_TIMEs behind! Are we on "
+		//		+ "5nm or is Quantum tunneling somehow an issue "
+		//		+ "on Skylake's 14nm? Wait a PLANCK_TIME,"
+		//		+ " this is a Core 2 Duo!");
 		AVWorld avw = new AVWorld();
 		players = new Player[4];
 		Player p1 = new Player(new TestCO(),9999,null);

@@ -116,8 +116,12 @@ public abstract class Terrain extends Location{
             dc = 1;
             dr = -1;
         }
+        try{
 		return hostGrid.getLocationArray()[getRow()+dr][getCol()+dc];
-	}
+        }catch (ArrayIndexOutOfBoundsException e) {
+			return null;
+		}
+    }
 	public ArrayList<Terrain> getAllAdjacentTerrains(){
 		ArrayList<Terrain> adjacent = new ArrayList<Terrain>();
 		for(int dir = 0;dir<360;dir+=45){

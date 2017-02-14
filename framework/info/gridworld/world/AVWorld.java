@@ -2,6 +2,7 @@ package info.gridworld.world;
 
 import info.gridworld.grid.Grid;
 import info.gridworld.gui.WorldFrame;
+import majig12346.TerrainGrid;
 
 public class AVWorld extends MouseWorld {
 
@@ -18,6 +19,7 @@ public class AVWorld extends MouseWorld {
 		super.show();
 	}
 	public void go(){
+		System.out.println("starting go\n");
 		WorldFrame wf = (WorldFrame) frame;
 		//wf.control.display.originalLocation = getLocationWhenClicked();
 		wf.control.display.avw = this;

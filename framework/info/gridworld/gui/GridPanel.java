@@ -136,6 +136,9 @@ PseudoInfiniteViewport.Pannable
 		if(loc!=null){
 			try{
 				Unit u = (Unit) avw.getGrid().get(loc);
+				if(null==u){
+					return;
+				}
 				Set<Terrain> validMoveSpaces = u.getValidMoveSpaces();
 				for(Terrain t:validMoveSpaces){
 					Location l = t;

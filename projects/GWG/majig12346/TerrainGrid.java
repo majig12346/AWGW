@@ -101,7 +101,7 @@ public class TerrainGrid<E> extends AbstractGrid<E>
 		// Add the object to the grid.
 		E oldOccupant = get(loc);
 		occupantArray[loc.getRow()][loc.getCol()] = obj;
-		System.out.println("success putting in unit. See line 98 of TerrainGrid");
+		System.out.println("success putting in unit. See line 103 of TerrainGrid");
 		return oldOccupant;
 	}
 

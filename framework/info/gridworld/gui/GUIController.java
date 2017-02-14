@@ -330,6 +330,7 @@ public class GUIController<T>
             	
                 MenuMaker<T> maker = new MenuMaker<T>(parentFrame, resources,
                         displayMap);
+                maker.display = this.display;
                 System.out.println("invoking makeMethodMenu, see line 324 of GUIController");
                 JPopupMenu popup = null;
 				try {
