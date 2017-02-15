@@ -9,7 +9,9 @@ import info.gridworld.world.AVWorld;
 import majig12346.CO.TestCO;
 import majig12346.terrain.*;
 import majig12346.terrain.properties.*;
+import majig12346.units.air.CAS;
 import majig12346.units.land.Infantry;
+import majig12346.units.land.Tank;
 
 
 public class Runner {
@@ -43,6 +45,10 @@ public class Runner {
 	private static void customFill(TerrainGrid g, Player p1, Player p2){
 		Infantry inf1 = new Infantry(players[1]);
 		inf1.putSelfInGrid(g,g.getLocationArray()[1][1]);
+		Infantry inf2 = new Infantry(players[1]);
+		inf2.putSelfInGrid(g,g.getLocationArray()[1][2]);
+		Tank tank1 = new Tank(players[1]);
+		tank1.putSelfInGrid(g,g.getLocationArray()[2][1]);
 	}
 
 

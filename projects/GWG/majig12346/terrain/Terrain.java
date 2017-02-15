@@ -123,7 +123,6 @@ public abstract class Terrain extends Location{
 		}
     }
 	public ArrayList<Terrain> getAllAdjacentTerrains(){
-		System.out.println("a");
 		ArrayList<Terrain> adjacent = new ArrayList<Terrain>();
 		for(int dirs = 0;dirs<360;dirs+=45){
 			Terrain t = (Terrain) getAdjacentLocation(dirs);

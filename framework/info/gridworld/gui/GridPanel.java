@@ -128,6 +128,7 @@ PseudoInfiniteViewport.Pannable
 		//drawGridlines(g2);
 		drawOccupants(g2);
 		drawCurrentLocation(g2);
+		//System.out.println("invoking drawBoxesFromLocation() from line 131 GridPanel");
 		drawBoxesFromLocation(g2,currentLocation);
 	}
 
@@ -139,6 +140,7 @@ PseudoInfiniteViewport.Pannable
 				if(null==u){
 					return;
 				}
+				//System.out.println("invoking getValidMoveSpaces() from GridPanel line 142");
 				Set<Terrain> validMoveSpaces = u.getValidMoveSpaces();
 				for(Terrain t:validMoveSpaces){
 					Location l = t;

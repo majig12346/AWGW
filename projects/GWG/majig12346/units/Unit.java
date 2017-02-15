@@ -416,7 +416,7 @@ public abstract class Unit extends Actor{
 	 * terrain, units, and current mobility level
 	 */
 	public Set<Terrain> getValidMoveSpaces(){
-		//FIXME something is broken
+		//FIXME pretty sure this is very inefficient, uncomment sysouts to see
 		Stack<Terrain> toCheck = new Stack<Terrain>();
 		toCheck.push((Terrain) this.getLocation());
 		Map<Terrain, Double> distances = new HashMap<>();
@@ -430,19 +430,25 @@ public abstract class Unit extends Actor{
 				if((distTo = distances.get(current)+t.getMoveCost(getMovementType()))<=mobility){
 					if(null==getGrid().get(t)){
 						if(distances.containsKey(t)){
-							distances.put(t,Math.min(distTo,distances.get(t)));
+							double old = distances.get(t);
+							if(distTo<old){
+								//System.out.println("mobility is "+mobility+", good vs new ezer cst of "+distTo);
+								distances.put(t,distTo);
+								toCheck.push(t);
+							}
 						}else{
+							//System.out.println("mobility is "+mobility+", greater or euqal vs total movement cost of "+distTo);
 							distances.put(t,distTo);
+							toCheck.push(t);
 						}
 						ans.add(t);
-						toCheck.push(t);
 					}else{
 						Unit u = (Unit) getGrid().get(t);
 						if(u.getOwner()==this.getOwner()){
-							if(distances.containsKey(t)){
-								distances.put(t,Math.min(distTo,distances.get(t)));
-							}else{
+							double old = distances.get(t);
+							if(distTo<old){
 								distances.put(t,distTo);
+								toCheck.push(t);
 							}
 							toCheck.push(t);
 							if(u instanceof Carry){
@@ -454,9 +460,14 @@ public abstract class Unit extends Actor{
 						}
 					}
 				}
+				else{
+					//System.out.println("mobility is "+mobility+",  not enough vs total movement cost of "+distTo);
+				}
 			}
 		}
+		//System.out.println("\ndone\n");
 		return ans;
+
 	}
 
 	private int totalCost(Queue<Terrain> path){
