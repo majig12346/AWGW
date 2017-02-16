@@ -445,6 +445,7 @@ public abstract class Unit extends Actor{
 					}else{
 						Unit u = (Unit) getGrid().get(t);
 						if(u.getOwner()==this.getOwner()){
+							System.out.println("distances is "+(null==distances?"":"not ")+" null");
 							double old = distances.get(t);
 							if(distTo<old){
 								distances.put(t,distTo);
