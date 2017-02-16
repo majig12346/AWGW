@@ -423,12 +423,13 @@ public abstract class Unit extends Actor{
 		distances.put((Terrain) this.getLocation(), 0.0);
 		Set<Terrain> ans = new HashSet<Terrain>();
 		while(0!=toCheck.size()){
-			System.out.println("stack size is "+toCheck.size());
+			//System.out.println("stack size is "+toCheck.size());
 			double distTo;
 			Terrain current = toCheck.pop();
 			ArrayList<Terrain> adjacent = current.getAllAdjacentTerrains();
 			for(Terrain t:adjacent){
-				if((distTo = distances.get(current)+t.getMoveCost(getMovementType()))<=mobility){
+				System.out.println("movement type: "+this.getMovementType());
+				if((distTo = distances.get(current)+t.getMoveCost(this.getMovementType()))<=mobility){
 					if(null==getGrid().get(t)){
 						if(!distances.containsKey(t)||distTo<distances.get(t)){
 							distances.put(t,distTo);
