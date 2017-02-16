@@ -423,21 +423,14 @@ public abstract class Unit extends Actor{
 		distances.put((Terrain) this.getLocation(), 0.0);
 		Set<Terrain> ans = new HashSet<Terrain>();
 		while(0!=toCheck.size()){
+			System.out.println("stack size is "+toCheck.size());
 			double distTo;
 			Terrain current = toCheck.pop();
 			ArrayList<Terrain> adjacent = current.getAllAdjacentTerrains();
 			for(Terrain t:adjacent){
 				if((distTo = distances.get(current)+t.getMoveCost(getMovementType()))<=mobility){
 					if(null==getGrid().get(t)){
-						if(distances.containsKey(t)){
-							double old = distances.get(t);
-							if(distTo<old){
-								//System.out.println("mobility is "+mobility+", good vs new ezer cst of "+distTo);
-								distances.put(t,distTo);
-								toCheck.push(t);
-							}
-						}else{
-							//System.out.println("mobility is "+mobility+", greater or euqal vs total movement cost of "+distTo);
+						if(!distances.containsKey(t)||distTo<distances.get(t)){
 							distances.put(t,distTo);
 							toCheck.push(t);
 						}
@@ -445,13 +438,20 @@ public abstract class Unit extends Actor{
 					}else{
 						Unit u = (Unit) getGrid().get(t);
 						if(u.getOwner()==this.getOwner()){
-							System.out.println("distances is "+(null==distances?"":"not ")+" null");
-							double old = distances.get(t);
-							if(distTo<old){
+//							System.out.println("distances is "+(null==distances?"":"not ")+"null");
+//							System.out.println("t is "+(null==t?"":"not ")+" null");
+//							System.out.println(t);
+//							System.out.println(t.hashCode());
+							if(distances.containsKey(t)){
+								if(distTo<distances.get(t)){
+									distances.put(t,distTo);
+									toCheck.push(t);
+								}
+							}else{
+								//System.out.println("mobility is "+mobility+", greater or euqal vs total movement cost of "+distTo);
 								distances.put(t,distTo);
 								toCheck.push(t);
 							}
-							toCheck.push(t);
 							if(u instanceof Carry){
 								Carry c = (Carry) u;
 								if(c.canCarry(this)){

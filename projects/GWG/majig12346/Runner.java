@@ -47,8 +47,8 @@ public class Runner {
 		inf1.putSelfInGrid(g,g.getLocationArray()[1][1]);
 		Infantry inf2 = new Infantry(players[1]);
 		inf2.putSelfInGrid(g,g.getLocationArray()[1][2]);
-		Tank tank1 = new Tank(players[1]);
-		tank1.putSelfInGrid(g,g.getLocationArray()[2][1]);
+//		Tank tank1 = new Tank(players[1]);
+//		tank1.putSelfInGrid(g,g.getLocationArray()[2][1]);
 	}
 
 
