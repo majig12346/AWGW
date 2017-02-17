@@ -81,6 +81,7 @@ public class APC extends Unit implements Carry {
 
 		}
 	}
+
 	@Override
 	public int getBuildCost() {
 		return 500;
@@ -99,7 +100,8 @@ public class APC extends Unit implements Carry {
 
 	@Override
 	public MoveType getMovementType() {
-		return MoveType.TREADS;
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	@Override

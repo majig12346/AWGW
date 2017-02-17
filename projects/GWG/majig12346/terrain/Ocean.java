@@ -20,6 +20,10 @@ public class Ocean extends Terrain{
 	}
 
 	@Override
+	public double getMoveCostBoat(){
+		return 1;
+	}
+	@Override
 	public int getDefense() {
 		return 0;
 	}

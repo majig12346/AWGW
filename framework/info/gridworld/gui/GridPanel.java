@@ -148,6 +148,7 @@ PseudoInfiniteViewport.Pannable
 					g2.drawRect(p.x - cellSize / 2 - 2, p.y - cellSize / 2 - 2,
 							cellSize + 3, cellSize + 3);
 				}
+				System.out.println("boxes drawn,  GridPanel line 151");
 			}catch(Exception e){
 				System.out.println("some error, see drawBoxesFromLocation() in GridPanel");
 				e.printStackTrace();
