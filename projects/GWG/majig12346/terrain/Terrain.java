@@ -122,10 +122,15 @@ public abstract class Terrain extends Location{
 			return null;
 		}
     }
+	/**
+	 * 
+	 * @return list of Manhattan adjacent Terrains
+	 */
 	public ArrayList<Terrain> getAllAdjacentTerrains(){
 		ArrayList<Terrain> adjacent = new ArrayList<Terrain>();
-		for(int dirs = 0;dirs<360;dirs+=45){
-			Terrain t = (Terrain) getAdjacentLocation(dirs);
+		//45 deg for all, 90 for Manhattan
+		for(int dir = 0;dir<360;dir+=90){
+			Terrain t = (Terrain) getAdjacentLocation(dir);
 			if(t != null){
 				adjacent.add(t);
 			}

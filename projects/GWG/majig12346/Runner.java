@@ -9,6 +9,7 @@ import info.gridworld.world.AVWorld;
 import majig12346.CO.TestCO;
 import majig12346.terrain.*;
 import majig12346.terrain.properties.*;
+import majig12346.units.air.BCopter;
 import majig12346.units.air.CAS;
 import majig12346.units.land.Infantry;
 import majig12346.units.land.Tank;
@@ -52,6 +53,8 @@ public class Runner {
 		tank1.putSelfInGrid(g,g.getLocationArray()[2][1]);
 		Carrier carrier1 = new Carrier(players[1]);
 		carrier1.putSelfInGrid(g,g.getLocationArray()[6][4]);
+		BCopter copter1 = new BCopter(players[1]);
+		copter1.putSelfInGrid(g,g.getLocationArray()[7][7]);
 	}
 
 

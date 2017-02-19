@@ -428,10 +428,12 @@ public abstract class Unit extends Actor{
 			Terrain current = toCheck.pop();
 			ArrayList<Terrain> adjacent = current.getAllAdjacentTerrains();
 			for(Terrain t:adjacent){
-				//System.out.println("movement type: "+this.getMovementType());
+//				System.out.println("movement type: "+this.getMovementType());
 				if((distTo = distances.get(current)+t.getMoveCost(this.getMovementType()))<=mobility){
 					if(null==getGrid().get(t)){
 						if(!distances.containsKey(t)||distTo<distances.get(t)){
+//							System.out.println("mobility is "+mobility+", "
+//									+ "greater or euqal vs total movement cost of "+distTo+" for "+t);
 							distances.put(t,distTo);
 							toCheck.push(t);
 						}
@@ -445,7 +447,8 @@ public abstract class Unit extends Actor{
 									toCheck.push(t);
 								}
 							}else{
-								//System.out.println("mobility is "+mobility+", greater or euqal vs total movement cost of "+distTo);
+//								System.out.println("mobility is "+mobility+", "
+//										+ "greater or euqal vs total movement cost of "+distTo+" for "+t);
 								distances.put(t,distTo);
 								toCheck.push(t);
 							}
@@ -459,11 +462,12 @@ public abstract class Unit extends Actor{
 					}
 				}
 				else{
-					//System.out.println("mobility is "+mobility+",  not enough vs total movement cost of "+distTo);
+//					System.out.println("mobility is "+mobility+",  "
+//							+ "not enough vs total movement cost of "+distTo+" for "+t);
 				}
 			}
 		}
-		//System.out.println("\ndone\n");
+//		System.out.println("\ndone\n");
 		return ans;
 
 	}

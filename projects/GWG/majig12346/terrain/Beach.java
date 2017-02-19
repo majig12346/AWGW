@@ -39,5 +39,9 @@ public class Beach extends Terrain {
 	protected double getMoveCostTreads() {
 		return 1;
 	}
+	@Override
+	protected double getMoveCostBoat() {
+		return 2;
+	}
 
 }
