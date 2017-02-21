@@ -26,7 +26,7 @@ public class AVWorld extends MouseWorld {
 		wf.control.display.setCurrentLocation(getLocationWhenClicked());
 		wf.control.editLocation();
 		resetClickedLocation();
-		setMessage("Use mouse or arrowkeys+enter+esc");
+		setMessage("Use mouse to click things\nDO NOT us arrow keys");
 	}
 
 }

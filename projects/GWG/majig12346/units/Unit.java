@@ -248,6 +248,7 @@ public abstract class Unit extends Actor{
 	 * warfare (EW)
 	 */
 	protected boolean canMove;
+	public boolean hasMoved;
 	private double fuel;
 	private int dailyCost;
 	public void deductDailyCost(){
@@ -273,6 +274,7 @@ public abstract class Unit extends Actor{
 	 * @return Current {@link mobility} of the {@link Unit}
 	 */
 	public double getMobility(){
+		System.out.println("line 277 Unit: mobility="+this.mobility);
 		return this.mobility;
 	}
 
@@ -388,6 +390,7 @@ public abstract class Unit extends Actor{
 	 *   added to mobility. 
 	 */
 	public void resetMovement(){
+		this.hasMoved = false;
 		this.canMove = true;
 		this.fuel = (int)(getFuel());
 		this.mobility = this.maxMobility;
@@ -585,7 +588,7 @@ public abstract class Unit extends Actor{
 		//Terrain is occupied by something other than allied Unit, fail
 		try{
 			Unit u = (Unit)(gr.get(t));
-			if(u.getOwner()!=this.getOwner()){
+			if(null!=u&&u.getOwner()!=this.getOwner()){
 				return false;
 			}
 		}catch(ClassCastException actorIsNotAUnit){
@@ -594,7 +597,12 @@ public abstract class Unit extends Actor{
 			return false;
 		}
 		//move on
-		//TODO insert wait time
+		try {
+			Thread.sleep(500);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}//TODO insert wait time
 		traverse(getGrid(),t);
 		if(path.peek()!=null){
 			this.setDirection(t.getDirectionToward(path.peek()));

@@ -331,15 +331,16 @@ public class GUIController<T>
                 MenuMaker<T> maker = new MenuMaker<T>(parentFrame, resources,
                         displayMap);
                 maker.display = this.display;
-                System.out.println("invoking makeMethodMenu, see line 324 of GUIController");
+                System.out.println("invoking makeMethodMenu, see line 334 of GUIController");
                 JPopupMenu popup = null;
-				try {
+//					System.out.println("trying");
 					popup = maker.makeMethodMenu(occupant, loc);
-				} catch (NoSuchMethodException | SecurityException e) {
+//					System.out.println("success");
 					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
                 Point p = display.pointForLocation(loc);
+                if(null==popup){
+                	return;
+                }
                 popup.show(display, p.x, p.y);
             }
         }

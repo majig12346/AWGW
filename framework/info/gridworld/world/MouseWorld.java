@@ -40,7 +40,7 @@ public class MouseWorld extends ActorWorld {
 				e.printStackTrace();
 			}
 		}
-		setMessage("Ready.");
+		//setMessage("Ready.");
 		return loc;
 	}
 

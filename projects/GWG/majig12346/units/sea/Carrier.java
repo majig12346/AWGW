@@ -73,6 +73,9 @@ public class Carrier extends Sea implements Carry {
 	}
 	@Override
 	public boolean canTarget(Unit u){
+		if(null==u){
+			return false;
+		}
 		Terrain home = (Terrain) getLocation();
 		int dist = home.distanceTo((Terrain) u.getLocation());
 		return (dist>=1&&dist<=4);
