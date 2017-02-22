@@ -100,8 +100,7 @@ public class APC extends Unit implements Carry {
 
 	@Override
 	public MoveType getMovementType() {
-		// TODO Auto-generated method stub
-		return null;
+		return MoveType.TREADS;
 	}
 
 	@Override

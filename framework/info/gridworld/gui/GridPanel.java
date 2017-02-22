@@ -47,6 +47,7 @@ import java.io.File;
 import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.ResourceBundle;
 import java.util.Set;
 
@@ -85,7 +86,7 @@ PseudoInfiniteViewport.Pannable
 	private Color backgroundColor = Color.WHITE;
 	private ResourceBundle resources;
 	private DisplayMap displayMap;
-	public Location originalLocation;
+	//	public Location originalLocation;
 	public Location currentLocation;
 	private Timer tipTimer;
 	private JToolTip tip;
@@ -102,14 +103,17 @@ PseudoInfiniteViewport.Pannable
 		setToolTipsEnabled(true);
 	}
 
+	public Set<Terrain> shouldBeHighlighted = new HashSet<Terrain>();
+	public Graphics2D pointerToGraphics2D;
 	/**
 	 * Paint this component.
 	 * @param g the Graphics object to use to render this component
 	 */
 	public void paintComponent(Graphics g)
 	{
-		Graphics2D g2 = (Graphics2D) g;
 
+		Graphics2D g2 = (Graphics2D) g;
+		pointerToGraphics2D = g2;
 		super.paintComponent(g2);
 		if (grid == null)
 			return;
@@ -128,33 +132,37 @@ PseudoInfiniteViewport.Pannable
 		//drawGridlines(g2);
 		drawOccupants(g2);
 		drawCurrentLocation(g2);
-		//System.out.println("invoking drawBoxesFromLocation() from line 131 GridPanel");
-		drawBoxesFromLocation(g2,currentLocation);
+		//TODO
+//		drawBoxesFromLocation(g2,currentLocation);
+		drawBoxesOnSetOfLocations(g2, shouldBeHighlighted);
 	}
 
 	//XXX made by me
-	private void drawBoxesFromLocation(Graphics2D g2,Location loc){
-		if(loc!=null){
-			try{
-				Unit u = (Unit) avw.getGrid().get(loc);
-				if(null==u){
-					return;
-				}
-				//System.out.println("invoking getValidMoveSpaces() from GridPanel line 142");
-				Set<Terrain> validMoveSpaces = u.getValidMoveSpaces();
-				for(Terrain t:validMoveSpaces){
-					Location l = t;
-					Point p = pointForLocation(l);
-					g2.drawRect(p.x - cellSize / 2 - 2, p.y - cellSize / 2 - 2,
-							cellSize + 3, cellSize + 3);
-				}
-				System.out.println("boxes drawn,  GridPanel line 151");
-			}catch(Exception e){
-				System.out.println("some error, see drawBoxesFromLocation() in GridPanel");
-				e.printStackTrace();
+	public void drawBoxesFromLocation(Graphics2D g2,Location loc){
+		try{
+			Unit u = (Unit) avw.getGrid().get(loc);
+			if(null==u||u.canMove()==false){
+				return;
 			}
+			//System.out.println("invoking getValidMoveSpaces() from GridPanel line 142");
+			Set<Terrain> validMoveSpaces = u.getValidMoveSpaces();
+			drawBoxesOnSetOfLocations(g2, validMoveSpaces);
+			
+		}catch(Exception e){
+			System.out.println("some error, see drawBoxesFromLocation() in GridPanel");
+			e.printStackTrace();
 		}
 	}
+	//XXX made by me
+	public void drawBoxesOnSetOfLocations(Graphics2D g2,Set<Terrain> validMoveSpaces){
+		for(Terrain t:validMoveSpaces){
+			Location l = t;
+			Point p = pointForLocation(l);
+			g2.drawRect(p.x - cellSize / 2 - 2, p.y - cellSize / 2 - 2,
+					cellSize + 3, cellSize + 3);
+		}
+	}
+
 
 	private void drawBG(Graphics2D g2,Insets insets){
 		BufferedImage img = null;

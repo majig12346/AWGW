@@ -26,7 +26,7 @@ public class AVWorld extends MouseWorld {
 		wf.control.display.setCurrentLocation(getLocationWhenClicked());
 		wf.control.editLocation();
 		resetClickedLocation();
-		setMessage("Use mouse to click things\nDO NOT us arrow keys");
+		setMessage("Currently selected: none.\nUse mouse to click things. DO NOT us arrow keys");
 	}
 
 }

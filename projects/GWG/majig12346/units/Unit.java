@@ -274,7 +274,7 @@ public abstract class Unit extends Actor{
 	 * @return Current {@link mobility} of the {@link Unit}
 	 */
 	public double getMobility(){
-		System.out.println("line 277 Unit: mobility="+this.mobility);
+		System.out.println("line 277 Unit: mobility="+this.mobility+" canMove = "+canMove);
 		return this.mobility;
 	}
 
@@ -420,11 +420,15 @@ public abstract class Unit extends Actor{
 	 */
 	public Set<Terrain> getValidMoveSpaces(){
 		//FIXME pretty sure this is very inefficient, uncomment sysouts to see
+		Set<Terrain> ans = new HashSet<Terrain>();
+		ans.add((Terrain) this.getLocation());
+		if(this.canMove()==false){
+			return ans;
+		}
 		Stack<Terrain> toCheck = new Stack<Terrain>();
 		toCheck.push((Terrain) this.getLocation());
 		Map<Terrain, Double> distances = new HashMap<>();
 		distances.put((Terrain) this.getLocation(), 0.0);
-		Set<Terrain> ans = new HashSet<Terrain>();
 		while(0!=toCheck.size()){
 			//System.out.println("stack size is "+toCheck.size());
 			double distTo;

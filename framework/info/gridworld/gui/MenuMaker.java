@@ -109,28 +109,31 @@ public class MenuMaker<T>
 	{
 		this.occupant = occupant;
 		//new ver
+		Unit u = (Unit) occupant;
 
 
 		display.currentLocation = loc;
+		currentLocation = loc;
 		display.avw.setMessage("Currently Selected: "+
-		display.avw.getGrid().get(loc).getClass().getSimpleName()+" at "+loc+
-		"\nClick highlighted tile to move, click unhighlighted to cancel");
+				u.getClass().getSimpleName()+" at "+loc+ 
+				(u.canMove()?"\nClick highlighted tile to move, click unhighlighted to cancel":
+						"\nUnit currently immobile; wait until next turn to move again."));
 		display.repaint();
 		//inefficient
-		Unit u = (Unit) occupant;
 		Set<Terrain> validMoveSpaces = u.getValidMoveSpaces();
-		Terrain t = null;
-//		while(!validMoveSpaces.contains(t)){
-			display.avw.resetClickedLocation();
-			t = (Terrain) display.avw.getLocationWhenClicked();
-			if(!validMoveSpaces.contains(t)){
-				display.avw.setMessage("DEFAULT SOMETHING");
-				return null;
-			}
-//		}
-		System.out.println("line 126 mm" +t);
+		display.shouldBeHighlighted = validMoveSpaces;
+		Terrain newLoc = null;
+		display.avw.resetClickedLocation();
+		newLoc = (Terrain) display.avw.getLocationWhenClicked();
+		if(!validMoveSpaces.contains(newLoc)){
+			display.avw.setMessage("DEFAULT SOMETHING");
+			display.shouldBeHighlighted.clear();
+			return null;
+		}
+		System.out.println("line 126 mm" +newLoc);
 		try {
-			u.move(t);
+			u.move(newLoc);
+			display.shouldBeHighlighted.clear();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -141,13 +144,12 @@ public class MenuMaker<T>
 
 
 
-
-		System.out.println("line 133 Menu: currentLocation set to loc\nloc is "+loc.getClass().getName());
-		this.currentLocation = loc;
+		System.out.println("line 147 Menu: currentLocation set to loc\nloc is "+newLoc.getClass().getName()+"at "+newLoc);
+		System.out.println("line 148 Menu: old loc set to loc\nloc is "+currentLocation.getClass().getName()+"at "+currentLocation);
 		JPopupMenu menu = new JPopupMenu();
-		Method[] methods = null;
+		ArrayList<JMenuItem> actions = null;
 		try {
-			methods = getValidMethods();
+			actions = getValidActions(newLoc);
 		} catch (NoSuchMethodException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -155,11 +157,11 @@ public class MenuMaker<T>
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		System.out.println("methods is "+methods.length+" size.");
-		for (int i = 0; i < methods.length; i++)
+		System.out.println("methods is "+actions.size()+" size.");
+		for (int i = 0; i < actions.size(); i++)
 		{
-			menu.add(new MethodItem(methods[i]));
-			System.out.println("added method, see line 137 of MenuMaker");
+			menu.add(actions.get(i));
+			System.out.println("added method, see line 164 of MenuMaker");
 		}
 		return menu;
 	}
@@ -167,7 +169,7 @@ public class MenuMaker<T>
 
 
 
-	private Method[] getValidMethods() throws NoSuchMethodException, SecurityException
+	private ArrayList<JMenuItem> getValidActions(Location newLoc) throws NoSuchMethodException, SecurityException
 	{
 		Unit u = null;
 		try{
@@ -177,25 +179,33 @@ public class MenuMaker<T>
 					+ "method\nsee MenuMaker's getValidMethods()");
 			System.exit(-1);
 		}
-		Class cl = occupant.getClass();
-		ArrayList<Method> ans = new ArrayList<Method>();
+		ArrayList<JMenuItem> ans = new ArrayList<JMenuItem>();
 		//every unit has the move method if it can Move
 		if(u.canMove()){
 			System.out.println("can move, added!");
-			ans.add(Unit.class.getMethod("move", Terrain.class));
+			//TODO move action thing
+			//			ans.add(new Unit.class.getMethod("move", Terrain.class));
 		}else{
 			System.out.println("cant move");
 		}
 		//units can fire on enemies if not unarmed and in range
 		System.out.println("checking weps");
 		if(u.getWeapons()[0].getWeaponType()!=WeaponType.NONE||null!=u.getWeapons()[1]){
-			if(u.canTarget((Unit) u.getGrid().get(currentLocation))){
+			ArrayList<Unit> targetalbe = new ArrayList<>();
+			ArrayList<Location> occupied = u.getGrid().getOccupiedLocations();
+			for(Location l:occupied){
+				Unit tmp = (Unit) u.getGrid().get(l);
+				if(u.canTarget(tmp)){
+					targetalbe.add(tmp);
+				}
+			}
+			if(!targetalbe.isEmpty()){
 
 				Action a = new Action(){
 					public boolean enabled = true;
 					@Override
 					public void actionPerformed(ActionEvent e) {
-						// TODO Auto-generated method stub
+
 
 					}
 
@@ -214,8 +224,7 @@ public class MenuMaker<T>
 
 					@Override
 					public boolean isEnabled() {
-						// TODO Auto-generated method stub
-						return false;
+						return enabled;
 					}
 
 					@Override
@@ -235,13 +244,10 @@ public class MenuMaker<T>
 					public void setEnabled(boolean b) {
 						enabled = b;
 					}
-
 				};
 				JMenuItem tmp = new JMenuItem();
-
-
-
-				ans.add(Unit.class.getMethod("fire", Unit.class));
+				tmp.setAction(a);
+				ans.add(tmp);
 			}
 		}
 		System.out.println("checking carriability");
@@ -249,7 +255,8 @@ public class MenuMaker<T>
 		if(u.getGrid().get(currentLocation)instanceof Carry){
 			Carry c = (Carry) u.getGrid().get(currentLocation);
 			if(c.canCarry(u)){
-				ans.add(Unit.class.getMethod("load", Carry.class));
+				//TODO add load action menu item
+				//				ans.add(Unit.class.getMethod("load", Carry.class));
 			}
 		}
 		//if unit is carry, can drop something off
@@ -260,7 +267,8 @@ public class MenuMaker<T>
 					for(Unit carried:c.getUnits()){
 						Terrain t = (Terrain) currentLocation;
 						if(t.getMoveCost(carried.getMovementType())!=999){
-							ans.add(Carry.class.getMethod("drop"));
+							//TODO add drop action menu item
+							//							ans.add(Carry.class.getMethod("drop"));
 							break DROPOFF;
 						}
 					}
@@ -272,15 +280,11 @@ public class MenuMaker<T>
 		if(u instanceof Infantry){
 			if(currentLocation instanceof Property && 
 					((Property) currentLocation).getOwner()!=u.getOwner()){
-				ans.add(Infantry.class.getMethod("capture"));
+				ans.add(new MethodItem(Infantry.class.getMethod("capture")));
 			}
 		}
-		//wow do I really need to do this
-		Method[] realAns = new Method[ans.size()];
-		for(int i=0;i<realAns.length;i++){
-			realAns[i] = ans.get(i);
-		}
-		return realAns;
+
+		return ans;
 
 
 		//return (Method[]) (ans.toArray());
@@ -418,8 +422,8 @@ public class MenuMaker<T>
 				};
 				a.setEnabled(true);
 				tmp.setAction(a);
-//				String[] nameParts = constructor.getName().split("\\.");
-//				String name = nameParts[nameParts.length-1];
+				//				String[] nameParts = constructor.getName().split("\\.");
+				//				String name = nameParts[nameParts.length-1];
 				Player[] p = {null};
 				Unit u = constructor.newInstance(p);
 				int cost = u.getBuildCost();
@@ -495,7 +499,7 @@ public class MenuMaker<T>
 		//   Method[] methods = new Method[];
 
 		Arrays.sort(methods, new Comparator<Method>()
-				{
+		{
 			public int compare(Method m1, Method m2)
 			{
 				int d1 = depth(m1.getDeclaringClass());
@@ -517,7 +521,7 @@ public class MenuMaker<T>
 				else
 					return 1 + depth(cl.getSuperclass());
 			}
-				});
+		});
 		return methods;
 	}
 
