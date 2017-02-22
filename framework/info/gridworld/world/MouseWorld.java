@@ -9,7 +9,7 @@ import info.gridworld.grid.Grid;
 import info.gridworld.grid.Location;
 
 public class MouseWorld extends ActorWorld {
-	private Location clickedLocation;
+	protected Location clickedLocation;
 
 	public MouseWorld() {
 		super();
