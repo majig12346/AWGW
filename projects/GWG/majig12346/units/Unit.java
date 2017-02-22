@@ -183,8 +183,7 @@ public abstract class Unit extends Actor{
 	 * as determined by canTarget(Unit)
 	 */
 	public void fire(Unit target){
-
-		this.canMove = false;
+		immobilize();
 		//fire first
 		//stronger weapon
 		double wep1,wep2,damage;
@@ -389,9 +388,24 @@ public abstract class Unit extends Actor{
 	 */
 	public boolean canMove(){
 		if(this.getMobility()==0){
+			immobilize();
 			return false;
 		}
 		return this.canMove;
+	}
+	
+	/**
+	 * sets canMove to false
+	 * @return whether or not the unit was already UNABLE to move
+	 */
+	private boolean immobilize(){
+		if(!canMove){
+			return true;
+		}else{
+			canMove = false;
+			setColor(getColor().darker());
+			return false;
+		}
 	}
 
 	/**
@@ -403,6 +417,9 @@ public abstract class Unit extends Actor{
 	 */
 	public void resetMovement(){
 		this.hasMoved = false;
+		if(!canMove){
+			setColor(getColor().brighter());
+		}
 		this.canMove = true;
 		this.fuel = (int)(getFuel());
 		this.mobility = this.maxMobility;
@@ -419,9 +436,9 @@ public abstract class Unit extends Actor{
 	public void move(Terrain toMoveTo) throws Exception{
 		Terrain t = (Terrain) getLocation();
 		if(move(findPathTo(toMoveTo))){
-			canMove = false;
+			immobilize();
 		}else{
-			System.out.println("move failed, see line 397 of Unit");
+			System.out.println("move failed, see line 438 of Unit");
 		}
 	}
 
@@ -636,6 +653,6 @@ public abstract class Unit extends Actor{
 		}else{
 			throw new Exception("cannot be carried, precondition not met");
 		}
-		this.canMove = false;
+		immobilize();
 	}
 }

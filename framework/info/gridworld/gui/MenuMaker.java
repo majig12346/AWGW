@@ -115,30 +115,43 @@ public class MenuMaker<T>
 		display.currentLocation = loc;
 		currentLocation = loc;
 		//TODO tidy up
-		display.avw.setMessage("Currently Selected: "+
-				u.getClass().getSimpleName()+" at "+loc+ 
-				(u instanceof Carry?"Carrying: "+(((Carry) u).getUnits()):"")+
-				(u.canMove()?"\nClick highlighted tile to move, click unhighlighted to cancel":
-						"\nUnit currently immobile; wait until next turn to move again."));
-		display.repaint();
-		//inefficient
-		Set<Terrain> validMoveSpaces = u.getValidMoveSpaces();
-		display.shouldBeHighlighted = validMoveSpaces;
-		Terrain newLoc = null;
-		display.avw.resetClickedLocation();
-		newLoc = (Terrain) display.avw.getLocationWhenClicked();
-		if(!validMoveSpaces.contains(newLoc)){
-			display.avw.setMessage("DEFAULT SOMETHING");
-			display.shouldBeHighlighted.clear();
-			return null;
+		StringBuilder dispMessage = new StringBuilder(50);
+		dispMessage.append("Currently Selected: "+u.getType()+"["+u.getHealth()+" HP] at "+loc);
+		if(u instanceof Carry){
+			dispMessage.append(" Carrying: ");
+			ArrayList<String> types = new ArrayList<>();
+			Carry c = (Carry) u;
+			for(Unit carried:c.getUnits()){
+				types.add(carried.getType() +"["+carried.getHealth()+" HP]");
+			}
+			if(!types.isEmpty()){
+				dispMessage.append(types.toString());
+			}else{
+				dispMessage.append("(empty)");
+			}
 		}
-		System.out.println("line 133 mm" +newLoc);
-		try {
-//			u.move(newLoc);
-//			display.shouldBeHighlighted.clear();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		dispMessage.append(u.canMove()?"\nClick highlighted tile to move, click unhighlighted to cancel":
+				"\nUnit currently immobile; wait until next turn to move again.");
+		display.avw.setMessage(dispMessage.toString());
+				display.repaint();
+				//inefficient
+				Set<Terrain> validMoveSpaces = u.getValidMoveSpaces();
+				display.shouldBeHighlighted = validMoveSpaces;
+				Terrain newLoc = null;
+				display.avw.resetClickedLocation();
+				newLoc = (Terrain) display.avw.getLocationWhenClicked();
+				if(!validMoveSpaces.contains(newLoc)){
+					display.avw.setMessage("DEFAULT SOMETHING");
+					display.shouldBeHighlighted.clear();
+					return null;
+				}
+				System.out.println("line 133 mm" +newLoc);
+				try {
+					//			u.move(newLoc);
+					//			display.shouldBeHighlighted.clear();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 
 
 
@@ -146,26 +159,26 @@ public class MenuMaker<T>
 
 
 
-		System.out.println("line 147 Menu: currentLocation set to loc\nloc is "+newLoc.getClass().getName()+"at "+newLoc);
-		System.out.println("line 148 Menu: old loc set to loc\nloc is "+currentLocation.getClass().getName()+"at "+currentLocation);
-		JPopupMenu menu = new JPopupMenu();
-		ArrayList<JMenuItem> actions = null;
-		try {
-			actions = getValidActions(newLoc);
-		} catch (NoSuchMethodException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (SecurityException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		System.out.println("methods is "+actions.size()+" size.");
-		for (int i = 0; i < actions.size(); i++)
-		{
-			menu.add(actions.get(i));
-			System.out.println("added method, see line 164 of MenuMaker");
-		}
-		return menu;
+				System.out.println("line 147 Menu: currentLocation set to loc\nloc is "+newLoc.getClass().getName()+"at "+newLoc);
+				System.out.println("line 148 Menu: old loc set to loc\nloc is "+currentLocation.getClass().getName()+"at "+currentLocation);
+				JPopupMenu menu = new JPopupMenu();
+				ArrayList<JMenuItem> actions = null;
+				try {
+					actions = getValidActions(newLoc);
+				} catch (NoSuchMethodException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (SecurityException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				System.out.println("methods is "+actions.size()+" size.");
+				for (int i = 0; i < actions.size(); i++)
+				{
+					menu.add(actions.get(i));
+					System.out.println("added method, see line 166 of MenuMaker");
+				}
+				return menu;
 	}
 
 
@@ -180,7 +193,7 @@ public class MenuMaker<T>
 		if(u.canMove()&&null==newLocOcc){
 			System.out.println("can move, added!");
 			//TODO move action thing
-//						ans.add(new Unit.class.getMethod("move", Terrain.class));
+			//						ans.add(new Unit.class.getMethod("move", Terrain.class));
 			JMenuItem waitOption = new JMenuItem();
 			Action a = new Action(){
 				public boolean enabled = true;
@@ -241,10 +254,11 @@ public class MenuMaker<T>
 					}
 					c.addUnit(u);
 					newLocOcc.putSelfInGrid(u.getGrid(), newLoc);
+					display.shouldBeHighlighted.clear();
 					display.repaint();
 					//TODO i think this is done
 				}
-				
+
 				@Override
 				public void setEnabled(boolean b) {
 					enabled = b;
@@ -481,6 +495,7 @@ public class MenuMaker<T>
 					@Override
 					public void actionPerformed(ActionEvent e) {
 						fac.buildUnit(constructor);
+						display.repaint();
 					}
 					@Override
 					public void setEnabled(boolean b) {
@@ -585,7 +600,7 @@ public class MenuMaker<T>
 		//   Method[] methods = new Method[];
 
 		Arrays.sort(methods, new Comparator<Method>()
-				{
+		{
 			public int compare(Method m1, Method m2)
 			{
 				int d1 = depth(m1.getDeclaringClass());
@@ -607,7 +622,7 @@ public class MenuMaker<T>
 				else
 					return 1 + depth(cl.getSuperclass());
 			}
-				});
+		});
 		return methods;
 	}
 

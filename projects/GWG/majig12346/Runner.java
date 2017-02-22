@@ -25,7 +25,7 @@ public class Runner {
 		//		+ " this is a Core 2 Duo!");
 		AVWorld avw = new AVWorld();
 		players = new Player[4];
-		Player p1 = new Player(new TestCO(),9999,null);
+		Player p1 = new Player(new TestCO(),9999,new Color(255,85,0));
 		Player p2 = new Player(new TestCO(), 9999, new Color(100, 200, 255));
 		players[p1.ID] = p1;
 		players[p2.ID] = p2;
