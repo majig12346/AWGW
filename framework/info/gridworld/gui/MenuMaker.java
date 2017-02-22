@@ -185,6 +185,43 @@ public class MenuMaker<T>
 			System.out.println("can move, added!");
 			//TODO move action thing
 			//			ans.add(new Unit.class.getMethod("move", Terrain.class));
+			JMenuItem tmp = new JMenuItem("Wait");
+			Action a = new Action(){
+
+				@Override
+				public void actionPerformed(ActionEvent arg0) {
+
+					
+					
+				}
+
+				@Override
+				public void addPropertyChangeListener(PropertyChangeListener arg0) {
+				}
+
+				@Override
+				public Object getValue(String arg0) {
+					return null; //idk  
+				}
+
+				@Override
+				public boolean isEnabled() {
+					return enabled;
+				}
+
+				@Override
+				public void putValue(String key, Object value) {
+				}
+
+				@Override
+				public void removePropertyChangeListener(PropertyChangeListener listener) {	
+				}
+				boolean enabled;
+				@Override
+				public void setEnabled(boolean b) {
+					enabled =b;
+				}
+			};
 		}else{
 			System.out.println("cant move");
 		}
@@ -278,8 +315,8 @@ public class MenuMaker<T>
 
 		//infantry can capture
 		if(u instanceof Infantry){
-			if(currentLocation instanceof Property && 
-					((Property) currentLocation).getOwner()!=u.getOwner()){
+			if(newLoc instanceof Property && 
+					((Property) newLoc).getOwner()!=u.getOwner()){
 				ans.add(new MethodItem(Infantry.class.getMethod("capture")));
 			}
 		}

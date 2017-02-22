@@ -129,10 +129,10 @@ PseudoInfiniteViewport.Pannable
 		drawWatermark(g2);
 
 		//comment out following line to hide grid lines
-		//drawGridlines(g2);
+//		drawGridlines(g2);
 		drawOccupants(g2);
 		drawCurrentLocation(g2);
-		//TODO
+		//i think this is okay
 //		drawBoxesFromLocation(g2,currentLocation);
 		drawBoxesOnSetOfLocations(g2, shouldBeHighlighted);
 	}
