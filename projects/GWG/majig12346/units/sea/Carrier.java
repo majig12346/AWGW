@@ -72,6 +72,14 @@ public class Carrier extends Sea implements Carry {
 		return 0.85;
 	}
 	@Override
+	public boolean couldTarget(Unit toCheck, Terrain hypothetical){
+		if(null==toCheck){
+			return false; //can't target nothing
+		}
+		int dist = hypothetical.distanceTo((Terrain) toCheck.getLocation());
+		return (dist>=1&&dist<=4);
+	}
+	@Override
 	public boolean canTarget(Unit u){
 		if(null==u){
 			return false;

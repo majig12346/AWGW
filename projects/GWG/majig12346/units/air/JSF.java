@@ -1,7 +1,9 @@
 package majig12346.units.air;
 
 import majig12346.Player;
+import majig12346.terrain.Terrain;
 import majig12346.units.Stealth;
+import majig12346.units.Unit;
 import majig12346.weapons.WeaponType;
 
 /**
@@ -62,6 +64,23 @@ public class JSF extends Stealth {
 		default:
 			return damage;
 		}
+	}
+	@Override
+	public boolean couldTarget(Unit toCheck, Terrain hypothetical){
+		if(null==toCheck){
+			return false; //can't target nothing
+		}
+		int dist = hypothetical.distanceTo((Terrain) toCheck.getLocation());
+		return (dist>=1&&dist<=5);
+	}
+	@Override
+	public boolean canTarget(Unit toCheck){
+		Terrain hypothetical = (Terrain) getLocation();
+		if(null==toCheck){
+			return false; //can't target nothing
+		}
+		int dist = hypothetical.distanceTo((Terrain) toCheck.getLocation());
+		return (dist>=3&&dist<=5);
 	}
 
 }

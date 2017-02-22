@@ -25,6 +25,14 @@ public class Rockets extends Unit{
 		setWeapon(0, WeaponType.ROCKET);
 	}
 	@Override
+	public boolean couldTarget(Unit toCheck, Terrain hypothetical){
+		if(null==toCheck){
+			return false; //can't target nothing
+		}
+		int dist = hypothetical.distanceTo((Terrain) toCheck.getLocation());
+		return (dist>=3&&dist<=5);
+	}
+	@Override
 	public boolean canTarget(Unit u){
 		Terrain home = (Terrain) getLocation();
 		int dist = home.distanceTo((Terrain) u.getLocation());

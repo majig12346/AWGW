@@ -114,8 +114,10 @@ public class MenuMaker<T>
 
 		display.currentLocation = loc;
 		currentLocation = loc;
+		//TODO tidy up
 		display.avw.setMessage("Currently Selected: "+
 				u.getClass().getSimpleName()+" at "+loc+ 
+				(u instanceof Carry?"Carrying: "+(((Carry) u).getUnits()):"")+
 				(u.canMove()?"\nClick highlighted tile to move, click unhighlighted to cancel":
 						"\nUnit currently immobile; wait until next turn to move again."));
 		display.repaint();
@@ -130,10 +132,10 @@ public class MenuMaker<T>
 			display.shouldBeHighlighted.clear();
 			return null;
 		}
-		System.out.println("line 126 mm" +newLoc);
+		System.out.println("line 133 mm" +newLoc);
 		try {
-			u.move(newLoc);
-			display.shouldBeHighlighted.clear();
+//			u.move(newLoc);
+//			display.shouldBeHighlighted.clear();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -171,28 +173,28 @@ public class MenuMaker<T>
 
 	private ArrayList<JMenuItem> getValidActions(Location newLoc) throws NoSuchMethodException, SecurityException
 	{
-		Unit u = null;
-		try{
-			u = (Unit)occupant;
-		}catch(ClassCastException e){
-			JOptionPane.showMessageDialog(null, "not sure how you called this "
-					+ "method\nsee MenuMaker's getValidMethods()");
-			System.exit(-1);
-		}
+		Unit u = (Unit)occupant;
 		ArrayList<JMenuItem> ans = new ArrayList<JMenuItem>();
-		//every unit has the move method if it can Move
-		if(u.canMove()){
+		//every unit has the wait option if not loading into carry
+		Unit newLocOcc = (Unit) u.getGrid().get(newLoc);
+		if(u.canMove()&&null==newLocOcc){
 			System.out.println("can move, added!");
 			//TODO move action thing
-			//			ans.add(new Unit.class.getMethod("move", Terrain.class));
-			JMenuItem tmp = new JMenuItem("Wait");
+//						ans.add(new Unit.class.getMethod("move", Terrain.class));
+			JMenuItem waitOption = new JMenuItem();
 			Action a = new Action(){
-
+				public boolean enabled = true;
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
+					try {
+						u.move((Terrain) newLoc);
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					display.shouldBeHighlighted.clear();
+					display.repaint();
 
-					
-					
 				}
 
 				@Override
@@ -216,12 +218,58 @@ public class MenuMaker<T>
 				@Override
 				public void removePropertyChangeListener(PropertyChangeListener listener) {	
 				}
-				boolean enabled;
 				@Override
 				public void setEnabled(boolean b) {
 					enabled =b;
 				}
 			};
+			a.setEnabled(true);
+			waitOption.setAction(a);
+			waitOption.setText("Wait");
+			ans.add(waitOption);
+		}else if(newLocOcc instanceof Carry&&((Carry) newLocOcc).canCarry(u)){
+			Carry c = (Carry) newLocOcc;
+			JMenuItem loadOption = new JMenuItem();
+			Action a = new Action() {
+				public boolean enabled = true;
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					try {
+						u.move((Terrain) newLoc);
+					} catch (Exception e1) {
+						e1.printStackTrace();
+					}
+					c.addUnit(u);
+					newLocOcc.putSelfInGrid(u.getGrid(), newLoc);
+					display.repaint();
+					//TODO i think this is done
+				}
+				
+				@Override
+				public void setEnabled(boolean b) {
+					enabled = b;
+				}
+				@Override
+				public void removePropertyChangeListener(PropertyChangeListener listener) {
+				}
+				@Override
+				public void putValue(String key, Object value) {
+				}
+				@Override
+				public boolean isEnabled() {
+					return enabled;
+				}
+				@Override
+				public Object getValue(String key) {
+					return null;
+				}
+				@Override
+				public void addPropertyChangeListener(PropertyChangeListener listener) {
+				}
+			};
+			loadOption.setAction(a);
+			loadOption.setText("Load");
+			ans.add(loadOption);
 		}else{
 			System.out.println("cant move");
 		}
@@ -232,7 +280,7 @@ public class MenuMaker<T>
 			ArrayList<Location> occupied = u.getGrid().getOccupiedLocations();
 			for(Location l:occupied){
 				Unit tmp = (Unit) u.getGrid().get(l);
-				if(u.canTarget(tmp)){
+				if(u.couldTarget(tmp,(Terrain) newLoc)&&(!u.getOwner().equals(tmp.getOwner()))){
 					targetalbe.add(tmp);
 				}
 			}
@@ -242,20 +290,17 @@ public class MenuMaker<T>
 					public boolean enabled = true;
 					@Override
 					public void actionPerformed(ActionEvent e) {
-
+						//TODO add this
 
 					}
 
 					@Override
 					public void addPropertyChangeListener(
 							PropertyChangeListener listener) {
-						// TODO Auto-generated method stub
-
 					}
 
 					@Override
 					public Object getValue(String key) {
-						// TODO Auto-generated method stub
 						return null;
 					}
 
@@ -282,9 +327,13 @@ public class MenuMaker<T>
 						enabled = b;
 					}
 				};
-				JMenuItem tmp = new JMenuItem();
-				tmp.setAction(a);
-				ans.add(tmp);
+				JMenuItem fireOption = new JMenuItem();
+				fireOption.setAction(a);
+				fireOption.setText("Fire");
+				ans.add(fireOption);
+				System.out.println("added fireOption: MM "
+						+ "line "+new Throwable().getStackTrace()[0].getLineNumber());
+				System.out.println("targetable = "+targetalbe);
 			}
 		}
 		System.out.println("checking carriability");
@@ -536,7 +585,7 @@ public class MenuMaker<T>
 		//   Method[] methods = new Method[];
 
 		Arrays.sort(methods, new Comparator<Method>()
-		{
+				{
 			public int compare(Method m1, Method m2)
 			{
 				int d1 = depth(m1.getDeclaringClass());
@@ -558,7 +607,7 @@ public class MenuMaker<T>
 				else
 					return 1 + depth(cl.getSuperclass());
 			}
-		});
+				});
 		return methods;
 	}
 

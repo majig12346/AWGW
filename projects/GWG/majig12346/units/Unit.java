@@ -156,6 +156,18 @@ public abstract class Unit extends Actor{
 		}
 		return home.distanceTo((Terrain) u.getLocation())==1;
 	}
+	
+	/**
+	 * @return whether or not this unit can attack Unit toCheck from Terrain hypothetical
+	 * Gets overridden for ranged units, indirect fire, etc
+	 */
+	public boolean couldTarget(Unit toCheck, Terrain hypothetical){
+		if(null==toCheck){
+			return false; //can't target nothing
+		}
+		return hypothetical.distanceTo((Terrain) toCheck.getLocation())==1;
+	}
+	
 	/**
 	 * @return whether or not this unit can counterattack Unit u
 	 * Gets overridden for ranged units, indirect fire, etc

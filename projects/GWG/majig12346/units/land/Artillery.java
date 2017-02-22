@@ -24,6 +24,14 @@ public class Artillery extends Tank {
 		setWeapon(1, WeaponType.SHELL);
 	}
 	@Override
+	public boolean couldTarget(Unit toCheck, Terrain hypothetical){
+		if(null==toCheck){
+			return false; //can't target nothing
+		}
+		int dist = hypothetical.distanceTo((Terrain) toCheck.getLocation());
+		return (dist>=2&&dist<=3);
+	}
+	@Override
 	public boolean canTarget(Unit u){
 		Terrain home = (Terrain) getLocation();
 		int dist = home.distanceTo((Terrain) u.getLocation());
