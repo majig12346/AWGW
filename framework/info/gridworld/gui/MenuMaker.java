@@ -98,7 +98,7 @@ public class MenuMaker<T>
 
 
 
-
+	public Terrain newLoc;
 	/**
 	 * Makes a menu that displays all available actions that a Unit may perform when moving to this tile
 	 * @param occupant the unit whose available actions should be displayed
@@ -137,7 +137,6 @@ public class MenuMaker<T>
 				//inefficient
 				Set<Terrain> validMoveSpaces = u.getValidMoveSpaces();
 				display.shouldBeHighlighted = validMoveSpaces;
-				Terrain newLoc = null;
 				display.avw.resetClickedLocation();
 				newLoc = (Terrain) display.avw.getLocationWhenClicked();
 				if(!validMoveSpaces.contains(newLoc)){

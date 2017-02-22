@@ -318,8 +318,12 @@ public class GUIController<T>
                 maker.display = this.display;
                 JPopupMenu popup = maker.makeConstructorMenu(occupantClasses,
                         loc);
-                Point p = display.pointForLocation(loc);
-                popup.show(display, p.x, p.y);
+                Point p = display.pointForLocation(null!=maker.newLoc?maker.newLoc:loc);
+//                if(null!=p){
+                	popup.show(display, p.x, p.y);
+//                }else{
+//                	display.shouldBeHighlighted.clear();
+//                }
             }
             else
             {
@@ -337,11 +341,15 @@ public class GUIController<T>
 					popup = maker.makeMethodMenu(occupant, loc);
 //					System.out.println("success");
 					// TODO Auto-generated catch block
-                Point p = display.pointForLocation(loc);
+                Point p = display.pointForLocation(null!=maker.newLoc?maker.newLoc:loc);
                 if(null==popup){
                 	return;
                 }
-                popup.show(display, p.x, p.y);
+//                if(null!=p){
+                	popup.show(display, p.x, p.y);
+//                }else{
+//                	display.shouldBeHighlighted.clear();
+//                }
             }
         }
         parentFrame.repaint();

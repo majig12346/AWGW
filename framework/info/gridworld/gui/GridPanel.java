@@ -453,6 +453,9 @@ PseudoInfiniteViewport.Pannable
 
 	public Point pointForLocation(Location loc)
 	{
+		if(null==loc){
+			return null;
+		}
 		return new Point(colToXCoord(loc.getCol()) + cellSize / 2,
 				rowToYCoord(loc.getRow()) + cellSize / 2);
 	}
