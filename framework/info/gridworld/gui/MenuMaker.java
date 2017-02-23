@@ -257,8 +257,8 @@ public class MenuMaker<T> {
 							display.shouldBeHighlighted = new HashSet<Terrain>(validLZs);
 							display.avw.resetClickedLocation();
 							display.repaint();
-							
-							new Thread(new Runnable() {
+							display.invalidate();
+							new Thread(new Runnable() { 
 
 								@Override
 								public void run() {
@@ -266,12 +266,14 @@ public class MenuMaker<T> {
 							if (!validLZs.contains(LZ)) {
 								display.shouldBeHighlighted.clear();
 								display.repaint();
+								display.invalidate();
 								// drop canceled
 								return;
 							} else {
 								try {
 									u.move((Terrain) newLoc);
 									display.repaint();
+									display.invalidate();
 								} catch (Exception e) {
 									e.printStackTrace();
 								}

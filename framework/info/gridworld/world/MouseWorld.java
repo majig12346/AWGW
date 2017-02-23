@@ -39,7 +39,7 @@ public class MouseWorld extends ActorWorld {
 		while (loc == null) {
 			loc = clickedLocation;
 			try {
-				Thread.sleep(300);
+				Thread.sleep(50);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
