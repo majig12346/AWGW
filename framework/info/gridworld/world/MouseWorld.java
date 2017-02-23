@@ -29,6 +29,10 @@ public class MouseWorld extends ActorWorld {
 		clickedLocation = null;
 	}
 
+	/**
+	 * 
+	 * WARNING: NEVER CALL ON SAME AWT THREAD 
+	 */
 	public Location getLocationWhenClicked() {
 		Location loc = null;
 		//setMessage("Waiting for Click");

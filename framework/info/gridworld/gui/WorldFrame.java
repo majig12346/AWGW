@@ -187,7 +187,7 @@ public class WorldFrame<T> extends JFrame
         control = new GUIController<T>(this, display, displayMap, resources);
         content.add(control.controlPanel(), BorderLayout.SOUTH);
 
-        messageArea = new JTextArea(2, 35);
+        messageArea = new JTextArea(3, 35);
         messageArea.setEditable(false);
         messageArea.setFocusable(false);
         messageArea.setBackground(new Color(0xFAFAD2));

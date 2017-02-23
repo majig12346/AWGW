@@ -11,6 +11,7 @@ import majig12346.terrain.*;
 import majig12346.terrain.properties.*;
 import majig12346.units.air.BCopter;
 import majig12346.units.air.CAS;
+import majig12346.units.land.APC;
 import majig12346.units.land.Infantry;
 import majig12346.units.land.Tank;
 import majig12346.units.sea.Carrier;
@@ -49,8 +50,8 @@ public class Runner {
 		inf1.putSelfInGrid(g,g.getLocationArray()[1][1]);
 		Infantry inf2 = new Infantry(players[1]);
 		inf2.putSelfInGrid(g,g.getLocationArray()[9][6]);
-		Tank tank1 = new Tank(players[1]);
-		tank1.putSelfInGrid(g,g.getLocationArray()[2][1]);
+		APC apc1 = new APC(players[1]);
+		apc1.putSelfInGrid(g,g.getLocationArray()[2][1]);
 		Carrier carrier1 = new Carrier(players[1]);
 		carrier1.putSelfInGrid(g,g.getLocationArray()[6][4]);
 		BCopter copter1 = new BCopter(players[1]);

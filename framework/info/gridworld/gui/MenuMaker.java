@@ -47,6 +47,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -74,134 +75,125 @@ import javax.swing.text.PlainDocument;
  * implementation details that are not intended to be understood by AP CS
  * students.
  */
-public class MenuMaker<T>
-{
+public class MenuMaker<T> {
 	/**
 	 * Constructs a menu maker for a given world.
-	 * @param parent the frame in which the world is displayed
-	 * @param resources the resource bundle
-	 * @param displayMap the display map
+	 * 
+	 * @param parent
+	 *            the frame in which the world is displayed
+	 * @param resources
+	 *            the resource bundle
+	 * @param displayMap
+	 *            the display map
 	 */
-	public MenuMaker(WorldFrame<T> parent, ResourceBundle resources,
-			DisplayMap displayMap)
-	{
+	public MenuMaker(WorldFrame<T> parent, ResourceBundle resources, DisplayMap displayMap) {
 		this.parent = parent;
 		this.resources = resources;
 		this.displayMap = displayMap;
 	}
+
 	public GridPanel display;
 
-
-
-
-
-
-
-
 	public Terrain newLoc;
+
 	/**
-	 * Makes a menu that displays all available actions that a Unit may perform when moving to this tile
-	 * @param occupant the unit whose available actions should be displayed
-	 * @param loc the location that the Unit would move to
+	 * Makes a menu that displays all available actions that a Unit may perform
+	 * when moving to this tile
+	 * 
+	 * @param occupant
+	 *            the unit whose available actions should be displayed
+	 * @param loc
+	 *            the location that the Unit would move to
 	 * @return the menu to pop up
 	 */
-	public JPopupMenu makeMoveMenu(T occupant, Location loc) 
-	{
+	public JPopupMenu makeMoveMenu(T occupant, Location loc) {
 		this.occupant = occupant;
-		//new ver
+		// new ver
 		Unit u = (Unit) occupant;
-
 
 		display.currentLocation = loc;
 		currentLocation = loc;
-		//TODO tidy up
+		// TODO tidy up
 		StringBuilder dispMessage = new StringBuilder(50);
-		dispMessage.append("Currently Selected: "+u.getType()+"["+u.getHealth()+" HP] at "+loc);
-		if(u instanceof Carry){
-			dispMessage.append(" Carrying: ");
+		dispMessage.append("Currently Selected: " + u.getType() + "[" + u.getHealth() + " HP] at " + loc);
+		if (u instanceof Carry) {
+			dispMessage.append("\nCurrently Carrying: ");
 			ArrayList<String> types = new ArrayList<>();
 			Carry c = (Carry) u;
-			for(Unit carried:c.getUnits()){
-				types.add(carried.getType() +"["+carried.getHealth()+" HP]");
+			for (Unit carried : c.getUnits()) {
+				types.add(carried.getType() + "[" + carried.getHealth() + " HP]");
 			}
-			if(!types.isEmpty()){
+			if (!types.isEmpty()) {
 				dispMessage.append(types.toString());
-			}else{
+			} else {
 				dispMessage.append("(empty)");
 			}
+		} else {
+			dispMessage.append("\n");
 		}
-		dispMessage.append(u.canMove()?"\nClick highlighted tile to move, click unhighlighted to cancel":
-				"\nUnit currently immobile; wait until next turn to move again.");
+		dispMessage.append(u.canMove() ? "\nClick highlighted tile to move, click unhighlighted to cancel"
+				: "\nUnit currently immobile; wait until next turn to move again.");
 		display.avw.setMessage(dispMessage.toString());
-				display.repaint();
-				//inefficient
-				Set<Terrain> validMoveSpaces = u.getValidMoveSpaces();
-				display.shouldBeHighlighted = validMoveSpaces;
-				display.avw.resetClickedLocation();
-				newLoc = (Terrain) display.avw.getLocationWhenClicked();
-				if(!validMoveSpaces.contains(newLoc)){
-					display.avw.setMessage("DEFAULT SOMETHING");
-					display.shouldBeHighlighted.clear();
-					return null;
-				}
-				System.out.println("line 133 mm" +newLoc);
-				try {
-					//			u.move(newLoc);
-					//			display.shouldBeHighlighted.clear();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+		display.repaint();
+		// inefficient
+		Set<Terrain> validMoveSpaces = u.getValidMoveSpaces();
+		display.shouldBeHighlighted = validMoveSpaces;
+		display.avw.resetClickedLocation();
+		newLoc = (Terrain) display.avw.getLocationWhenClicked();
+		if (!validMoveSpaces.contains(newLoc)) {
+			display.avw.setMessage("DEFAULT SOMETHING");
+			display.shouldBeHighlighted.clear();
+			return null;
+		}
+		System.out.println("line 133 mm" + newLoc);
+		try {
+			// u.move(newLoc);
+			// display.shouldBeHighlighted.clear();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
-
-
-
-
-
-
-				System.out.println("line 147 Menu: currentLocation set to loc\nloc is "+newLoc.getClass().getName()+"at "+newLoc);
-				System.out.println("line 148 Menu: old loc set to loc\nloc is "+currentLocation.getClass().getName()+"at "+currentLocation);
-				JPopupMenu menu = new JPopupMenu();
-				ArrayList<JMenuItem> actions = null;
-				try {
-					actions = getValidActions(newLoc);
-				} catch (NoSuchMethodException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (SecurityException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				System.out.println("methods is "+actions.size()+" size.");
-				for (int i = 0; i < actions.size(); i++)
-				{
-					menu.add(actions.get(i));
-					System.out.println("added method, see line 166 of MenuMaker");
-				}
-				return menu;
+		System.out.println(
+				"line 164 Menu: currentLocation set to loc\nloc is " + newLoc.getClass().getName() + "at " + newLoc);
+		System.out.println("line 165 Menu: old loc set to loc\nloc is " + currentLocation.getClass().getName() + "at "
+				+ currentLocation);
+		JPopupMenu menu = new JPopupMenu();
+		ArrayList<JMenuItem> actions = null;
+		try {
+			actions = getValidActions(newLoc);
+		} catch (NoSuchMethodException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SecurityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		System.out.println("methods is " + actions.size() + " size.");
+		for (int i = 0; i < actions.size(); i++) {
+			menu.add(actions.get(i));
+			System.out.println("added method, see line 166 of MenuMaker");
+		}
+		return menu;
 	}
 
-
-
-
-	private ArrayList<JMenuItem> getValidActions(Location newLoc) throws NoSuchMethodException, SecurityException
-	{
-		Unit u = (Unit)occupant;
+	private ArrayList<JMenuItem> getValidActions(Location newLoc) throws NoSuchMethodException, SecurityException {
+		Unit u = (Unit) occupant;
 		ArrayList<JMenuItem> ans = new ArrayList<JMenuItem>();
-		//every unit has the wait option if not loading into carry
+		// every unit has the wait option if not loading into carry
 		Unit newLocOcc = (Unit) u.getGrid().get(newLoc);
-		if(u.canMove()&&null==newLocOcc){
+		if (u.canMove() && null == newLocOcc) {
 			System.out.println("can move, added!");
-			//TODO move action thing
-			//						ans.add(new Unit.class.getMethod("move", Terrain.class));
+			// TODO move action thing
+			// ans.add(new Unit.class.getMethod("move", Terrain.class));
 			JMenuItem waitOption = new JMenuItem();
-			Action a = new Action(){
+			Action a = new Action() {
 				public boolean enabled = true;
+
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
 					try {
 						u.move((Terrain) newLoc);
 					} catch (Exception e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 					display.shouldBeHighlighted.clear();
@@ -215,7 +207,7 @@ public class MenuMaker<T>
 
 				@Override
 				public Object getValue(String arg0) {
-					return null; //idk  
+					return null; // idk
 				}
 
 				@Override
@@ -228,22 +220,102 @@ public class MenuMaker<T>
 				}
 
 				@Override
-				public void removePropertyChangeListener(PropertyChangeListener listener) {	
+				public void removePropertyChangeListener(PropertyChangeListener listener) {
 				}
+
 				@Override
 				public void setEnabled(boolean b) {
-					enabled =b;
+					enabled = b;
 				}
 			};
 			a.setEnabled(true);
 			waitOption.setAction(a);
 			waitOption.setText("Wait");
 			ans.add(waitOption);
-		}else if(newLocOcc instanceof Carry&&((Carry) newLocOcc).canCarry(u)){
+
+			// if unit is carry, can drop something off
+			System.out.println("checking drop");
+			ArrayList<Unit> carriedUnits = new ArrayList<>();
+			if (u instanceof Carry) {
+				Carry carryU = (Carry) u;
+				carriedUnits = carryU.getUnits();
+			}
+			if (u instanceof Carry && (!(carriedUnits.isEmpty()))) {
+				for (Unit carried : carriedUnits) {
+					JMenuItem tmpDropOption = new JMenuItem();
+					Action tmpAction = new Action() {
+						public boolean enabled = true;
+
+						@Override
+						public void actionPerformed(ActionEvent arg0) {
+							ArrayList<Terrain> validLZs = new ArrayList<>();
+							for (Terrain t : ((Terrain) newLoc).getAllAdjacentTerrains()) {
+								if (null == u.getGrid().get(t) && 999 != t.getMoveCost(carried.getMovementType())) {
+									validLZs.add(t);
+								}
+							}
+							display.shouldBeHighlighted = new HashSet<Terrain>(validLZs);
+							display.avw.resetClickedLocation();
+							display.repaint();
+							
+							new Thread(new Runnable() {
+
+								@Override
+								public void run() {
+							Location LZ = display.avw.getLocationWhenClicked();
+							if (!validLZs.contains(LZ)) {
+								display.shouldBeHighlighted.clear();
+								display.repaint();
+								// drop canceled
+								return;
+							} else {
+								try {
+									u.move((Terrain) newLoc);
+									display.repaint();
+								} catch (Exception e) {
+									e.printStackTrace();
+								}
+								carried.putSelfInGrid(u.getGrid(), LZ);
+
+							}
+								}
+							}).start();
+							
+						}
+
+						public void addPropertyChangeListener(PropertyChangeListener arg0) {
+						}
+
+						public Object getValue(String arg0) {
+							return null;
+						}
+
+						public boolean isEnabled() {
+							return enabled;
+						}
+
+						public void putValue(String key, Object value) {
+						}
+
+						public void removePropertyChangeListener(PropertyChangeListener listener) {
+						}
+
+						public void setEnabled(boolean b) {
+							enabled = b;
+						}
+					};
+					tmpDropOption.setAction(tmpAction);
+					tmpDropOption.setText("Drop: " + carried.getType());
+					ans.add(tmpDropOption);
+				}
+			}
+
+		} else if (newLocOcc instanceof Carry && ((Carry) newLocOcc).canCarry(u)) {
 			Carry c = (Carry) newLocOcc;
 			JMenuItem loadOption = new JMenuItem();
 			Action a = new Action() {
 				public boolean enabled = true;
+
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					try {
@@ -255,27 +327,32 @@ public class MenuMaker<T>
 					newLocOcc.putSelfInGrid(u.getGrid(), newLoc);
 					display.shouldBeHighlighted.clear();
 					display.repaint();
-					//TODO i think this is done
+					// TODO i think this is done
 				}
 
 				@Override
 				public void setEnabled(boolean b) {
 					enabled = b;
 				}
+
 				@Override
 				public void removePropertyChangeListener(PropertyChangeListener listener) {
 				}
+
 				@Override
 				public void putValue(String key, Object value) {
 				}
+
 				@Override
 				public boolean isEnabled() {
 					return enabled;
 				}
+
 				@Override
 				public Object getValue(String key) {
 					return null;
 				}
+
 				@Override
 				public void addPropertyChangeListener(PropertyChangeListener listener) {
 				}
@@ -283,33 +360,33 @@ public class MenuMaker<T>
 			loadOption.setAction(a);
 			loadOption.setText("Load");
 			ans.add(loadOption);
-		}else{
+		} else {
 			System.out.println("cant move");
 		}
-		//units can fire on enemies if not unarmed and in range
+		// units can fire on enemies if not unarmed and in range
 		System.out.println("checking weps");
-		if(u.getWeapons()[0].getWeaponType()!=WeaponType.NONE||null!=u.getWeapons()[1]){
+		if (u.getWeapons()[0].getWeaponType() != WeaponType.NONE || null != u.getWeapons()[1]) {
 			ArrayList<Unit> targetalbe = new ArrayList<>();
 			ArrayList<Location> occupied = u.getGrid().getOccupiedLocations();
-			for(Location l:occupied){
+			for (Location l : occupied) {
 				Unit tmp = (Unit) u.getGrid().get(l);
-				if(u.couldTarget(tmp,(Terrain) newLoc)&&(!u.getOwner().equals(tmp.getOwner()))){
+				if (u.couldTarget(tmp, (Terrain) newLoc) && (!u.getOwner().equals(tmp.getOwner()))) {
 					targetalbe.add(tmp);
 				}
 			}
-			if(!targetalbe.isEmpty()){
+			if (!targetalbe.isEmpty()) {
 
-				Action a = new Action(){
+				Action a = new Action() {
 					public boolean enabled = true;
+
 					@Override
 					public void actionPerformed(ActionEvent e) {
-						//TODO add this
+						// TODO add this
 
 					}
 
 					@Override
-					public void addPropertyChangeListener(
-							PropertyChangeListener listener) {
+					public void addPropertyChangeListener(PropertyChangeListener listener) {
 					}
 
 					@Override
@@ -329,8 +406,7 @@ public class MenuMaker<T>
 					}
 
 					@Override
-					public void removePropertyChangeListener(
-							PropertyChangeListener listener) {
+					public void removePropertyChangeListener(PropertyChangeListener listener) {
 						// TODO Auto-generated method stub
 
 					}
@@ -344,168 +420,134 @@ public class MenuMaker<T>
 				fireOption.setAction(a);
 				fireOption.setText("Fire");
 				ans.add(fireOption);
-				System.out.println("added fireOption: MM "
-						+ "line "+new Throwable().getStackTrace()[0].getLineNumber());
-				System.out.println("targetable = "+targetalbe);
+				System.out.println(
+						"added fireOption: MM " + "line " + new Throwable().getStackTrace()[0].getLineNumber());
+				System.out.println("targetable = " + targetalbe);
 			}
 		}
-		System.out.println("checking carriability");
-		//if unit can be carried
-		if(u.getGrid().get(currentLocation)instanceof Carry){
-			Carry c = (Carry) u.getGrid().get(currentLocation);
-			if(c.canCarry(u)){
-				//TODO add load action menu item
-				//				ans.add(Unit.class.getMethod("load", Carry.class));
-			}
-		}
-		//if unit is carry, can drop something off
-		DROPOFF:
-			if(u instanceof Carry){
-				Carry c = (Carry) u;
-				if(!(c.getUnits().isEmpty())){
-					for(Unit carried:c.getUnits()){
-						Terrain t = (Terrain) currentLocation;
-						if(t.getMoveCost(carried.getMovementType())!=999){
-							//TODO add drop action menu item
-							//							ans.add(Carry.class.getMethod("drop"));
-							break DROPOFF;
-						}
-					}
-				}
-			}
-		//TODO stealth functions
 
-		//infantry can capture
-		if(u instanceof Infantry){
-			if(newLoc instanceof Property && 
-					((Property) newLoc).getOwner()!=u.getOwner()){
+		// TODO stealth functions
+
+		// infantry can capture
+		if (u instanceof Infantry) {
+			if (newLoc instanceof Property && ((Property) newLoc).getOwner() != u.getOwner()) {
 				ans.add(new MethodItem(Infantry.class.getMethod("capture")));
 			}
 		}
 
 		return ans;
 
-
-		//return (Method[]) (ans.toArray());
+		// return (Method[]) (ans.toArray());
 	}
 
-
-
-	//        Arrays.sort(methods, new Comparator<Method>()
-	//        {
-	//            public int compare(Method m1, Method m2)
-	//            {
-	//                int d1 = depth(m1.getDeclaringClass());
-	//                int d2 = depth(m2.getDeclaringClass());
-	//                if (d1 != d2)
-	//                    return d2 - d1;
-	//                int d = m1.getName().compareTo(m2.getName());
-	//                if (d != 0)
-	//                    return d;
-	//                d1 = m1.getParameterTypes().length;
-	//                d2 = m2.getParameterTypes().length;
-	//                return d1 - d2;
-	//            }
+	// Arrays.sort(methods, new Comparator<Method>()
+	// {
+	// public int compare(Method m1, Method m2)
+	// {
+	// int d1 = depth(m1.getDeclaringClass());
+	// int d2 = depth(m2.getDeclaringClass());
+	// if (d1 != d2)
+	// return d2 - d1;
+	// int d = m1.getName().compareTo(m2.getName());
+	// if (d != 0)
+	// return d;
+	// d1 = m1.getParameterTypes().length;
+	// d2 = m2.getParameterTypes().length;
+	// return d1 - d2;
+	// }
 	//
-	//            private int depth(Class cl)
-	//            {
-	//                if (cl == null)
-	//                    return 0;
-	//                else
-	//                    return 1 + depth(cl.getSuperclass());
-	//            }
-	//        });
-	//        return methods;
-	//}
-
-
-
-
-
-
-
-
-
-
-
-
-
+	// private int depth(Class cl)
+	// {
+	// if (cl == null)
+	// return 0;
+	// else
+	// return 1 + depth(cl.getSuperclass());
+	// }
+	// });
+	// return methods;
+	// }
 
 	/**
 	 * Makes a menu that displays all public methods of an object
-	 * @param occupant the object whose methods should be displayed
-	 * @param loc the location of the occupant
-	 * @return the menu to pop up 
+	 * 
+	 * @param occupant
+	 *            the object whose methods should be displayed
+	 * @param loc
+	 *            the location of the occupant
+	 * @return the menu to pop up
 	 */
-	public JPopupMenu makeMethodMenu(T occupant, Location loc)
-	{
+	public JPopupMenu makeMethodMenu(T occupant, Location loc) {
 
 		return makeMoveMenu(occupant, loc);
-		//old code
+		// old code
 
-		//        this.occupant = occupant;
-		//        this.currentLocation = loc;
-		//        JPopupMenu menu = new JPopupMenu();
-		//        Method[] methods = getMethods();
-		//        Class oldDcl = null;
-		//        for (int i = 0; i < methods.length; i++)
-		//        {
-		//            Class dcl = methods[i].getDeclaringClass();
-		//            if (dcl != Object.class)
-		//            {
-		//                if (i > 0 && dcl != oldDcl)
-		//                    menu.addSeparator();
-		//                menu.add(new MethodItem(methods[i]));
-		//            }
-		//            oldDcl = dcl;
-		//        }
-		//        return menu;
-
-
+		// this.occupant = occupant;
+		// this.currentLocation = loc;
+		// JPopupMenu menu = new JPopupMenu();
+		// Method[] methods = getMethods();
+		// Class oldDcl = null;
+		// for (int i = 0; i < methods.length; i++)
+		// {
+		// Class dcl = methods[i].getDeclaringClass();
+		// if (dcl != Object.class)
+		// {
+		// if (i > 0 && dcl != oldDcl)
+		// menu.addSeparator();
+		// menu.add(new MethodItem(methods[i]));
+		// }
+		// oldDcl = dcl;
+		// }
+		// return menu;
 
 	}
 
 	/**
 	 * Makes a menu that displays all public constructors of a collection of
 	 * classes.
-	 * @param classes the classes whose constructors should be displayed
-	 * @param loc the location of the occupant to be constructed
+	 * 
+	 * @param classes
+	 *            the classes whose constructors should be displayed
+	 * @param loc
+	 *            the location of the occupant to be constructed
 	 * @return the menu to pop up
 	 */
-	public JPopupMenu makeConstructorMenu(Collection<Class> classes,
-			Location loc)
-	{
+	public JPopupMenu makeConstructorMenu(Collection<Class> classes, Location loc) {
 		System.out.println("making constructor menu. See line 362 of MenuMaker");
 		this.currentLocation = loc;
 		JPopupMenu menu = new JPopupMenu();
-		//???
-		//boolean first = true;
+		// ???
+		// boolean first = true;
 
 		//
-		if(!(loc instanceof Factory)){
+		if (!(loc instanceof Factory)) {
 			return menu;
 		}
-		try{
+		try {
 			Factory fac = (Factory) loc;
-			for(Constructor<? extends Unit> constructor: fac.getBuildableUnits()){
+			for (Constructor<? extends Unit> constructor : fac.getBuildableUnits()) {
 				JMenuItem tmp = new JMenuItem();
 				Action a = new Action() {
 					public boolean enabled = true;
+
 					@Override
 					public void actionPerformed(ActionEvent e) {
 						fac.buildUnit(constructor);
 						display.repaint();
 					}
+
 					@Override
 					public void setEnabled(boolean b) {
 						enabled = b;
 					}
+
 					@Override
-					public void removePropertyChangeListener(PropertyChangeListener listener) {	
+					public void removePropertyChangeListener(PropertyChangeListener listener) {
 					}
+
 					@Override
-					public void putValue(String key, Object value) {	
+					public void putValue(String key, Object value) {
 					}
+
 					@Override
 					public boolean isEnabled() {
 						return enabled;
@@ -522,86 +564,77 @@ public class MenuMaker<T>
 				};
 				a.setEnabled(true);
 				tmp.setAction(a);
-				//				String[] nameParts = constructor.getName().split("\\.");
-				//				String name = nameParts[nameParts.length-1];
-				Player[] p = {null};
+				// String[] nameParts = constructor.getName().split("\\.");
+				// String name = nameParts[nameParts.length-1];
+				Player[] p = { null };
 				Unit u = constructor.newInstance(p);
 				int cost = u.getBuildCost();
-				String spaces = (cost<1000?"  ":"");
+				String spaces = (cost < 1000 ? "  " : "");
 				String name = constructor.getDeclaringClass().getSimpleName();
-				name = +cost+spaces+" | "+name;
-				//ResourceBundle b = new ResourceBundle("")
-				//TODO nicer naming, picture
+				name = +cost + spaces + " | " + name;
+				// ResourceBundle b = new ResourceBundle("")
+				// TODO nicer naming, picture
 				tmp.setText(name);
-				//tmp.setIcon();
+				// tmp.setIcon();
 				menu.add(tmp);
 			}
 
-		}catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return menu;
 
-
-
-
-
 		//
-		//        Iterator<Class> iter = classes.iterator();
-		//        while (iter.hasNext())
-		//        {
-		//            if (first)
-		//                first = false;
-		//            else
-		//                menu.addSeparator();
-		//            Class cl = iter.next();
-		//            Constructor[] cons = (Constructor[]) cl.getConstructors();
-		//            for (int i = 0; i < cons.length; i++)
-		//            {
-		//                menu.add(new OccupantConstructorItem(cons[i]));
-		//            }
-		//        }
-
-
+		// Iterator<Class> iter = classes.iterator();
+		// while (iter.hasNext())
+		// {
+		// if (first)
+		// first = false;
+		// else
+		// menu.addSeparator();
+		// Class cl = iter.next();
+		// Constructor[] cons = (Constructor[]) cl.getConstructors();
+		// for (int i = 0; i < cons.length; i++)
+		// {
+		// menu.add(new OccupantConstructorItem(cons[i]));
+		// }
+		// }
 
 	}
 
 	/**
 	 * Adds menu items that call all public constructors of a collection of
 	 * classes to a menu
-	 * @param menu the menu to which the items should be added
-	 * @param classes the collection of classes
+	 * 
+	 * @param menu
+	 *            the menu to which the items should be added
+	 * @param classes
+	 *            the collection of classes
 	 */
-	public void addConstructors(JMenu menu, Collection<Class> classes)
-	{
+	public void addConstructors(JMenu menu, Collection<Class> classes) {
 		boolean first = true;
 		Iterator<Class> iter = classes.iterator();
-		while (iter.hasNext())
-		{
+		while (iter.hasNext()) {
 			if (first)
 				first = false;
 			else
 				menu.addSeparator();
 			Class cl = iter.next();
 			Constructor[] cons = cl.getConstructors();
-			for (int i = 0; i < cons.length; i++)
-			{
+			for (int i = 0; i < cons.length; i++) {
 				menu.add(new GridConstructorItem(cons[i]));
 			}
 		}
 	}
 
-	private Method[] getMethods()
-	{
+	private Method[] getMethods() {
 		Class cl = occupant.getClass();
-		//TODO ???
+		// TODO ???
 		Method[] methods = cl.getMethods();
-		//   Method[] methods = new Method[];
+		// Method[] methods = new Method[];
 
-		Arrays.sort(methods, new Comparator<Method>()
-		{
-			public int compare(Method m1, Method m2)
-			{
+		Arrays.sort(methods, new Comparator<Method>() {
+			public int compare(Method m1, Method m2) {
 				int d1 = depth(m1.getDeclaringClass());
 				int d2 = depth(m2.getDeclaringClass());
 				if (d1 != d2)
@@ -614,8 +647,7 @@ public class MenuMaker<T>
 				return d1 - d2;
 			}
 
-			private int depth(Class cl)
-			{
+			private int depth(Class cl) {
 				if (cl == null)
 					return 0;
 				else
@@ -628,11 +660,8 @@ public class MenuMaker<T>
 	/**
 	 * A menu item that shows a method or constructor.
 	 */
-	private class MCItem extends JMenuItem
-	{
-		public String getDisplayString(Class retType, String name,
-				Class[] paramTypes)
-		{
+	private class MCItem extends JMenuItem {
+		public String getDisplayString(Class retType, String name, Class[] paramTypes) {
 			StringBuffer b = new StringBuffer();
 			b.append("<html>");
 			if (retType != null)
@@ -640,8 +669,7 @@ public class MenuMaker<T>
 			b.append(" <font color='blue'>");
 			appendTypeName(b, name);
 			b.append("</font>( ");
-			for (int i = 0; i < paramTypes.length; i++)
-			{
+			for (int i = 0; i < paramTypes.length; i++) {
 				if (i > 0)
 					b.append(", ");
 				appendTypeName(b, paramTypes[i].getName());
@@ -650,26 +678,21 @@ public class MenuMaker<T>
 			return b.toString();
 		}
 
-		public void appendTypeName(StringBuffer b, String name)
-		{
+		public void appendTypeName(StringBuffer b, String name) {
 			int i = name.lastIndexOf('.');
-			if (i >= 0)
-			{
+			if (i >= 0) {
 				String prefix = name.substring(0, i + 1);
-				if (!prefix.equals("java.lang"))
-				{
+				if (!prefix.equals("java.lang")) {
 					b.append("<font color='gray'>");
 					b.append(prefix);
 					b.append("</font>");
 				}
 				b.append(name.substring(i + 1));
-			}
-			else
+			} else
 				b.append(name);
 		}
 
-		public Object makeDefaultValue(Class type)
-		{
+		public Object makeDefaultValue(Class type) {
 			if (type == int.class)
 				return new Integer(0);
 			else if (type == boolean.class)
@@ -684,59 +707,43 @@ public class MenuMaker<T>
 				return currentLocation;
 			else if (Grid.class.isAssignableFrom(type))
 				return currentGrid;
-			else
-			{
-				try
-				{
+			else {
+				try {
 					return type.newInstance();
-				}
-				catch (Exception ex)
-				{
+				} catch (Exception ex) {
 					return null;
 				}
 			}
 		}
 	}
 
-	private abstract class ConstructorItem extends MCItem
-	{
-		public ConstructorItem(Constructor c)
-		{
-			setText(getDisplayString(null, c.getDeclaringClass().getName(), c
-					.getParameterTypes()));
+	private abstract class ConstructorItem extends MCItem {
+		public ConstructorItem(Constructor c) {
+			setText(getDisplayString(null, c.getDeclaringClass().getName(), c.getParameterTypes()));
 			this.c = c;
 		}
 
-		public Object invokeConstructor()
-		{
+		public Object invokeConstructor() {
 			Class[] types = c.getParameterTypes();
 			Object[] values = new Object[types.length];
 
-			for (int i = 0; i < types.length; i++)
-			{
+			for (int i = 0; i < types.length; i++) {
 				values[i] = makeDefaultValue(types[i]);
 			}
 
-			if (types.length > 0)
-			{
+			if (types.length > 0) {
 				PropertySheet sheet = new PropertySheet(types, values);
-				JOptionPane.showMessageDialog(this, sheet, resources
-						.getString("dialog.method.params"),
+				JOptionPane.showMessageDialog(this, sheet, resources.getString("dialog.method.params"),
 						JOptionPane.QUESTION_MESSAGE);
 				values = sheet.getValues();
 			}
 
-			try
-			{
+			try {
 				return c.newInstance(values);
-			}
-			catch (InvocationTargetException ex)
-			{
+			} catch (InvocationTargetException ex) {
 				parent.new GUIExceptionHandler().handle(ex.getCause());
 				return null;
-			}
-			catch (Exception ex)
-			{
+			} catch (Exception ex) {
 				parent.new GUIExceptionHandler().handle(ex);
 				return null;
 			}
@@ -745,105 +752,81 @@ public class MenuMaker<T>
 		private Constructor c;
 	}
 
-	private class OccupantConstructorItem extends ConstructorItem implements
-	ActionListener
-	{
-		public OccupantConstructorItem(Constructor c)
-		{
+	private class OccupantConstructorItem extends ConstructorItem implements ActionListener {
+		public OccupantConstructorItem(Constructor c) {
 			super(c);
 			addActionListener(this);
 			setIcon(displayMap.getIcon(c.getDeclaringClass(), 16, 16));
 		}
 
 		@SuppressWarnings("unchecked")
-		public void actionPerformed(ActionEvent event)
-		{
+		public void actionPerformed(ActionEvent event) {
 			T result = (T) invokeConstructor();
 			parent.getWorld().add(currentLocation, result);
 			parent.repaint();
 		}
 	}
 
-	private class GridConstructorItem extends ConstructorItem implements
-	ActionListener
-	{
-		public GridConstructorItem(Constructor c)
-		{
+	private class GridConstructorItem extends ConstructorItem implements ActionListener {
+		public GridConstructorItem(Constructor c) {
 			super(c);
 			addActionListener(this);
 			setIcon(displayMap.getIcon(c.getDeclaringClass(), 16, 16));
 		}
 
 		@SuppressWarnings("unchecked")
-		public void actionPerformed(ActionEvent event)
-		{
-			Grid<T> newGrid = (Grid<T>) invokeConstructor(); 
+		public void actionPerformed(ActionEvent event) {
+			Grid<T> newGrid = (Grid<T>) invokeConstructor();
 			parent.setGrid(newGrid);
 		}
 	}
 
-	private class MethodItem extends MCItem implements ActionListener
-	{
-		public MethodItem(Method m)
-		{
-			setText(getDisplayString(m.getReturnType(), m.getName(), m
-					.getParameterTypes()));
+	private class MethodItem extends MCItem implements ActionListener {
+		public MethodItem(Method m) {
+			setText(getDisplayString(m.getReturnType(), m.getName(), m.getParameterTypes()));
 			this.m = m;
 			addActionListener(this);
 			setIcon(displayMap.getIcon(m.getDeclaringClass(), 16, 16));
 		}
 
-		public void actionPerformed(ActionEvent event)
-		{
+		public void actionPerformed(ActionEvent event) {
 			Class[] types = m.getParameterTypes();
 			Object[] values = new Object[types.length];
 
-			for (int i = 0; i < types.length; i++)
-			{
+			for (int i = 0; i < types.length; i++) {
 				values[i] = makeDefaultValue(types[i]);
 			}
 
-			if (types.length > 0)
-			{
+			if (types.length > 0) {
 				PropertySheet sheet = new PropertySheet(types, values);
-				JOptionPane.showMessageDialog(this, sheet, resources
-						.getString("dialog.method.params"),
+				JOptionPane.showMessageDialog(this, sheet, resources.getString("dialog.method.params"),
 						JOptionPane.QUESTION_MESSAGE);
 				values = sheet.getValues();
 			}
 
-			try
-			{
+			try {
 				Object result = m.invoke(occupant, values);
 				parent.repaint();
-				if (m.getReturnType() != void.class)
-				{
+				if (m.getReturnType() != void.class) {
 					String resultString = result.toString();
 					Object resultObject;
 					final int MAX_LENGTH = 50;
 					final int MAX_HEIGHT = 10;
 					if (resultString.length() < MAX_LENGTH)
 						resultObject = resultString;
-					else
-					{
-						int rows = Math.min(MAX_HEIGHT, 1
-								+ resultString.length() / MAX_LENGTH);
+					else {
+						int rows = Math.min(MAX_HEIGHT, 1 + resultString.length() / MAX_LENGTH);
 						JTextArea pane = new JTextArea(rows, MAX_LENGTH);
 						pane.setText(resultString);
 						pane.setLineWrap(true);
 						resultObject = new JScrollPane(pane);
 					}
-					JOptionPane.showMessageDialog(parent, resultObject,
-							resources.getString("dialog.method.return"),
+					JOptionPane.showMessageDialog(parent, resultObject, resources.getString("dialog.method.return"),
 							JOptionPane.INFORMATION_MESSAGE);
 				}
-			}
-			catch (InvocationTargetException ex)
-			{
+			} catch (InvocationTargetException ex) {
 				parent.new GUIExceptionHandler().handle(ex.getCause());
-			}
-			catch (Exception ex)
-			{
+			} catch (Exception ex) {
 				parent.new GUIExceptionHandler().handle(ex);
 			}
 		}
@@ -859,36 +842,30 @@ public class MenuMaker<T>
 	private ResourceBundle resources;
 }
 
-class PropertySheet extends JPanel
-{
+class PropertySheet extends JPanel {
 	/**
 	 * Constructs a property sheet that shows the editable properties of a given
 	 * object.
-	 * @param object the object whose properties are being edited
+	 * 
+	 * @param object
+	 *            the object whose properties are being edited
 	 */
-	public PropertySheet(Class[] types, Object[] values)
-	{
+	public PropertySheet(Class[] types, Object[] values) {
 		this.values = values;
 		editors = new PropertyEditor[types.length];
 		setLayout(new FormLayout());
-		for (int i = 0; i < values.length; i++)
-		{
+		for (int i = 0; i < values.length; i++) {
 			JLabel label = new JLabel(types[i].getName());
 			add(label);
-			if (Grid.class.isAssignableFrom(types[i]))
-			{
+			if (Grid.class.isAssignableFrom(types[i])) {
 				label.setEnabled(false);
 				add(new JPanel());
-			}
-			else
-			{
+			} else {
 				editors[i] = getEditor(types[i]);
-				if (editors[i] != null)
-				{
+				if (editors[i] != null) {
 					editors[i].setValue(values[i]);
 					add(getEditorComponent(editors[i]));
-				}
-				else
+				} else
 					add(new JLabel("?"));
 			}
 		}
@@ -897,13 +874,15 @@ class PropertySheet extends JPanel
 	/**
 	 * Gets the property editor for a given property, and wires it so that it
 	 * updates the given object.
-	 * @param bean the object whose properties are being edited
-	 * @param descriptor the descriptor of the property to be edited
+	 * 
+	 * @param bean
+	 *            the object whose properties are being edited
+	 * @param descriptor
+	 *            the descriptor of the property to be edited
 	 * @return a property editor that edits the property with the given
-	 * descriptor and updates the given object
+	 *         descriptor and updates the given object
 	 */
-	public PropertyEditor getEditor(Class type)
-	{
+	public PropertyEditor getEditor(Class type) {
 		PropertyEditor editor;
 		editor = defaultEditors.get(type);
 		if (editor != null)
@@ -914,70 +893,53 @@ class PropertySheet extends JPanel
 
 	/**
 	 * Wraps a property editor into a component.
-	 * @param editor the editor to wrap
+	 * 
+	 * @param editor
+	 *            the editor to wrap
 	 * @return a button (if there is a custom editor), combo box (if the editor
-	 * has tags), or text field (otherwise)
+	 *         has tags), or text field (otherwise)
 	 */
-	public Component getEditorComponent(final PropertyEditor editor)
-	{
+	public Component getEditorComponent(final PropertyEditor editor) {
 		String[] tags = editor.getTags();
 		String text = editor.getAsText();
-		if (editor.supportsCustomEditor())
-		{
+		if (editor.supportsCustomEditor()) {
 			return editor.getCustomEditor();
-		}
-		else if (tags != null)
-		{
+		} else if (tags != null) {
 			// make a combo box that shows all tags
 			final JComboBox comboBox = new JComboBox(tags);
 			comboBox.setSelectedItem(text);
-			comboBox.addItemListener(new ItemListener()
-			{
-				public void itemStateChanged(ItemEvent event)
-				{
+			comboBox.addItemListener(new ItemListener() {
+				public void itemStateChanged(ItemEvent event) {
 					if (event.getStateChange() == ItemEvent.SELECTED)
 						editor.setAsText((String) comboBox.getSelectedItem());
 				}
 			});
 			return comboBox;
-		}
-		else
-		{
+		} else {
 			final JTextField textField = new JTextField(text, 10);
-			textField.getDocument().addDocumentListener(new DocumentListener()
-			{
-				public void insertUpdate(DocumentEvent e)
-				{
-					try
-					{
+			textField.getDocument().addDocumentListener(new DocumentListener() {
+				public void insertUpdate(DocumentEvent e) {
+					try {
 						editor.setAsText(textField.getText());
-					}
-					catch (IllegalArgumentException exception)
-					{
+					} catch (IllegalArgumentException exception) {
 					}
 				}
 
-				public void removeUpdate(DocumentEvent e)
-				{
-					try
-					{
+				public void removeUpdate(DocumentEvent e) {
+					try {
 						editor.setAsText(textField.getText());
-					}
-					catch (IllegalArgumentException exception)
-					{
+					} catch (IllegalArgumentException exception) {
 					}
 				}
 
-				public void changedUpdate(DocumentEvent e)
-				{
+				public void changedUpdate(DocumentEvent e) {
 				}
 			});
 			return textField;
 		}
 	}
 
-	public Object[] getValues()
-	{
+	public Object[] getValues() {
 		for (int i = 0; i < editors.length; i++)
 			if (editors[i] != null)
 				values[i] = editors[i].getValue();
@@ -990,21 +952,17 @@ class PropertySheet extends JPanel
 	private static Map<Class, PropertyEditor> defaultEditors;
 
 	// workaround for Web Start bug
-	public static class StringEditor extends PropertyEditorSupport
-	{
-		public String getAsText()
-		{
+	public static class StringEditor extends PropertyEditorSupport {
+		public String getAsText() {
 			return (String) getValue();
 		}
 
-		public void setAsText(String s)
-		{
+		public void setAsText(String s) {
 			setValue(s);
 		}
 	}
 
-	static
-	{
+	static {
 		defaultEditors = new HashMap<Class, PropertyEditor>();
 		defaultEditors.put(String.class, new StringEditor());
 		defaultEditors.put(Location.class, new LocationEditor());
