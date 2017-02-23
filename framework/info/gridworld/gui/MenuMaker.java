@@ -236,11 +236,8 @@ public class MenuMaker<T> {
 			// if unit is carry, can drop something off
 			System.out.println("checking drop");
 			ArrayList<Unit> carriedUnits = new ArrayList<>();
-			if (u instanceof Carry) {
-				Carry carryU = (Carry) u;
-				carriedUnits = carryU.getUnits();
-			}
-			if (u instanceof Carry && (!(carriedUnits.isEmpty()))) {
+			Carry carryU;
+			if (u instanceof Carry && (!((carriedUnits = (carryU = (Carry) u).getUnits()).isEmpty()))) {
 				for (Unit carried : carriedUnits) {
 					JMenuItem tmpDropOption = new JMenuItem();
 					Action tmpAction = new Action() {
@@ -278,6 +275,7 @@ public class MenuMaker<T> {
 									e.printStackTrace();
 								}
 								carried.putSelfInGrid(u.getGrid(), LZ);
+								carryU.getUnits().remove(carried);
 
 							}
 								}

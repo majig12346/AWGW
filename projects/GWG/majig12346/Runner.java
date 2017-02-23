@@ -9,21 +9,19 @@ import info.gridworld.world.AVWorld;
 import majig12346.CO.TestCO;
 import majig12346.terrain.*;
 import majig12346.terrain.properties.*;
-import majig12346.units.air.BCopter;
-import majig12346.units.air.CAS;
-import majig12346.units.land.APC;
-import majig12346.units.land.Infantry;
-import majig12346.units.land.Tank;
-import majig12346.units.sea.Carrier;
+import majig12346.units.land.*;
+import majig12346.units.sea.*;
+import majig12346.units.air.*;
+import majig12346.units.*;
 
 
 public class Runner {
 	public static Player[] players;
 	public static void main(String[] args){
-		//System.out.println("Currently 6151355 PLANCK_TIMEs behind! Are we on "
-		//		+ "5nm or is Quantum tunneling somehow an issue "
-		//		+ "on Skylake's 14nm? Wait a PLANCK_TIME,"
-		//		+ " this is a Core 2 Duo!");
+		System.out.println("Currently 1337 PLANCK_TIMEs behind! Are we on "
+				+ "5nm or is Quantum tunneling somehow an issue "
+				+ "on Skylake's 14nm? Wait a PLANCK_TIME,"
+				+ " this is a Core 2 Duo!");
 		AVWorld avw = new AVWorld();
 		players = new Player[4];
 		Player p1 = new Player(new TestCO(),9999,new Color(255,85,0));
@@ -45,21 +43,27 @@ public class Runner {
 
 
 
-	private static void customFill(TerrainGrid g, Player p1, Player p2){
+	private static void customFill(TerrainGrid<Actor> g, Player p1, Player p2){
 		Infantry inf1 = new Infantry(players[1]);
 		inf1.putSelfInGrid(g,g.getLocationArray()[1][1]);
 		Infantry inf2 = new Infantry(players[1]);
 		inf2.putSelfInGrid(g,g.getLocationArray()[9][6]);
+		Mech mech1 = new Mech(players[1]);
+		mech1.putSelfInGrid(g,g.getLocationArray()[0][8]);
+		MedTank medTank1 = new MedTank(players[1]);
+		medTank1.putSelfInGrid(g,g.getLocationArray()[1][8]);
 		APC apc1 = new APC(players[1]);
 		apc1.putSelfInGrid(g,g.getLocationArray()[2][1]);
 		Carrier carrier1 = new Carrier(players[1]);
 		carrier1.putSelfInGrid(g,g.getLocationArray()[6][4]);
 		BCopter copter1 = new BCopter(players[1]);
 		copter1.putSelfInGrid(g,g.getLocationArray()[7][7]);
+		TCopter copter2 = new TCopter(players[1]);
+		copter2.putSelfInGrid(g,g.getLocationArray()[7][6]);
 	}
 
 
-	public static void fillTerrainGrid(TerrainGrid g){
+	public static void fillTerrainGrid(TerrainGrid<Actor> g){
 
 		//String fileName = JOptionPane.showInputDialog("file name");
 		String fileName = "projects/GWG/resources/map.txt";
