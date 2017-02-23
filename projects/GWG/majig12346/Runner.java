@@ -55,7 +55,7 @@ public class Runner {
 		APC apc1 = new APC(players[1]);
 		apc1.putSelfInGrid(g,g.getLocationArray()[2][1]);
 		Carrier carrier1 = new Carrier(players[1]);
-		carrier1.putSelfInGrid(g,g.getLocationArray()[6][4]);
+		carrier1.putSelfInGrid(g,g.getLocationArray()[3][5]);
 		BCopter copter1 = new BCopter(players[1]);
 		copter1.putSelfInGrid(g,g.getLocationArray()[7][7]);
 		TCopter copter2 = new TCopter(players[1]);
