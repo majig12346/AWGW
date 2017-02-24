@@ -285,7 +285,7 @@ public abstract class Unit extends Actor{
 	 * @return Current {@link mobility} of the {@link Unit}
 	 */
 	public double getMobility(){
-		System.out.println("line 277 Unit: mobility="+this.mobility+" canMove = "+canMove);
+		System.out.println("line 288 Unit: mobility="+this.mobility+" canMove = "+canMove);
 		return this.mobility;
 	}
 
@@ -433,12 +433,14 @@ public abstract class Unit extends Actor{
 	 * Postcondition: the unit moves to the Terrain toMoveTo, traversing each terrain in a good path
 	 * @throws Exception 
 	 */
-	public void move(Terrain toMoveTo) throws Exception{
+	public void move(Terrain toMoveTo,boolean...realMove) throws Exception{
 		Terrain t = (Terrain) getLocation();
-		if(move(findPathTo(toMoveTo))){
+		boolean moveSuccess = realMove.length==0?
+				move(findPathTo(toMoveTo)):move(findPathTo(toMoveTo),realMove[0]);
+		if(moveSuccess){
 			immobilize();
 		}else{
-			System.out.println("move failed, see line 438 of Unit");
+			System.out.println("move failed, see line 441 of Unit");
 		}
 	}
 
@@ -586,10 +588,10 @@ public abstract class Unit extends Actor{
 	 *  Postcondition: this.getLocation returns t
 	 */
 	private void traverse(Grid<Actor> gr, Terrain t){
-		removeSelfFromGrid();
-		putSelfInGrid(gr, t);
+//		removeSelfFromGrid();
+//		putSelfInGrid(gr, t);
 		double moveCost = t.getMoveCost(this.getMovementType());
-		this.mobility -= moveCost;
+		setMobility(getMobility()-moveCost);
 	}
 	/**
 	 * Moves the {@link Unit} along a path of {@link Terrain}s.
@@ -597,7 +599,7 @@ public abstract class Unit extends Actor{
 	 * For now, it should always be successful because fog of war/land mines etc are not implemented yet
 	 * @param path A {@link Queue} of adjacent {@link Terrain}s
 	 */
-	public boolean move(Queue<Terrain> path){
+	public boolean move(Queue<Terrain> path, boolean...realMove){
 		if(0==path.size()){
 			//already done
 			return true;
@@ -630,18 +632,19 @@ public abstract class Unit extends Actor{
 			return false;
 		}
 		//move on
-		try {
-			Thread.sleep(500);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}//TODO insert wait time
 		traverse(getGrid(),t);
-		if(path.peek()!=null){
-			this.setDirection(t.getDirectionToward(path.peek()));
+		if(path.peek()==null&&realMove.length!=0){
+			teleport(t);
 		}
 		return move(path);
 	}
+	private void teleport(Terrain t){
+		Grid gr = getGrid();
+		this.removeSelfFromGrid();
+		this.putSelfInGrid(gr, t);
+	}
+	
+	
 	/**
 	 * Precondition: Carry c canCarry(this) is true
 	 * @param c the Carry that this Unit will be loaded into

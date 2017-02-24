@@ -86,7 +86,8 @@ public class MenuMaker<T> {
 	 * @param displayMap
 	 *            the display map
 	 */
-	public MenuMaker(WorldFrame<T> parent, ResourceBundle resources, DisplayMap displayMap) {
+	public MenuMaker(WorldFrame<T> parent, ResourceBundle resources,
+			DisplayMap displayMap) {
 		this.parent = parent;
 		this.resources = resources;
 		this.displayMap = displayMap;
@@ -115,13 +116,15 @@ public class MenuMaker<T> {
 		currentLocation = loc;
 		// TODO tidy up
 		StringBuilder dispMessage = new StringBuilder(50);
-		dispMessage.append("Currently Selected: " + u.getType() + "[" + u.getHealth() + " HP] at " + loc);
+		dispMessage.append("Currently Selected: " + u.getType() + "["
+				+ u.getHealth() + " HP] at " + loc);
 		if (u instanceof Carry) {
 			dispMessage.append("\nCurrently Carrying: ");
 			ArrayList<String> types = new ArrayList<>();
 			Carry c = (Carry) u;
 			for (Unit carried : c.getUnits()) {
-				types.add(carried.getType() + "[" + carried.getHealth() + " HP]");
+				types.add(carried.getType() + "[" + carried.getHealth()
+						+ " HP] ["+u.getFuel()+" fuel]");
 			}
 			if (!types.isEmpty()) {
 				dispMessage.append(types.toString());
@@ -131,15 +134,22 @@ public class MenuMaker<T> {
 		} else {
 			dispMessage.append("\n");
 		}
-		dispMessage.append(u.canMove() ? "\nClick highlighted tile to move, click unhighlighted to cancel"
-				: "\nUnit currently immobile; wait until next turn to move again.");
+		dispMessage
+				.append(u.canMove() ? "\nClick highlighted tile to move, click unhighlighted to cancel"
+						: "\nUnit currently immobile; wait until next turn to move again.");
 		display.avw.setMessage(dispMessage.toString());
 		display.repaint();
 		// inefficient
 		Set<Terrain> validMoveSpaces = u.getValidMoveSpaces();
 		display.shouldBeHighlighted = validMoveSpaces;
 		display.avw.resetClickedLocation();
-		newLoc = (Terrain) display.avw.getLocationWhenClicked();
+
+//		new Thread(new Runnable() {
+//			@Override
+//			public void run() {
+				newLoc = (Terrain) display.avw.getLocationWhenClicked();
+//			}
+//		}).start();
 		if (!validMoveSpaces.contains(newLoc)) {
 			display.avw.setMessage("DEFAULT SOMETHING");
 			display.shouldBeHighlighted.clear();
@@ -153,9 +163,10 @@ public class MenuMaker<T> {
 			e.printStackTrace();
 		}
 
-		System.out.println(
-				"line 164 Menu: currentLocation set to loc\nloc is " + newLoc.getClass().getName() + "at " + newLoc);
-		System.out.println("line 165 Menu: old loc set to loc\nloc is " + currentLocation.getClass().getName() + "at "
+		System.out.println("line 164 Menu: currentLocation set to loc\nloc is "
+				+ newLoc.getClass().getName() + "at " + newLoc);
+		System.out.println("line 165 Menu: old loc set to loc\nloc is "
+				+ currentLocation.getClass().getName() + "at "
 				+ currentLocation);
 		JPopupMenu menu = new JPopupMenu();
 		ArrayList<JMenuItem> actions = null;
@@ -176,7 +187,8 @@ public class MenuMaker<T> {
 		return menu;
 	}
 
-	private ArrayList<JMenuItem> getValidActions(Location newLoc) throws NoSuchMethodException, SecurityException {
+	private ArrayList<JMenuItem> getValidActions(Location newLoc)
+			throws NoSuchMethodException, SecurityException {
 		Unit u = (Unit) occupant;
 		ArrayList<JMenuItem> ans = new ArrayList<JMenuItem>();
 		// every unit has the wait option if not loading into carry
@@ -192,7 +204,7 @@ public class MenuMaker<T> {
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
 					try {
-						u.move((Terrain) newLoc);
+						u.move(((Terrain) newLoc),true);
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -202,7 +214,8 @@ public class MenuMaker<T> {
 				}
 
 				@Override
-				public void addPropertyChangeListener(PropertyChangeListener arg0) {
+				public void addPropertyChangeListener(
+						PropertyChangeListener arg0) {
 				}
 
 				@Override
@@ -220,7 +233,8 @@ public class MenuMaker<T> {
 				}
 
 				@Override
-				public void removePropertyChangeListener(PropertyChangeListener listener) {
+				public void removePropertyChangeListener(
+						PropertyChangeListener listener) {
 				}
 
 				@Override
@@ -237,7 +251,9 @@ public class MenuMaker<T> {
 			System.out.println("checking drop");
 			ArrayList<Unit> carriedUnits = new ArrayList<>();
 			Carry carryU;
-			if (u instanceof Carry && (!((carriedUnits = (carryU = (Carry) u).getUnits()).isEmpty()))) {
+			if (u instanceof Carry
+					&& (!((carriedUnits = (carryU = (Carry) u).getUnits())
+							.isEmpty()))) {
 				for (Unit carried : carriedUnits) {
 					JMenuItem tmpDropOption = new JMenuItem();
 					Action tmpAction = new Action() {
@@ -246,44 +262,50 @@ public class MenuMaker<T> {
 						@Override
 						public void actionPerformed(ActionEvent arg0) {
 							ArrayList<Terrain> validLZs = new ArrayList<>();
-							for (Terrain t : ((Terrain) newLoc).getAllAdjacentTerrains()) {
-								if (null == u.getGrid().get(t) && 999 != t.getMoveCost(carried.getMovementType())) {
+							for (Terrain t : ((Terrain) newLoc)
+									.getAllAdjacentTerrains()) {
+								if (null == u.getGrid().get(t)
+										&& 999 != t.getMoveCost(carried
+												.getMovementType())) {
 									validLZs.add(t);
 								}
 							}
-							display.shouldBeHighlighted = new HashSet<Terrain>(validLZs);
+							display.shouldBeHighlighted = new HashSet<Terrain>(
+									validLZs);
 							display.avw.resetClickedLocation();
 							display.repaint();
 							display.invalidate();
-							new Thread(new Runnable() { 
+							new Thread(new Runnable() {
 
 								@Override
 								public void run() {
-							Location LZ = display.avw.getLocationWhenClicked();
-							if (!validLZs.contains(LZ)) {
-								display.shouldBeHighlighted.clear();
-								display.repaint();
-								display.invalidate();
-								// drop canceled
-								return;
-							} else {
-								try {
-									u.move((Terrain) newLoc);
-									display.repaint();
-									display.invalidate();
-								} catch (Exception e) {
-									e.printStackTrace();
-								}
-								carried.putSelfInGrid(u.getGrid(), LZ);
-								carryU.getUnits().remove(carried);
+									Location LZ = display.avw
+											.getLocationWhenClicked();
+									if (!validLZs.contains(LZ)) {
+										display.shouldBeHighlighted.clear();
+										display.repaint();
+										display.invalidate();
+										// drop canceled
+										return;
+									} else {
+										try {
+											u.move(((Terrain) newLoc),true);
+											display.repaint();
+											display.invalidate();
+										} catch (Exception e) {
+											e.printStackTrace();
+										}
+										carried.putSelfInGrid(u.getGrid(), LZ);
+										carryU.getUnits().remove(carried);
 
-							}
+									}
 								}
 							}).start();
-							
+
 						}
 
-						public void addPropertyChangeListener(PropertyChangeListener arg0) {
+						public void addPropertyChangeListener(
+								PropertyChangeListener arg0) {
 						}
 
 						public Object getValue(String arg0) {
@@ -297,7 +319,8 @@ public class MenuMaker<T> {
 						public void putValue(String key, Object value) {
 						}
 
-						public void removePropertyChangeListener(PropertyChangeListener listener) {
+						public void removePropertyChangeListener(
+								PropertyChangeListener listener) {
 						}
 
 						public void setEnabled(boolean b) {
@@ -310,7 +333,8 @@ public class MenuMaker<T> {
 				}
 			}
 
-		} else if (newLocOcc instanceof Carry && ((Carry) newLocOcc).canCarry(u)) {
+		} else if (newLocOcc instanceof Carry
+				&& ((Carry) newLocOcc).canCarry(u)) {
 			Carry c = (Carry) newLocOcc;
 			JMenuItem loadOption = new JMenuItem();
 			Action a = new Action() {
@@ -324,7 +348,20 @@ public class MenuMaker<T> {
 						e1.printStackTrace();
 					}
 					c.addUnit(u);
-					newLocOcc.putSelfInGrid(u.getGrid(), newLoc);
+					u.removeSelfFromGrid();//TODO
+//					new Thread(new Runnable(){
+//						public void run(){
+//							display.repaint();
+//							display.invalidate();
+//						}
+//					}).start();
+					Grid debug1 = newLocOcc.getGrid();
+					Location debug2 = newLocOcc.getLocation();
+					Location debug3 = newLoc;
+					Unit debug4 = newLocOcc;
+					Carry debug5 = c;
+					Unit debug6 = u;
+//					newLocOcc.putSelfInGrid(u.getGrid(), newLoc); 
 					display.shouldBeHighlighted.clear();
 					display.repaint();
 					// TODO i think this is done
@@ -336,7 +373,8 @@ public class MenuMaker<T> {
 				}
 
 				@Override
-				public void removePropertyChangeListener(PropertyChangeListener listener) {
+				public void removePropertyChangeListener(
+						PropertyChangeListener listener) {
 				}
 
 				@Override
@@ -354,7 +392,8 @@ public class MenuMaker<T> {
 				}
 
 				@Override
-				public void addPropertyChangeListener(PropertyChangeListener listener) {
+				public void addPropertyChangeListener(
+						PropertyChangeListener listener) {
 				}
 			};
 			loadOption.setAction(a);
@@ -365,12 +404,14 @@ public class MenuMaker<T> {
 		}
 		// units can fire on enemies if not unarmed and in range
 		System.out.println("checking weps");
-		if (u.getWeapons()[0].getWeaponType() != WeaponType.NONE || null != u.getWeapons()[1]) {
+		if (u.getWeapons()[0].getWeaponType() != WeaponType.NONE
+				|| null != u.getWeapons()[1]) {
 			ArrayList<Unit> targetalbe = new ArrayList<>();
 			ArrayList<Location> occupied = u.getGrid().getOccupiedLocations();
 			for (Location l : occupied) {
 				Unit tmp = (Unit) u.getGrid().get(l);
-				if (u.couldTarget(tmp, (Terrain) newLoc) && (!u.getOwner().equals(tmp.getOwner()))) {
+				if (u.couldTarget(tmp, (Terrain) newLoc)
+						&& (!u.getOwner().equals(tmp.getOwner()))) {
 					targetalbe.add(tmp);
 				}
 			}
@@ -386,7 +427,8 @@ public class MenuMaker<T> {
 					}
 
 					@Override
-					public void addPropertyChangeListener(PropertyChangeListener listener) {
+					public void addPropertyChangeListener(
+							PropertyChangeListener listener) {
 					}
 
 					@Override
@@ -406,7 +448,8 @@ public class MenuMaker<T> {
 					}
 
 					@Override
-					public void removePropertyChangeListener(PropertyChangeListener listener) {
+					public void removePropertyChangeListener(
+							PropertyChangeListener listener) {
 						// TODO Auto-generated method stub
 
 					}
@@ -420,8 +463,8 @@ public class MenuMaker<T> {
 				fireOption.setAction(a);
 				fireOption.setText("Fire");
 				ans.add(fireOption);
-				System.out.println(
-						"added fireOption: MM " + "line " + new Throwable().getStackTrace()[0].getLineNumber());
+				System.out.println("added fireOption: MM " + "line "
+						+ new Throwable().getStackTrace()[0].getLineNumber());
 				System.out.println("targetable = " + targetalbe);
 			}
 		}
@@ -430,7 +473,8 @@ public class MenuMaker<T> {
 
 		// infantry can capture
 		if (u instanceof Infantry) {
-			if (newLoc instanceof Property && ((Property) newLoc).getOwner() != u.getOwner()) {
+			if (newLoc instanceof Property
+					&& ((Property) newLoc).getOwner() != u.getOwner()) {
 				ans.add(new MethodItem(Infantry.class.getMethod("capture")));
 			}
 		}
@@ -511,8 +555,10 @@ public class MenuMaker<T> {
 	 *            the location of the occupant to be constructed
 	 * @return the menu to pop up
 	 */
-	public JPopupMenu makeConstructorMenu(Collection<Class> classes, Location loc) {
-		System.out.println("making constructor menu. See line 362 of MenuMaker");
+	public JPopupMenu makeConstructorMenu(Collection<Class> classes,
+			Location loc) {
+		System.out
+				.println("making constructor menu. See line 362 of MenuMaker");
 		this.currentLocation = loc;
 		JPopupMenu menu = new JPopupMenu();
 		// ???
@@ -524,7 +570,8 @@ public class MenuMaker<T> {
 		}
 		try {
 			Factory fac = (Factory) loc;
-			for (Constructor<? extends Unit> constructor : fac.getBuildableUnits()) {
+			for (Constructor<? extends Unit> constructor : fac
+					.getBuildableUnits()) {
 				JMenuItem tmp = new JMenuItem();
 				Action a = new Action() {
 					public boolean enabled = true;
@@ -541,7 +588,8 @@ public class MenuMaker<T> {
 					}
 
 					@Override
-					public void removePropertyChangeListener(PropertyChangeListener listener) {
+					public void removePropertyChangeListener(
+							PropertyChangeListener listener) {
 					}
 
 					@Override
@@ -559,7 +607,8 @@ public class MenuMaker<T> {
 					}
 
 					@Override
-					public void addPropertyChangeListener(PropertyChangeListener listener) {
+					public void addPropertyChangeListener(
+							PropertyChangeListener listener) {
 					}
 				};
 				a.setEnabled(true);
@@ -661,7 +710,8 @@ public class MenuMaker<T> {
 	 * A menu item that shows a method or constructor.
 	 */
 	private class MCItem extends JMenuItem {
-		public String getDisplayString(Class retType, String name, Class[] paramTypes) {
+		public String getDisplayString(Class retType, String name,
+				Class[] paramTypes) {
 			StringBuffer b = new StringBuffer();
 			b.append("<html>");
 			if (retType != null)
@@ -719,7 +769,8 @@ public class MenuMaker<T> {
 
 	private abstract class ConstructorItem extends MCItem {
 		public ConstructorItem(Constructor c) {
-			setText(getDisplayString(null, c.getDeclaringClass().getName(), c.getParameterTypes()));
+			setText(getDisplayString(null, c.getDeclaringClass().getName(),
+					c.getParameterTypes()));
 			this.c = c;
 		}
 
@@ -733,7 +784,8 @@ public class MenuMaker<T> {
 
 			if (types.length > 0) {
 				PropertySheet sheet = new PropertySheet(types, values);
-				JOptionPane.showMessageDialog(this, sheet, resources.getString("dialog.method.params"),
+				JOptionPane.showMessageDialog(this, sheet,
+						resources.getString("dialog.method.params"),
 						JOptionPane.QUESTION_MESSAGE);
 				values = sheet.getValues();
 			}
@@ -752,7 +804,8 @@ public class MenuMaker<T> {
 		private Constructor c;
 	}
 
-	private class OccupantConstructorItem extends ConstructorItem implements ActionListener {
+	private class OccupantConstructorItem extends ConstructorItem implements
+			ActionListener {
 		public OccupantConstructorItem(Constructor c) {
 			super(c);
 			addActionListener(this);
@@ -767,7 +820,8 @@ public class MenuMaker<T> {
 		}
 	}
 
-	private class GridConstructorItem extends ConstructorItem implements ActionListener {
+	private class GridConstructorItem extends ConstructorItem implements
+			ActionListener {
 		public GridConstructorItem(Constructor c) {
 			super(c);
 			addActionListener(this);
@@ -783,7 +837,8 @@ public class MenuMaker<T> {
 
 	private class MethodItem extends MCItem implements ActionListener {
 		public MethodItem(Method m) {
-			setText(getDisplayString(m.getReturnType(), m.getName(), m.getParameterTypes()));
+			setText(getDisplayString(m.getReturnType(), m.getName(),
+					m.getParameterTypes()));
 			this.m = m;
 			addActionListener(this);
 			setIcon(displayMap.getIcon(m.getDeclaringClass(), 16, 16));
@@ -799,7 +854,8 @@ public class MenuMaker<T> {
 
 			if (types.length > 0) {
 				PropertySheet sheet = new PropertySheet(types, values);
-				JOptionPane.showMessageDialog(this, sheet, resources.getString("dialog.method.params"),
+				JOptionPane.showMessageDialog(this, sheet,
+						resources.getString("dialog.method.params"),
 						JOptionPane.QUESTION_MESSAGE);
 				values = sheet.getValues();
 			}
@@ -815,13 +871,15 @@ public class MenuMaker<T> {
 					if (resultString.length() < MAX_LENGTH)
 						resultObject = resultString;
 					else {
-						int rows = Math.min(MAX_HEIGHT, 1 + resultString.length() / MAX_LENGTH);
+						int rows = Math.min(MAX_HEIGHT,
+								1 + resultString.length() / MAX_LENGTH);
 						JTextArea pane = new JTextArea(rows, MAX_LENGTH);
 						pane.setText(resultString);
 						pane.setLineWrap(true);
 						resultObject = new JScrollPane(pane);
 					}
-					JOptionPane.showMessageDialog(parent, resultObject, resources.getString("dialog.method.return"),
+					JOptionPane.showMessageDialog(parent, resultObject,
+							resources.getString("dialog.method.return"),
 							JOptionPane.INFORMATION_MESSAGE);
 				}
 			} catch (InvocationTargetException ex) {
