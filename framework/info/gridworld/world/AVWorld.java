@@ -5,28 +5,37 @@ import info.gridworld.gui.WorldFrame;
 import majig12346.TerrainGrid;
 
 public class AVWorld extends MouseWorld {
-
-	public AVWorld(){}
+	public AVWorld(){
+	}
 	public AVWorld(Grid g) {
 		super(g);
 		// TODO Auto-generated constructor stub
-		
+
 	}
 	@Override
-	public void show() {
-		super.show();
+	public void setGrid(Grid g) {
+		super.setGrid(g);
+		if(g instanceof TerrainGrid){
+			((TerrainGrid) g).hostWorld = this;
+		}
 	}
 	public void go(){
 		System.out.println("starting go\n");
-		WorldFrame wf = (WorldFrame) frame;
-		wf.control.display.avw = this;
-		wf.control.display.setCurrentLocation(getLocationWhenClicked());
-		wf.control.editLocation();
+		getWorldFrame().control.display.avw = this;
+		getWorldFrame().control.display.setCurrentLocation(getLocationWhenClicked());
+		getWorldFrame().control.editLocation();
 		resetClickedLocation();
-		if(!wf.control.display.shouldBeHighlighted.contains(clickedLocation)){
-			wf.control.display.shouldBeHighlighted.clear();
+		if(!getWorldFrame().control.display.shouldBeHighlighted.contains(clickedLocation)){
+			getWorldFrame().control.display.shouldBeHighlighted.clear();
 		}
-		setMessage("Currently selected: none.\n\nUse mouse to click things. DO NOT use arrow keys or Enter");
+
+	}
+	public WorldFrame getWorldFrame() {
+		if(null!=frame){
+			return (WorldFrame) frame;
+		}else{
+			return null;
+		}
 	}
 
 }

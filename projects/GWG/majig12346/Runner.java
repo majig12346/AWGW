@@ -24,18 +24,20 @@ public class Runner {
 				+ " this is a Core 2 Duo!");
 		AVWorld avw = new AVWorld();
 		players = new Player[4];
-		Player p1 = new Player(new TestCO(),9999,new Color(255,85,50));
-		Player p2 = new Player(new TestCO(), 9999, new Color(100, 200, 255));
+		Player p1 = new Player(new TestCO(),15000,new Color(255,85,50));
+		Player p2 = new Player(new TestCO(), 9000, new Color(100, 200, 255));
 		players[p1.ID] = p1;
 		players[p2.ID] = p2;
 		TerrainGrid<Actor> g = new TerrainGrid<Actor>(10,10);
 		fillTerrainGrid(g);
 		customFill(g,p1,p2);
 		avw.setGrid(g);
-		avw.setMessage("Currently selected: none.\nUse mouse to click things. DO NOT us arrow keys");
 		avw.show();
 		//I will fix this
 		while(true){
+			avw.setMessage("Currently selected: none.\n\nUse mouse to click things. "+
+//					 "DO NOT use arrow keys or Enter"+
+		"P1 money: "+players[1].getMoney()+"  P2 money: "+players[2].getMoney());
 			avw.go();
 		}
 	}

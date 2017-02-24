@@ -2,6 +2,7 @@ package majig12346;
 
 import info.gridworld.grid.AbstractGrid;
 import info.gridworld.grid.Location;
+import info.gridworld.world.AVWorld;
 
 import java.util.ArrayList;
 
@@ -11,6 +12,7 @@ import java.util.ArrayList;
  */
 public class TerrainGrid<E> extends AbstractGrid<E>
 {
+	public AVWorld hostWorld;
 	private Object[][] occupantArray; // the array storing the grid elements
 	private Location[][] locationArray; // array containing map
 	public Location[][] getLocationArray(){

@@ -41,9 +41,9 @@ public abstract class Unit extends Actor{
 			this.setFuel(99);
 			this.resetMovement();
 		}else{
-			//TEST PURPOSES ONLY
-			//System.out.println("Warning: owner is null");
-			//throw new IllegalArgumentException("owner is null");
+			//FOR FACTORY MENU, FIXME in Factory class NOT VERY EFFICIENT
+//			System.out.println("Warning: owner is null");
+//			throw new IllegalArgumentException("owner is null");
 
 		}
 	}

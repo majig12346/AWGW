@@ -116,8 +116,8 @@ public class MenuMaker<T> {
 		currentLocation = loc;
 		// TODO tidy up
 		StringBuilder dispMessage = new StringBuilder(50);
-		dispMessage.append("Currently Selected: " + u.getType() + "["
-				+ u.getHealth() + " HP] at " + loc);
+		dispMessage.append("Currently Selected: " + u.getType() + " at " + loc
+				+" ["+ u.getHealth() + " HP] ["+u.getFuel()+" fuel]");
 		if (u instanceof Carry) {
 			dispMessage.append("\nCurrently Carrying: ");
 			ArrayList<String> types = new ArrayList<>();

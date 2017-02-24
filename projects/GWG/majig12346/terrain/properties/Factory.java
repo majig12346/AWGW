@@ -44,8 +44,15 @@ public abstract class Factory extends Property {
 				System.out.println("when money = "+getOwner().getMoney());
 				JOptionPane.showMessageDialog(null, "not enough money");
 				return;
+			}else{
+				getOwner().setMoney(getOwner().getMoney()-u.getBuildCost());
+				u.putSelfInGrid(hostGrid, this);
+				//FIXME I think this is unnecessary
+//				if(null!=hostGrid&&null!=hostGrid.hostWorld){
+//					hostGrid.hostWorld.getWorldFrame().control.display.repaint();
+//				}
 			}
-			u.putSelfInGrid(hostGrid, this);
+			
 			
 		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException
 				| InvocationTargetException e) {
