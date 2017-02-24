@@ -561,7 +561,8 @@ public abstract class Unit extends Actor{
 		while(!toCheck.isEmpty()){
 			Terrain current = toCheck.poll();
 			for(Terrain t : current.getAllAdjacentTerrains()){
-				if(999!=t.getMoveCost(getMovementType())){
+				if(999!=t.getMoveCost(getMovementType())&&
+						(null==getGrid().get(t)||((Unit)(getGrid().get(t))).getOwner()==this.getOwner())){
 					Queue<Terrain> path = new LinkedList<Terrain>();
 					if(savedPaths.containsKey(current)){
 						path.addAll(savedPaths.get(current));
@@ -619,23 +620,24 @@ public abstract class Unit extends Actor{
 		}
 		//invalid Terrain, fail -- should never happen
 		if(!(gr.isValid(t))){
-			System.out.println("invalid terrain, not sure what happened here");
+			System.err.println("invalid terrain, not sure what happened here");
 			return false;
 		}
 		//not enough mobility -- should never happen
 		if(t.getMoveCost((this.getMovementType()))>this.getMobility()){
-			System.out.println("not enough mobi -- check BFS algorithm");
+			System.err.println("not enough mobi -- check BFS algorithm???");
 			return false;
 		}
 		//Terrain is occupied by something other than allied Unit, fail
 		try{
 			Unit u = (Unit)(gr.get(t));
 			if(null!=u&&u.getOwner()!=this.getOwner()){
+				System.err.println("Terrain is occupied by something other than allied Unit, fail");
 				return false;
 			}
 		}catch(ClassCastException actorIsNotAUnit){
 			System.out.println(actorIsNotAUnit.getStackTrace());
-			System.out.println("why do you have non-units in the grid");
+			System.err.println("why do you have non-units in the grid");
 			return false;
 		}
 		//move on
