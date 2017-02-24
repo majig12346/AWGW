@@ -156,7 +156,7 @@ public abstract class Unit extends Actor{
 		}
 		return home.distanceTo((Terrain) u.getLocation())==1;
 	}
-	
+
 	/**
 	 * @return whether or not this unit can attack Unit toCheck from Terrain hypothetical
 	 * Gets overridden for ranged units, indirect fire, etc
@@ -167,7 +167,7 @@ public abstract class Unit extends Actor{
 		}
 		return hypothetical.distanceTo((Terrain) toCheck.getLocation())==1;
 	}
-	
+
 	/**
 	 * @return whether or not this unit can counterattack Unit u
 	 * Gets overridden for ranged units, indirect fire, etc
@@ -393,7 +393,7 @@ public abstract class Unit extends Actor{
 		}
 		return this.canMove;
 	}
-	
+
 	/**
 	 * sets canMove to false
 	 * @return whether or not the unit was already UNABLE to move
@@ -437,11 +437,11 @@ public abstract class Unit extends Actor{
 		Terrain t = (Terrain) getLocation();
 		boolean moveSuccess = realMove.length==0?
 				move(findPathTo(toMoveTo)):move(findPathTo(toMoveTo),realMove[0]);
-		if(moveSuccess){
-			immobilize();
-		}else{
-			System.out.println("move failed, see line 441 of Unit");
-		}
+				if(moveSuccess){
+					immobilize();
+				}else{
+					System.out.println("move failed, see line 441 of Unit");
+				}
 	}
 
 	/**
@@ -466,12 +466,12 @@ public abstract class Unit extends Actor{
 			Terrain current = toCheck.pop();
 			ArrayList<Terrain> adjacent = current.getAllAdjacentTerrains();
 			for(Terrain t:adjacent){
-//				System.out.println("movement type: "+this.getMovementType());
+				//				System.out.println("movement type: "+this.getMovementType());
 				if((distTo = distances.get(current)+t.getMoveCost(this.getMovementType()))<=mobility){
 					if(null==getGrid().get(t)){
 						if(!distances.containsKey(t)||distTo<distances.get(t)){
-//							System.out.println("mobility is "+mobility+", "
-//									+ "greater or euqal vs total movement cost of "+distTo+" for "+t);
+							//							System.out.println("mobility is "+mobility+", "
+							//									+ "greater or euqal vs total movement cost of "+distTo+" for "+t);
 							distances.put(t,distTo);
 							toCheck.push(t);
 						}
@@ -485,8 +485,8 @@ public abstract class Unit extends Actor{
 									toCheck.push(t);
 								}
 							}else{
-//								System.out.println("mobility is "+mobility+", "
-//										+ "greater or euqal vs total movement cost of "+distTo+" for "+t);
+								//								System.out.println("mobility is "+mobility+", "
+								//										+ "greater or euqal vs total movement cost of "+distTo+" for "+t);
 								distances.put(t,distTo);
 								toCheck.push(t);
 							}
@@ -500,12 +500,12 @@ public abstract class Unit extends Actor{
 					}
 				}
 				else{
-//					System.out.println("mobility is "+mobility+",  "
-//							+ "not enough vs total movement cost of "+distTo+" for "+t);
+					//					System.out.println("mobility is "+mobility+",  "
+					//							+ "not enough vs total movement cost of "+distTo+" for "+t);
 				}
 			}
 		}
-//		System.out.println("\ndone\n");
+		//		System.out.println("\ndone\n");
 		return ans;
 
 	}
@@ -561,19 +561,26 @@ public abstract class Unit extends Actor{
 		while(!toCheck.isEmpty()){
 			Terrain current = toCheck.poll();
 			for(Terrain t : current.getAllAdjacentTerrains()){
-				Queue<Terrain> path;
-				if(savedPaths.containsKey(t)){
-					path = savedPaths.get(t);
-				}else{
-					path = new LinkedList<Terrain>();
-				}
-				path.add(t);
-				if(t==target){
-					return path;
-				}
-				savedPaths.put(t, path);
-				if(totalCost(path)<=getMobility()){
-					toCheck.add(t);
+				if(999!=t.getMoveCost(getMovementType())){
+					Queue<Terrain> path = new LinkedList<Terrain>();
+					if(savedPaths.containsKey(current)){
+						path.addAll(savedPaths.get(current));
+					}
+					path.add(t);
+					if(t==target){
+						return path;
+					}
+					boolean updated = false;
+					if(totalCost(path)<(savedPaths.containsKey(t)?totalCost(savedPaths.get(t)):998)){
+						savedPaths.put(t, path);
+						updated = true;
+					}
+					if(totalCost(path)<=getMobility()&&updated){
+						if(!toCheck.contains(t)){
+							toCheck.add(t);
+						}
+
+					}
 				}
 			}
 		}
@@ -588,8 +595,8 @@ public abstract class Unit extends Actor{
 	 *  Postcondition: this.getLocation returns t
 	 */
 	private void traverse(Grid<Actor> gr, Terrain t){
-//		removeSelfFromGrid();
-//		putSelfInGrid(gr, t);
+		//		removeSelfFromGrid();
+		//		putSelfInGrid(gr, t);
 		double moveCost = t.getMoveCost(this.getMovementType());
 		setMobility(getMobility()-moveCost);
 	}
@@ -636,15 +643,15 @@ public abstract class Unit extends Actor{
 		if(path.peek()==null&&realMove.length!=0){
 			teleport(t);
 		}
-		return move(path);
+		return realMove.length==0?move(path):move(path,true);
 	}
 	private void teleport(Terrain t){
 		Grid gr = getGrid();
 		this.removeSelfFromGrid();
 		this.putSelfInGrid(gr, t);
 	}
-	
-	
+
+
 	/**
 	 * Precondition: Carry c canCarry(this) is true
 	 * @param c the Carry that this Unit will be loaded into
