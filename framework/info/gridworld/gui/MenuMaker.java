@@ -30,6 +30,7 @@ import majig12346.weapons.WeaponType;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -39,9 +40,11 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyEditor;
 import java.beans.PropertyEditorManager;
 import java.beans.PropertyEditorSupport;
+import java.io.File;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -54,6 +57,7 @@ import java.util.ResourceBundle;
 import java.util.Set;
 
 import javax.swing.Action;
+import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -124,7 +128,7 @@ public class MenuMaker<T> {
 			Carry c = (Carry) u;
 			for (Unit carried : c.getUnits()) {
 				types.add(carried.getType() + "[" + carried.getHealth()
-						+ " HP] ["+u.getFuel()+" fuel]");
+				+ " HP] ["+u.getFuel()+" fuel]");
 			}
 			if (!types.isEmpty()) {
 				dispMessage.append(types.toString());
@@ -135,8 +139,8 @@ public class MenuMaker<T> {
 			dispMessage.append("\n");
 		}
 		dispMessage
-				.append(u.canMove() ? "\nClick highlighted tile to move, click unhighlighted to cancel"
-						: "\nUnit currently immobile; wait until next turn to move again.");
+		.append(u.canMove() ? "\nClick highlighted tile to move, click unhighlighted to cancel"
+				: "\nUnit currently immobile; wait until next turn to move again.");
 		display.avw.setMessage(dispMessage.toString());
 		display.repaint();
 		// inefficient
@@ -144,12 +148,13 @@ public class MenuMaker<T> {
 		display.shouldBeHighlighted = validMoveSpaces;
 		display.avw.resetClickedLocation();
 
-//		new Thread(new Runnable() {
-//			@Override
-//			public void run() {
-				newLoc = (Terrain) display.avw.getLocationWhenClicked();
-//			}
-//		}).start();
+		//TODO thread stuff
+		//		new Thread(new Runnable() {
+		//			@Override
+		//			public void run() {
+		newLoc = (Terrain) display.avw.getLocationWhenClicked();
+		//			}
+		//		}).start();
 		if (!validMoveSpaces.contains(newLoc)) {
 			display.avw.setMessage("DEFAULT SOMETHING");
 			display.shouldBeHighlighted.clear();
@@ -186,7 +191,13 @@ public class MenuMaker<T> {
 		}
 		return menu;
 	}
-
+	public ImageIcon get16xIcon(URL imagePath){
+		ImageIcon pic = new ImageIcon(imagePath); // load the image to a imageIcon
+		Image image = pic.getImage(); // transform it 
+		Image newimg = image.getScaledInstance(16, 16,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
+		pic = new ImageIcon(newimg);  // transform it back
+		return pic;
+	}
 	private ArrayList<JMenuItem> getValidActions(Location newLoc)
 			throws NoSuchMethodException, SecurityException {
 		Unit u = (Unit) occupant;
@@ -244,6 +255,8 @@ public class MenuMaker<T> {
 			};
 			a.setEnabled(true);
 			waitOption.setAction(a);
+			URL imagePath = this.getClass().getClassLoader().getResource("resources/32x/wait.png");
+			waitOption.setIcon(get16xIcon(imagePath));
 			waitOption.setText("Wait");
 			ans.add(waitOption);
 
@@ -329,6 +342,8 @@ public class MenuMaker<T> {
 					};
 					tmpDropOption.setAction(tmpAction);
 					tmpDropOption.setText("Drop: " + carried.getType());
+					tmpDropOption.setIcon(get16xIcon(this.getClass().getClassLoader().getResource(
+							"resources/units/"+carried.getType()+".png")));
 					ans.add(tmpDropOption);
 				}
 			}
@@ -349,19 +364,19 @@ public class MenuMaker<T> {
 					}
 					c.addUnit(u);
 					u.removeSelfFromGrid();//TODO
-//					new Thread(new Runnable(){
-//						public void run(){
-//							display.repaint();
-//							display.invalidate();
-//						}
-//					}).start();
+					//					new Thread(new Runnable(){
+					//						public void run(){
+					//							display.repaint();
+					//							display.invalidate();
+					//						}
+					//					}).start();
 					Grid debug1 = newLocOcc.getGrid();
 					Location debug2 = newLocOcc.getLocation();
 					Location debug3 = newLoc;
 					Unit debug4 = newLocOcc;
 					Carry debug5 = c;
 					Unit debug6 = u;
-//					newLocOcc.putSelfInGrid(u.getGrid(), newLoc); 
+					//					newLocOcc.putSelfInGrid(u.getGrid(), newLoc); 
 					display.shouldBeHighlighted.clear();
 					display.repaint();
 					// TODO i think this is done
@@ -397,6 +412,8 @@ public class MenuMaker<T> {
 				}
 			};
 			loadOption.setAction(a);
+			URL imagePath = this.getClass().getClassLoader().getResource("resources/32x/load.png");
+			loadOption.setIcon(get16xIcon(imagePath));
 			loadOption.setText("Load");
 			ans.add(loadOption);
 		} else {
@@ -475,7 +492,11 @@ public class MenuMaker<T> {
 		if (u instanceof Infantry) {
 			if (newLoc instanceof Property
 					&& ((Property) newLoc).getOwner() != u.getOwner()) {
-				ans.add(new MethodItem(Infantry.class.getMethod("capture")));
+				MethodItem captureOption = new MethodItem(Infantry.class.getMethod("capture"));
+				URL imagePath = this.getClass().getClassLoader().getResource("resources/32x/capture.png");
+				captureOption.setIcon(get16xIcon(imagePath));
+				captureOption.setText("Capture");
+				ans.add(captureOption);
 			}
 		}
 
@@ -558,7 +579,7 @@ public class MenuMaker<T> {
 	public JPopupMenu makeConstructorMenu(Collection<Class> classes,
 			Location loc) {
 		System.out
-				.println("making constructor menu. See line 362 of MenuMaker");
+		.println("making constructor menu. See line 362 of MenuMaker");
 		this.currentLocation = loc;
 		JPopupMenu menu = new JPopupMenu();
 		// ???
@@ -624,7 +645,12 @@ public class MenuMaker<T> {
 				// ResourceBundle b = new ResourceBundle("")
 				// TODO nicer naming, picture
 				tmp.setText(name);
-				// tmp.setIcon();
+//				System.out.println(null==constructor); FIXME
+//				System.out.println("aaaaaa");
+				URL imagePath = this.getClass().getClassLoader().getResource(
+						"resources/units/"+constructor.getDeclaringClass().getSimpleName()+".png");
+
+				tmp.setIcon(get16xIcon(imagePath));
 				menu.add(tmp);
 			}
 
@@ -805,7 +831,7 @@ public class MenuMaker<T> {
 	}
 
 	private class OccupantConstructorItem extends ConstructorItem implements
-			ActionListener {
+	ActionListener {
 		public OccupantConstructorItem(Constructor c) {
 			super(c);
 			addActionListener(this);
@@ -821,7 +847,7 @@ public class MenuMaker<T> {
 	}
 
 	private class GridConstructorItem extends ConstructorItem implements
-			ActionListener {
+	ActionListener {
 		public GridConstructorItem(Constructor c) {
 			super(c);
 			addActionListener(this);
