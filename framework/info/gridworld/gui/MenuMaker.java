@@ -181,10 +181,8 @@ public class MenuMaker<T> {
 		try {
 			actions = getValidActions(newLoc);
 		} catch (NoSuchMethodException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (SecurityException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		System.out.println("methods is " + actions.size() + " size.");
@@ -209,8 +207,6 @@ public class MenuMaker<T> {
 		Unit newLocOcc = (Unit) u.getGrid().get(newLoc);
 		if (u.canMove() && null == newLocOcc) {
 			System.out.println("can move, added!");
-			// TODO move action thing
-			// ans.add(new Unit.class.getMethod("move", Terrain.class));
 			JMenuItem waitOption = new JMenuItem();
 			Action a = new Action() {
 				public boolean enabled = true;
@@ -262,6 +258,7 @@ public class MenuMaker<T> {
 			waitOption.setIcon(get16xIcon(imagePath));
 			waitOption.setText("Wait");
 			ans.add(waitOption);
+
 
 			// if unit is carry, can drop something off
 			System.out.println("checking drop");
@@ -357,12 +354,82 @@ public class MenuMaker<T> {
 					}
 				}
 			}
+			// units can fire on enemies if not unarmed and in range
+			System.out.println("checking weps");
+			if (u.getWeapons()[0].getWeaponType() != WeaponType.NONE
+					|| null != u.getWeapons()[1]) {
+				ArrayList<Unit> targetalbe = new ArrayList<>();
+				ArrayList<Location> occupied = u.getGrid().getOccupiedLocations();
+				for (Location l : occupied) {
+					Unit tmp = (Unit) u.getGrid().get(l);
+					if (u.couldTarget(tmp, (Terrain) newLoc)
+							&& (!u.getOwner().equals(tmp.getOwner()))) {
+						targetalbe.add(tmp);
+					}
+				}
+				if (!targetalbe.isEmpty()) {
+
+					Action fireAction = new Action() {
+						public boolean enabled = true;
+
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							// TODO add this
+
+						}
+
+						@Override
+						public void addPropertyChangeListener(
+								PropertyChangeListener listener) {
+						}
+
+						@Override
+						public Object getValue(String key) {
+							return null;
+						}
+
+						@Override
+						public boolean isEnabled() {
+							return enabled;
+						}
+
+						@Override
+						public void putValue(String key, Object value) {
+							// TODO Auto-generated method stub
+
+						}
+
+						@Override
+						public void removePropertyChangeListener(
+								PropertyChangeListener listener) {
+							// TODO Auto-generated method stub
+
+						}
+
+						@Override
+						public void setEnabled(boolean b) {
+							enabled = b;
+						}
+					};
+					JMenuItem fireOption = new JMenuItem();
+					fireOption.setAction(a);
+					fireOption.setText("Fire");
+					fireOption.setIcon(get16xIcon(this.getClass().getClassLoader().getResource(
+							"resources/32x/fire.png")));
+					ans.add(fireOption);
+
+
+					System.out.println("added fireOption: MM " + "line "
+							+ new Throwable().getStackTrace()[0].getLineNumber());
+					System.out.println("targetable = " + targetalbe);
+				}
+			}
 
 		} else if (newLocOcc instanceof Carry
 				&& ((Carry) newLocOcc).canCarry(u)) {
 			Carry c = (Carry) newLocOcc;
 			JMenuItem loadOption = new JMenuItem();
-			Action a = new Action() {
+			Action loadAction = new Action() {
 				public boolean enabled = true;
 
 				@Override
@@ -407,15 +474,16 @@ public class MenuMaker<T> {
 				public void addPropertyChangeListener(
 						PropertyChangeListener listener) {}
 			};
-			loadOption.setAction(a);
+			loadOption.setAction(loadAction);
 			URL imagePath = this.getClass().getClassLoader().getResource("resources/32x/load.png");
 			loadOption.setIcon(get16xIcon(imagePath));
 			loadOption.setText("Load");
 			ans.add(loadOption);
 		}else {
 			//do nothing
-			System.out.println("cant move");
 		}
+
+
 		//check resupply
 		System.out.println("checking resupply");
 		if(u instanceof Carry && ((Carry) u).canResupply()){
@@ -437,7 +505,7 @@ public class MenuMaker<T> {
 					public boolean enabled = true;
 
 					@Override
-					public void actionPerformed(ActionEvent e) {//FIXME bugged
+					public void actionPerformed(ActionEvent e) {
 						try {
 							u.move((Terrain) newLoc,true);
 						} catch (Exception e1) {
@@ -497,76 +565,7 @@ public class MenuMaker<T> {
 			}
 		}
 
-		// units can fire on enemies if not unarmed and in range
-		System.out.println("checking weps");
-		if (u.getWeapons()[0].getWeaponType() != WeaponType.NONE
-				|| null != u.getWeapons()[1]) {
-			ArrayList<Unit> targetalbe = new ArrayList<>();
-			ArrayList<Location> occupied = u.getGrid().getOccupiedLocations();
-			for (Location l : occupied) {
-				Unit tmp = (Unit) u.getGrid().get(l);
-				if (u.couldTarget(tmp, (Terrain) newLoc)
-						&& (!u.getOwner().equals(tmp.getOwner()))) {
-					targetalbe.add(tmp);
-				}
-			}
-			if (!targetalbe.isEmpty()) {
-
-				Action a = new Action() {
-					public boolean enabled = true;
-
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						// TODO add this
-
-					}
-
-					@Override
-					public void addPropertyChangeListener(
-							PropertyChangeListener listener) {
-					}
-
-					@Override
-					public Object getValue(String key) {
-						return null;
-					}
-
-					@Override
-					public boolean isEnabled() {
-						return enabled;
-					}
-
-					@Override
-					public void putValue(String key, Object value) {
-						// TODO Auto-generated method stub
-
-					}
-
-					@Override
-					public void removePropertyChangeListener(
-							PropertyChangeListener listener) {
-						// TODO Auto-generated method stub
-
-					}
-
-					@Override
-					public void setEnabled(boolean b) {
-						enabled = b;
-					}
-				};
-				JMenuItem fireOption = new JMenuItem();
-				fireOption.setAction(a);
-				fireOption.setText("Fire");
-				fireOption.setIcon(get16xIcon(this.getClass().getClassLoader().getResource(
-						"resources/32x/fire.png")));
-				ans.add(fireOption);
-
-
-				System.out.println("added fireOption: MM " + "line "
-						+ new Throwable().getStackTrace()[0].getLineNumber());
-				System.out.println("targetable = " + targetalbe);
-			}
-		}
+		
 
 		// TODO stealth functions
 
@@ -581,7 +580,10 @@ public class MenuMaker<T> {
 				ans.add(captureOption);
 			}
 		}
-
+		//always a cancel option
+		JMenuItem cancelOption = new JMenuItem("cancel",
+				get16xIcon(this.getClass().getClassLoader().getResource("resources/32x/cancel.png")));
+		ans.add(cancelOption);
 		return ans;
 
 		// return (Method[]) (ans.toArray());
@@ -716,8 +718,6 @@ public class MenuMaker<T> {
 				};
 				a.setEnabled(true);
 				tmp.setAction(a);
-				// String[] nameParts = constructor.getName().split("\\.");
-				// String name = nameParts[nameParts.length-1];
 				Player[] p = { null };
 				Unit u = constructor.newInstance(p);
 				int cost = u.getBuildCost();
@@ -727,8 +727,6 @@ public class MenuMaker<T> {
 				// ResourceBundle b = new ResourceBundle("")
 				// TODO nicer naming, picture
 				tmp.setText(name);
-				//				System.out.println(null==constructor); FIXME
-				//				System.out.println("aaaaaa");
 				URL imagePath = this.getClass().getClassLoader().getResource(
 						"resources/units/"+constructor.getDeclaringClass().getSimpleName()+".png");
 				tmp.setIcon(get16xIcon(imagePath));
@@ -785,10 +783,7 @@ public class MenuMaker<T> {
 
 	private Method[] getMethods() {
 		Class cl = occupant.getClass();
-		// TODO ???
 		Method[] methods = cl.getMethods();
-		// Method[] methods = new Method[];
-
 		Arrays.sort(methods, new Comparator<Method>() {
 			public int compare(Method m1, Method m2) {
 				int d1 = depth(m1.getDeclaringClass());
