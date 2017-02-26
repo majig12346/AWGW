@@ -124,9 +124,9 @@ public class MenuMaker<T> {
 		dispMessage.append("Currently Selected: " + u.getType() + " at " + loc
 				+" ["+ u.getHealth() + " HP] ["+u.getFuel()+" fuel]");
 		if (u instanceof Carry) {
-			dispMessage.append("\nCurrently Carrying: ");
-			ArrayList<String> types = new ArrayList<>();
 			Carry c = (Carry) u;
+			dispMessage.append("\nCurrently Carrying("+c.getUnits().size()+"/"+c.getMaxCapacity()+"): ");
+			ArrayList<String> types = new ArrayList<>();
 			for (Unit carried : c.getUnits()) {
 				types.add(carried.getType() + "[" + carried.getHealth()
 				+ " HP] ["+u.getFuel()+" fuel]");
@@ -288,7 +288,8 @@ public class MenuMaker<T> {
 								display.shouldBeHighlighted = new HashSet<Terrain>(
 										validLZs);
 								display.avw.setMessage("Dropping off: "+carried.getType() + "[" + carried.getHealth()
-								+ " HP] ["+u.getFuel()+" fuel]\n\nClick where you would like to drop "+carried.getType()+" off.");
+								+ " HP] ["+u.getFuel()+" fuel]\n\nClick where you would like to drop "+carried.getType()+" off."
+										+ "  Click an unhighlighted tile to cancel.");
 								display.avw.resetClickedLocation();
 								display.repaint();
 								display.invalidate();
@@ -426,6 +427,7 @@ public class MenuMaker<T> {
 			}
 
 		} else if (newLocOcc instanceof Carry
+				&& !((Carry) newLocOcc).isFull()
 				&& ((Carry) newLocOcc).canCarry(u)) {
 			Carry c = (Carry) newLocOcc;
 			JMenuItem loadOption = new JMenuItem();
@@ -565,7 +567,7 @@ public class MenuMaker<T> {
 			}
 		}
 
-		
+
 
 		// TODO stealth functions
 
@@ -580,10 +582,12 @@ public class MenuMaker<T> {
 				ans.add(captureOption);
 			}
 		}
-		//always a cancel option
-		JMenuItem cancelOption = new JMenuItem("cancel",
-				get16xIcon(this.getClass().getClassLoader().getResource("resources/32x/cancel.png")));
-		ans.add(cancelOption);
+		//always a cancel option if anything else is do able
+		if(!ans.isEmpty()){
+			JMenuItem cancelOption = new JMenuItem("cancel",
+					get16xIcon(this.getClass().getClassLoader().getResource("resources/32x/cancel.png")));
+			ans.add(cancelOption);
+		}
 		return ans;
 
 		// return (Method[]) (ans.toArray());
