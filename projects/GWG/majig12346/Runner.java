@@ -25,7 +25,7 @@ public class Runner {
 		AVWorld avw = new AVWorld();
 		players = new Player[4];
 		Player p1 = new Player(new TestCO(),15000,new Color(255,85,50));
-		Player p2 = new Player(new TestCO(), 9000, new Color(100, 200, 255));
+		Player p2 = new Player(new TestCO(), 9000, new Color(75, 150, 255));
 		players[p1.ID] = p1;
 		players[p2.ID] = p2;
 		TerrainGrid<Actor> g = new TerrainGrid<Actor>(10,10);
@@ -35,7 +35,7 @@ public class Runner {
 		avw.show();
 		//I will fix this
 		while(true){
-			avw.setMessage("Currently selected: none.\n\nUse mouse to click things. "+
+			avw.setMessage("Currently selected: none.\n\nUse your units to move. Click your factories to build. "+
 //					 "DO NOT use arrow keys or Enter"+
 		"P1 money: "+players[1].getMoney()+"  P2 money: "+players[2].getMoney());
 			avw.go();
@@ -50,8 +50,8 @@ public class Runner {
 		inf1.putSelfInGrid(g,g.getLocationArray()[1][1]);
 		Infantry inf2 = new Infantry(players[1]);
 		inf2.putSelfInGrid(g,g.getLocationArray()[9][6]);
-		Mech mech1 = new Mech(players[1]);
-		mech1.putSelfInGrid(g,g.getLocationArray()[0][8]);
+		Mech mech1 = new Mech(players[2]);
+		mech1.putSelfInGrid(g,g.getLocationArray()[1][9]);
 		MedTank medTank1 = new MedTank(players[1]);
 		medTank1.putSelfInGrid(g,g.getLocationArray()[1][8]);
 		APC apc1 = new APC(players[1]);

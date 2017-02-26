@@ -19,6 +19,7 @@ package info.gridworld.gui;
 import info.gridworld.grid.Grid;
 import info.gridworld.grid.Location;
 import majig12346.Player;
+import majig12346.Runner;
 import majig12346.terrain.Terrain;
 import majig12346.terrain.properties.Factory;
 import majig12346.terrain.properties.Property;
@@ -156,7 +157,9 @@ public class MenuMaker<T> {
 		//			}
 		//		}).start();
 		if (!validMoveSpaces.contains(newLoc)) {
-			display.avw.setMessage("DEFAULT SOMETHING");
+			display.avw.setMessage("Currently selected: none.\n\nUse your units to move. Click your factories to build. "+
+					//					 "DO NOT use arrow keys or Enter"+
+					"P1 money: "+Runner.players[1].getMoney()+"  P2 money: "+Runner.players[2].getMoney());
 			display.shouldBeHighlighted.clear();
 			return null;
 		}
@@ -268,83 +271,88 @@ public class MenuMaker<T> {
 					&& (!((carriedUnits = (carryU = (Carry) u).getUnits())
 							.isEmpty()))) {
 				for (Unit carried : carriedUnits) {
-					JMenuItem tmpDropOption = new JMenuItem();
-					Action tmpAction = new Action() {
-						public boolean enabled = true;
+					ArrayList<Terrain> validLZs = new ArrayList<>();
+					for (Terrain t : ((Terrain) newLoc)
+							.getAllAdjacentTerrains()) {
+						if ((null == u.getGrid().get(t)||(u==u.getGrid().get(t)&&!newLoc.equals(t)))
+								&& 999 != t.getMoveCost(carried
+										.getMovementType())) {
+							validLZs.add(t);
+						}
+					}
+					if(!validLZs.isEmpty()){
+						JMenuItem tmpDropOption = new JMenuItem();
+						Action tmpAction = new Action() {
+							public boolean enabled = true;
 
-						@Override
-						public void actionPerformed(ActionEvent arg0) {
-							ArrayList<Terrain> validLZs = new ArrayList<>();
-							for (Terrain t : ((Terrain) newLoc)
-									.getAllAdjacentTerrains()) {
-								if (null == u.getGrid().get(t)
-										&& 999 != t.getMoveCost(carried
-												.getMovementType())) {
-									validLZs.add(t);
-								}
-							}
-							display.shouldBeHighlighted = new HashSet<Terrain>(
-									validLZs);
-							display.avw.resetClickedLocation();
-							display.repaint();
-							display.invalidate();
-							new Thread(new Runnable() {
+							@Override
+							public void actionPerformed(ActionEvent arg0) {
 
-								@Override
-								public void run() {
-									Location LZ = display.avw
-											.getLocationWhenClicked();
-									if (!validLZs.contains(LZ)) {
-										display.shouldBeHighlighted.clear();
-										display.repaint();
-										display.invalidate();
-										// drop canceled
-										return;
-									} else {
-										try {
-											u.move(((Terrain) newLoc),true);
+								display.shouldBeHighlighted = new HashSet<Terrain>(
+										validLZs);
+								display.avw.setMessage("Dropping off: "+carried.getType() + "[" + carried.getHealth()
+								+ " HP] ["+u.getFuel()+" fuel]\n\nClick where you would like to drop "+carried.getType()+" off.");
+								display.avw.resetClickedLocation();
+								display.repaint();
+								display.invalidate();
+								new Thread(new Runnable() {
+
+									@Override
+									public void run() {
+										Location LZ = display.avw
+												.getLocationWhenClicked();
+										if (!validLZs.contains(LZ)) {
+											display.shouldBeHighlighted.clear();
 											display.repaint();
 											display.invalidate();
-										} catch (Exception e) {
-											e.printStackTrace();
+											// drop canceled
+											return;
+										} else {
+											try {
+												u.move(((Terrain) newLoc),true);
+												display.repaint();
+												display.invalidate();
+											} catch (Exception e) {
+												e.printStackTrace();
+											}
+											carried.putSelfInGrid(u.getGrid(), LZ);
+											carryU.getUnits().remove(carried);
+
 										}
-										carried.putSelfInGrid(u.getGrid(), LZ);
-										carryU.getUnits().remove(carried);
-
 									}
-								}
-							}).start();
+								}).start();
 
-						}
+							}
 
-						public void addPropertyChangeListener(
-								PropertyChangeListener arg0) {
-						}
+							public void addPropertyChangeListener(
+									PropertyChangeListener arg0) {
+							}
 
-						public Object getValue(String arg0) {
-							return null;
-						}
+							public Object getValue(String arg0) {
+								return null;
+							}
 
-						public boolean isEnabled() {
-							return enabled;
-						}
+							public boolean isEnabled() {
+								return enabled;
+							}
 
-						public void putValue(String key, Object value) {
-						}
+							public void putValue(String key, Object value) {
+							}
 
-						public void removePropertyChangeListener(
-								PropertyChangeListener listener) {
-						}
+							public void removePropertyChangeListener(
+									PropertyChangeListener listener) {
+							}
 
-						public void setEnabled(boolean b) {
-							enabled = b;
-						}
-					};
-					tmpDropOption.setAction(tmpAction);
-					tmpDropOption.setText("Drop: " + carried.getType());
-					tmpDropOption.setIcon(get16xIcon(this.getClass().getClassLoader().getResource(
-							"resources/units/"+carried.getType()+".png")));
-					ans.add(tmpDropOption);
+							public void setEnabled(boolean b) {
+								enabled = b;
+							}
+						};
+						tmpDropOption.setAction(tmpAction);
+						tmpDropOption.setText("Drop: " + carried.getType());
+						tmpDropOption.setIcon(get16xIcon(this.getClass().getClassLoader().getResource(
+								"resources/units/"+carried.getType()+".png")));
+						ans.add(tmpDropOption);
+					}
 				}
 			}
 
@@ -479,7 +487,11 @@ public class MenuMaker<T> {
 				JMenuItem fireOption = new JMenuItem();
 				fireOption.setAction(a);
 				fireOption.setText("Fire");
+				fireOption.setIcon(get16xIcon(this.getClass().getClassLoader().getResource(
+						"resources/32x/fire.png")));
 				ans.add(fireOption);
+
+
 				System.out.println("added fireOption: MM " + "line "
 						+ new Throwable().getStackTrace()[0].getLineNumber());
 				System.out.println("targetable = " + targetalbe);
@@ -645,8 +657,8 @@ public class MenuMaker<T> {
 				// ResourceBundle b = new ResourceBundle("")
 				// TODO nicer naming, picture
 				tmp.setText(name);
-//				System.out.println(null==constructor); FIXME
-//				System.out.println("aaaaaa");
+				//				System.out.println(null==constructor); FIXME
+				//				System.out.println("aaaaaa");
 				URL imagePath = this.getClass().getClassLoader().getResource(
 						"resources/units/"+constructor.getDeclaringClass().getSimpleName()+".png");
 
