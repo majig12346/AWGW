@@ -1,7 +1,10 @@
 package majig12346.units.air;
 
+import majig12346.PassiveFlag.MoveType;
 import majig12346.Player;
+import majig12346.terrain.Terrain;
 import majig12346.units.Air;
+import majig12346.units.Unit;
 import majig12346.weapons.WeaponType;
 
 /**
@@ -47,6 +50,10 @@ public class Fighter extends Air {
 	@Override
 	public int getDailyCost() {
 		return 5;
+	}
+	@Override
+	public boolean couldTarget(Unit toCheck, Terrain hypothetical) {//air only
+		return super.couldTarget(toCheck, hypothetical)&&MoveType.AIR.equals(toCheck.getMovementType());
 	}
 
 }

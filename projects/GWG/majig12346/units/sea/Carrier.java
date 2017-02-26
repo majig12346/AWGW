@@ -2,6 +2,7 @@ package majig12346.units.sea;
 
 import java.util.ArrayList;
 
+import majig12346.PassiveFlag.MoveType;
 import majig12346.Player;
 import majig12346.terrain.Terrain;
 import majig12346.units.Air;
@@ -73,19 +74,13 @@ public class Carrier extends Sea implements Carry {
 	}
 	@Override
 	public boolean couldTarget(Unit toCheck, Terrain hypothetical){
-		if(null==toCheck){
-			return false; //can't target nothing
+		if(!hypothetical.equals(getLocation())){
+			return false;//cannot move and fire
+		}
+		if(null==toCheck||!MoveType.AIR.equals(toCheck.getMovementType())){
+			return false; //can't target nothing, can only target Air units
 		}
 		int dist = hypothetical.distanceTo((Terrain) toCheck.getLocation());
-		return (dist>=1&&dist<=4);
-	}
-	@Override
-	public boolean canTarget(Unit u){
-		if(null==u){
-			return false;
-		}
-		Terrain home = (Terrain) getLocation();
-		int dist = home.distanceTo((Terrain) u.getLocation());
 		return (dist>=1&&dist<=4);
 	}
 	@Override

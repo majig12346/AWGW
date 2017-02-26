@@ -289,7 +289,7 @@ public class MenuMaker<T> {
 										validLZs);
 								display.avw.setMessage("Dropping off: "+carried.getType() + "[" + carried.getHealth()
 								+ " HP] ["+u.getFuel()+" fuel]\n\nClick where you would like to drop "+carried.getType()+" off."
-										+ "  Click an unhighlighted tile to cancel.");
+								+ "  Click an unhighlighted tile to cancel.");
 								display.avw.resetClickedLocation();
 								display.repaint();
 								display.invalidate();
@@ -355,77 +355,6 @@ public class MenuMaker<T> {
 					}
 				}
 			}
-			// units can fire on enemies if not unarmed and in range
-			System.out.println("checking weps");
-			if (u.getWeapons()[0].getWeaponType() != WeaponType.NONE
-					|| null != u.getWeapons()[1]) {
-				ArrayList<Unit> targetalbe = new ArrayList<>();
-				ArrayList<Location> occupied = u.getGrid().getOccupiedLocations();
-				for (Location l : occupied) {
-					Unit tmp = (Unit) u.getGrid().get(l);
-					if (u.couldTarget(tmp, (Terrain) newLoc)
-							&& (!u.getOwner().equals(tmp.getOwner()))) {
-						targetalbe.add(tmp);
-					}
-				}
-				if (!targetalbe.isEmpty()) {
-
-					Action fireAction = new Action() {
-						public boolean enabled = true;
-
-						@Override
-						public void actionPerformed(ActionEvent e) {
-							// TODO add this
-
-						}
-
-						@Override
-						public void addPropertyChangeListener(
-								PropertyChangeListener listener) {
-						}
-
-						@Override
-						public Object getValue(String key) {
-							return null;
-						}
-
-						@Override
-						public boolean isEnabled() {
-							return enabled;
-						}
-
-						@Override
-						public void putValue(String key, Object value) {
-							// TODO Auto-generated method stub
-
-						}
-
-						@Override
-						public void removePropertyChangeListener(
-								PropertyChangeListener listener) {
-							// TODO Auto-generated method stub
-
-						}
-
-						@Override
-						public void setEnabled(boolean b) {
-							enabled = b;
-						}
-					};
-					JMenuItem fireOption = new JMenuItem();
-					fireOption.setAction(a);
-					fireOption.setText("Fire");
-					fireOption.setIcon(get16xIcon(this.getClass().getClassLoader().getResource(
-							"resources/32x/fire.png")));
-					ans.add(fireOption);
-
-
-					System.out.println("added fireOption: MM " + "line "
-							+ new Throwable().getStackTrace()[0].getLineNumber());
-					System.out.println("targetable = " + targetalbe);
-				}
-			}
-
 		} else if (newLocOcc instanceof Carry
 				&& !((Carry) newLocOcc).isFull()
 				&& ((Carry) newLocOcc).canCarry(u)) {
@@ -485,6 +414,76 @@ public class MenuMaker<T> {
 			//do nothing
 		}
 
+		// units can fire on enemies if not unarmed and in range
+		System.out.println("checking weps");
+		if (u.getWeapons()[0].getWeaponType() != WeaponType.NONE
+				|| null != u.getWeapons()[1]) {
+			ArrayList<Unit> targetalbe = new ArrayList<>();
+			ArrayList<Location> occupied = u.getGrid().getOccupiedLocations();
+			for (Location l : occupied) {
+				Unit tmp = (Unit) u.getGrid().get(l);
+				if (u.couldTarget(tmp, (Terrain) newLoc)
+						&& (!u.getOwner().equals(tmp.getOwner()))) {
+					targetalbe.add(tmp);
+				}
+			}
+			if (!targetalbe.isEmpty()) {
+
+				Action fireAction = new Action() {
+					public boolean enabled = true;
+
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						// TODO add this
+
+					}
+
+					@Override
+					public void addPropertyChangeListener(
+							PropertyChangeListener listener) {
+					}
+
+					@Override
+					public Object getValue(String key) {
+						return null;
+					}
+
+					@Override
+					public boolean isEnabled() {
+						return enabled;
+					}
+
+					@Override
+					public void putValue(String key, Object value) {
+						// TODO Auto-generated method stub
+
+					}
+
+					@Override
+					public void removePropertyChangeListener(
+							PropertyChangeListener listener) {
+						// TODO Auto-generated method stub
+
+					}
+
+					@Override
+					public void setEnabled(boolean b) {
+						enabled = b;
+					}
+				};
+				JMenuItem fireOption = new JMenuItem();
+				fireOption.setAction(fireAction);
+				fireOption.setText("Fire");
+				fireOption.setIcon(get16xIcon(this.getClass().getClassLoader().getResource(
+						"resources/32x/fire.png")));
+				ans.add(fireOption);
+
+
+				System.out.println("added fireOption: MM " + "line "
+						+ new Throwable().getStackTrace()[0].getLineNumber());
+				System.out.println("targetable = " + targetalbe);
+			}
+		}
 
 		//check resupply
 		System.out.println("checking resupply");

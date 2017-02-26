@@ -27,16 +27,13 @@ public class Missiles extends Unit {
 	}
 	@Override
 	public boolean couldTarget(Unit toCheck, Terrain hypothetical){
-		if(null==toCheck){
-			return false; //can't target nothing
+		if(!getLocation().equals(hypothetical)){
+			return false;//cannot move and fire
+		}
+		if(null==toCheck||!MoveType.AIR.equals(toCheck)){
+			return false; //can't target nothing, can target Air units only
 		}
 		int dist = hypothetical.distanceTo((Terrain) toCheck.getLocation());
-		return (dist>=3&&dist<=5);
-	}
-	@Override
-	public boolean canTarget(Unit u){
-		Terrain home = (Terrain) getLocation();
-		int dist = home.distanceTo((Terrain) u.getLocation());
 		return (dist>=3&&dist<=5);
 	}
 	@Override

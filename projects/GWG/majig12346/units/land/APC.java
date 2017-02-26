@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import majig12346.PassiveFlag.MoveType;
 import majig12346.Player;
+import majig12346.terrain.Terrain;
 import majig12346.units.Carry;
 import majig12346.units.Unit;
 import majig12346.weapons.WeaponType;
@@ -40,10 +41,12 @@ public class APC extends Unit implements Carry {
 		ArrayList<Unit> targetUnits = new ArrayList<Unit>();
 		try{
 			for(int i=0;i<360;i+=90){
-//				if(getGrid().isValid(getLocation()))
-				Unit maybe = (Unit) getGrid().get(this.getLocation().getAdjacentLocation(i));
-				if(null!=maybe){
-					targetUnits.add(maybe);
+				Terrain targetLoc = (Terrain) this.getLocation().getAdjacentLocation(i);
+				if(getGrid().isValid(targetLoc)){
+					Unit maybe = (Unit) getGrid().get(targetLoc);
+					if(null!=maybe){
+						targetUnits.add(maybe);
+					}
 				}
 			}
 		}catch(ClassCastException e){

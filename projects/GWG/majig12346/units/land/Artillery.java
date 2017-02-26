@@ -1,6 +1,7 @@
 package majig12346.units.land;
 
 import majig12346.Player;
+import majig12346.PassiveFlag.MoveType;
 import majig12346.terrain.Terrain;
 import majig12346.units.Unit;
 import majig12346.weapons.WeaponType;
@@ -25,16 +26,13 @@ public class Artillery extends Tank {
 	}
 	@Override
 	public boolean couldTarget(Unit toCheck, Terrain hypothetical){
-		if(null==toCheck){
-			return false; //can't target nothing
+		if(!getLocation().equals(hypothetical)){
+			return false;//cannot move and fire
+		}
+		if(null==toCheck||MoveType.AIR.equals(toCheck)){
+			return false; //can't target nothing, can target sea, land
 		}
 		int dist = hypothetical.distanceTo((Terrain) toCheck.getLocation());
-		return (dist>=2&&dist<=3);
-	}
-	@Override
-	public boolean canTarget(Unit u){
-		Terrain home = (Terrain) getLocation();
-		int dist = home.distanceTo((Terrain) u.getLocation());
 		return (dist>=2&&dist<=3);
 	}
 	@Override

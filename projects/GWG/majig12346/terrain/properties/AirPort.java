@@ -33,10 +33,10 @@ public class AirPort extends Factory{
 		buildableUnits.add(SCopter.class.getConstructor(Player.class));
 		buildableUnits.add(Fighter.class.getConstructor(Player.class));
 		buildableUnits.add(Bomber.class.getConstructor(Player.class));
-		buildableUnits.add(StealthBomber.class.getConstructor(Player.class));
-		buildableUnits.add(AdvFighter.class.getConstructor(Player.class));
 		buildableUnits.add(CAS.class.getConstructor(Player.class));
+		buildableUnits.add(AdvFighter.class.getConstructor(Player.class));
 		buildableUnits.add(DropShip.class.getConstructor(Player.class));
+		buildableUnits.add(StealthBomber.class.getConstructor(Player.class));
 		buildableUnits.add(JSF.class.getConstructor(Player.class));
 	}
 

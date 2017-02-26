@@ -77,14 +77,8 @@ public class AdvFighter extends Stealth {
 		return (dist>=1&&dist<=3);
 	}
 	@Override
-	public boolean canTarget(Unit u){
-		Terrain hypothetical = (Terrain) getLocation();
-		if(null==u){
-			return false; //can't target nothing
-		}
-		int dist = hypothetical.distanceTo((Terrain) u.getLocation());
-		return (dist>=1&&dist<=3);
+	public boolean canCounter(Unit u) {
+		return super.canCounter(u);
 	}
-
 
 }

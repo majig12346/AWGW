@@ -1,7 +1,9 @@
 package majig12346.units.air;
 
 import majig12346.Player;
+import majig12346.terrain.Terrain;
 import majig12346.units.Stealth;
+import majig12346.units.Unit;
 import majig12346.weapons.WeaponType;
 
 /*
@@ -42,5 +44,8 @@ public class SCopter extends Stealth {
 	public int getDailyCost() {
 		return 2;
 	}
-
+	@Override
+	public boolean couldTarget(Unit toCheck, Terrain hypothetical) { //cannot target jet fighters
+		return super.couldTarget(toCheck, hypothetical)&&!toCheck.isJet();
+	}
 }

@@ -1,6 +1,7 @@
 package majig12346.units.air;
 
 import majig12346.Player;
+import majig12346.PassiveFlag.MoveType;
 import majig12346.terrain.Terrain;
 import majig12346.units.Air;
 import majig12346.units.Unit;
@@ -51,21 +52,15 @@ public class CAS extends Air {
 	}
 	@Override
 	public boolean couldTarget(Unit toCheck, Terrain hypothetical){
-		if(null==toCheck){
-			return false; //can't target nothing
+		if(null==toCheck||MoveType.AIR.equals(toCheck)){
+			return false; //can't target nothing, can target sea, land
 		}
 		int dist = hypothetical.distanceTo((Terrain) toCheck.getLocation());
 		return (dist>=1&&dist<=4);
 	}
 	@Override
-	public boolean canTarget(Unit u){
-		Terrain home = (Terrain) getLocation();
-		int dist = home.distanceTo((Terrain) u.getLocation());
-		return (dist>=1&&dist<=4);
-	}
-	@Override
 	public boolean canCounter(Unit u) {
-		return false;
+		return super.canTarget(u);//1 tile Manhattan radius
 	}
 	@Override
 	public int getDailyCost() {

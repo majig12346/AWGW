@@ -1,6 +1,9 @@
 package majig12346.units.land;
 
 import majig12346.Player;
+import majig12346.PassiveFlag.MoveType;
+import majig12346.terrain.Terrain;
+import majig12346.units.Unit;
 import majig12346.weapons.WeaponType;
 
 /*
@@ -32,4 +35,9 @@ public class MedTank extends Tank {
 		//10% resistance
 		return 0.90;
 	}
+	@Override
+	public boolean couldTarget(Unit toCheck, Terrain hypothetical) { //cannot target jet fighters
+		return super.couldTarget(toCheck, hypothetical)&&!toCheck.isJet();
+	}
+	
 }

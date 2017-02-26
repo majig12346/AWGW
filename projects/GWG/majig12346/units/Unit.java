@@ -7,6 +7,7 @@ import majig12346.weapons.Weapon;
 import majig12346.Player;
 import majig12346.terrain.Terrain;
 import majig12346.weapons.Suit;
+import majig12346.units.air.*;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -150,11 +151,7 @@ public abstract class Unit extends Actor{
 	 * Gets overridden for ranged units, indirect fire, etc
 	 */
 	public boolean canTarget(Unit u){
-		Terrain home = (Terrain) (this.getLocation());
-		if(null==u){
-			return false; //can't target nothing
-		}
-		return home.distanceTo((Terrain) u.getLocation())==1;
+		return couldTarget(u,(Terrain) getLocation());
 	}
 
 	/**
@@ -666,5 +663,12 @@ public abstract class Unit extends Actor{
 			throw new Exception("cannot be carried, precondition not met");
 		}
 		immobilize();
+	}
+	/**
+	 * @return whether or not this unit is a jet aircraft
+	 */
+	public boolean isJet(){
+		return(this instanceof Fighter||this instanceof Bomber||this instanceof StealthBomber||
+				this instanceof AdvFighter||this instanceof JSF||this instanceof CAS||this instanceof DropShip);
 	}
 }

@@ -69,6 +69,9 @@ public class Infantry extends Unit {
 		}
 		this.immobilize();
 	}
-
+	@Override
+	public boolean couldTarget(Unit toCheck, Terrain hypothetical) { //cannot target jet fighters, boats
+		return super.couldTarget(toCheck, hypothetical)&&!toCheck.isJet()&&!MoveType.SEA.equals(toCheck.getMovementType());
+	}
 
 }

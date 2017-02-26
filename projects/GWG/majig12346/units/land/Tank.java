@@ -1,6 +1,7 @@
 package majig12346.units.land;
 
 import majig12346.PassiveFlag.MoveType;
+import majig12346.terrain.Terrain;
 import majig12346.Player;
 import majig12346.units.Unit;
 import majig12346.weapons.WeaponType;
@@ -56,6 +57,10 @@ public class Tank extends Unit{
 	@Override
 	public MoveType getMovementType() {
 		return MoveType.TREADS;
+	}
+	@Override
+	public boolean couldTarget(Unit toCheck, Terrain hypothetical) { //cannot target air
+		return super.couldTarget(toCheck, hypothetical)&&!MoveType.AIR.equals(toCheck.getMovementType());
 	}
 
 }
