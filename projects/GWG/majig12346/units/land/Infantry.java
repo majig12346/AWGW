@@ -67,7 +67,7 @@ public class Infantry extends Unit {
 			p.tickCapTimer(this);
 			System.out.println("property's capture timer down to "+p.getCapTimer());
 		}
-		this.canMove = false;
+		this.immobilize();
 	}
 
 

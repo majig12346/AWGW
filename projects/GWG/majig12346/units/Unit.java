@@ -398,7 +398,7 @@ public abstract class Unit extends Actor{
 	 * sets canMove to false
 	 * @return whether or not the unit was already UNABLE to move
 	 */
-	private boolean immobilize(){
+	protected boolean immobilize(){
 		if(!canMove){
 			return true;
 		}else{
