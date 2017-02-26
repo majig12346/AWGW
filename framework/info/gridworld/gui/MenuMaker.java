@@ -439,13 +439,13 @@ public class MenuMaker<T> {
 					@Override
 					public void actionPerformed(ActionEvent e) {//FIXME bugged
 						try {
-							u.move((Terrain) newLoc);
+							u.move((Terrain) newLoc,true);
 						} catch (Exception e1) {
 							e1.printStackTrace();
 						}
-						((Carry)u).resupply();							
 						display.shouldBeHighlighted.clear();
 						display.paintImmediately(display.getBounds());
+						((Carry)u).resupply();							
 						new Thread(new Runnable(){
 							public void run(){
 								Set<Terrain> whereToDraw= new HashSet<>();

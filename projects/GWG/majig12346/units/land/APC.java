@@ -40,7 +40,8 @@ public class APC extends Unit implements Carry {
 		ArrayList<Unit> targetUnits = new ArrayList<Unit>();
 		try{
 			for(int i=0;i<360;i+=90){
-				Unit maybe = (Unit) getGrid().get(getLocation().getAdjacentLocation(i));
+//				if(getGrid().isValid(getLocation()))
+				Unit maybe = (Unit) getGrid().get(this.getLocation().getAdjacentLocation(i));
 				if(null!=maybe){
 					targetUnits.add(maybe);
 				}
