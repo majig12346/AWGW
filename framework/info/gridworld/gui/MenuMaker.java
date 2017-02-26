@@ -426,9 +426,27 @@ public class MenuMaker<T> {
 			loadOption.setIcon(get16xIcon(imagePath));
 			loadOption.setText("Load");
 			ans.add(loadOption);
-		} else {
+		}else {
+			//do nothing
 			System.out.println("cant move");
 		}
+		//check resupply
+		System.out.println("checking resupply");
+		if(u instanceof Carry && ((Carry) u).canResupply()){
+			Terrain newTerrain = (Terrain) newLoc;
+			ArrayList<Unit> adjacentAlliedUnits = new ArrayList<>();
+			for(Terrain t:newTerrain.getAllAdjacentTerrains()){
+				Unit tOcc = (Unit) u.getGrid().get(t);
+				if(tOcc!=null&&tOcc.getOwner()==u.getOwner()){
+					adjacentAlliedUnits.add(tOcc);
+				}
+			}
+			if(!adjacentAlliedUnits.isEmpty()){
+				JMenuItem resupplyOption = new JMenuItem();
+				System.out.println("\nkappa\nCan Resupply\n");
+			}
+		}
+		
 		// units can fire on enemies if not unarmed and in range
 		System.out.println("checking weps");
 		if (u.getWeapons()[0].getWeaponType() != WeaponType.NONE
