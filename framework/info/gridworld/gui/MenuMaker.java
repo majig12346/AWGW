@@ -432,6 +432,7 @@ public class MenuMaker<T> {
 				URL supplyPicLocation = this.getClass().getClassLoader().getResource(
 						"resources/32x/supply.png");
 				ImageIcon supplyIcon = get16xIcon(supplyPicLocation);
+				ImageIcon bigSupplyIcon = new ImageIcon(supplyPicLocation);
 				Action a = new Action() {
 					public boolean enabled = true;
 
@@ -451,14 +452,13 @@ public class MenuMaker<T> {
 								for(Unit tOcc:adjacentAlliedUnits){
 									whereToDraw.add((Terrain) tOcc.getLocation());
 								}
-								display.showIconsOnSetOfLocations(supplyIcon.getImage(), whereToDraw);
+								display.showIconsOnSetOfLocations(bigSupplyIcon.getImage(), whereToDraw);
 								try {
 									Thread.sleep(1200);
+									display.repaint();
 								} catch (InterruptedException e) {
 									e.printStackTrace();
 								}
-								display.repaint();
-								
 							}
 						}).start();
 						

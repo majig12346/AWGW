@@ -160,17 +160,19 @@ PseudoInfiniteViewport.Pannable
 		for(Terrain t:validMoveSpaces){
 			Location l = t;
 			Point p = pointForLocation(l);
+//			g2 = (Graphics2D) getGraphics(); //This should work but problem is already solved
 			g2.drawRect(p.x - cellSize / 2 - 2, p.y - cellSize / 2 - 2,
 					cellSize + 3, cellSize + 3);
 		}
 	}
 	public void showIconsOnSetOfLocations(Image pic, Set<Terrain> where){
-		Graphics g2 = getGraphics();
+		Graphics2D g2 = (Graphics2D) getGraphics();
 		for(Terrain t:where){
 			Location l = t;
 			Point p = pointForLocation(l);
-			g2.drawImage(pic, p.x, p.x, p.x+16, p.y+16, 0, 0, 16, 16, null);
+			g2.drawImage(pic, p.x, p.y, null);
 		}
+//		this.repaint();
 	}
 
 

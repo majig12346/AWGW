@@ -51,7 +51,7 @@ public class Runner {
 		Infantry inf2 = new Infantry(players[1]);
 		inf2.putSelfInGrid(g,g.getLocationArray()[9][6]);
 		Mech mech1 = new Mech(players[2]);
-		mech1.putSelfInGrid(g,g.getLocationArray()[1][9]);
+		mech1.putSelfInGrid(g,g.getLocationArray()[2][8]);
 		MedTank medTank1 = new MedTank(players[1]);
 		medTank1.putSelfInGrid(g,g.getLocationArray()[1][8]);
 		APC apc1 = new APC(players[1]);
