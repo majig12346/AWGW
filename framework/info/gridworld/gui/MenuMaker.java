@@ -373,25 +373,15 @@ public class MenuMaker<T> {
 						e1.printStackTrace();
 					}
 					c.addUnit(u);
-					u.removeSelfFromGrid();//TODO
-					//					new Thread(new Runnable(){
-					//						public void run(){
-					//							display.repaint();
-					//							display.invalidate();
-					//						}
-					//					}).start();
-					Grid debug1 = newLocOcc.getGrid();
-					Location debug2 = newLocOcc.getLocation();
-					Location debug3 = newLoc;
-					Unit debug4 = newLocOcc;
-					Carry debug5 = c;
-					Unit debug6 = u;
-					//					newLocOcc.putSelfInGrid(u.getGrid(), newLoc); 
-					display.shouldBeHighlighted.clear();
-					display.repaint();
-					// TODO i think this is done
+					u.removeSelfFromGrid();
+					new Thread(new Runnable(){
+						public void run(){
+							display.shouldBeHighlighted.clear();
+							display.repaint();
+						}
+					}).start();
+					
 				}
-
 				@Override
 				public void setEnabled(boolean b) {
 					enabled = b;
@@ -399,12 +389,10 @@ public class MenuMaker<T> {
 
 				@Override
 				public void removePropertyChangeListener(
-						PropertyChangeListener listener) {
-				}
+						PropertyChangeListener listener) {}
 
 				@Override
-				public void putValue(String key, Object value) {
-				}
+				public void putValue(String key, Object value) {}
 
 				@Override
 				public boolean isEnabled() {
@@ -415,11 +403,9 @@ public class MenuMaker<T> {
 				public Object getValue(String key) {
 					return null;
 				}
-
 				@Override
 				public void addPropertyChangeListener(
-						PropertyChangeListener listener) {
-				}
+						PropertyChangeListener listener) {}
 			};
 			loadOption.setAction(a);
 			URL imagePath = this.getClass().getClassLoader().getResource("resources/32x/load.png");
@@ -443,10 +429,10 @@ public class MenuMaker<T> {
 			}
 			if(!adjacentAlliedUnits.isEmpty()){
 				JMenuItem resupplyOption = new JMenuItem();
-				System.out.println("\nkappa\nCan Resupply\n");
+
 			}
 		}
-		
+
 		// units can fire on enemies if not unarmed and in range
 		System.out.println("checking weps");
 		if (u.getWeapons()[0].getWeaponType() != WeaponType.NONE
