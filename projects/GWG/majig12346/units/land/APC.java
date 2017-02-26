@@ -40,11 +40,15 @@ public class APC extends Unit implements Carry {
 		ArrayList<Unit> targetUnits = new ArrayList<Unit>();
 		try{
 			for(int i=0;i<360;i+=90){
-				targetUnits.add((Unit) getGrid().get(getLocation().getAdjacentLocation(i)));
+				Unit maybe = (Unit) getGrid().get(getLocation().getAdjacentLocation(i));
+				if(null!=maybe){
+					targetUnits.add(maybe);
+				}
 			}
 		}catch(ClassCastException e){
 			System.out.println("class cast error resupplying from APC at "
 					+ "(r,c) : ("+getLocation().getRow()+", "+getLocation().getCol()+")");
+			e.printStackTrace();
 		}
 		for(Unit u:targetUnits){
 			if(this.getOwner()==u.getOwner()){
@@ -91,7 +95,7 @@ public class APC extends Unit implements Carry {
 	public double getBaseArmorResistance() {
 		return 1;
 	}
-	
+
 	@Override
 	public void outOfFuel() {
 		//do nothing

@@ -429,7 +429,69 @@ public class MenuMaker<T> {
 			}
 			if(!adjacentAlliedUnits.isEmpty()){
 				JMenuItem resupplyOption = new JMenuItem();
+				URL supplyPicLocation = this.getClass().getClassLoader().getResource(
+						"resources/32x/supply.png");
+				ImageIcon supplyIcon = get16xIcon(supplyPicLocation);
+				Action a = new Action() {
+					public boolean enabled = true;
 
+					@Override
+					public void actionPerformed(ActionEvent e) {//FIXME bugged
+						try {
+							u.move((Terrain) newLoc);
+						} catch (Exception e1) {
+							e1.printStackTrace();
+						}
+						((Carry)u).resupply();
+						new Thread(new Runnable(){
+							public void run(){
+								display.shouldBeHighlighted.clear();
+								display.repaint();
+								Set<Terrain> whereToDraw= new HashSet<>();
+								for(Unit tOcc:adjacentAlliedUnits){
+									whereToDraw.add((Terrain) tOcc.getLocation());
+								}
+								display.showIconsOnSetOfLocations(supplyIcon.getImage(), whereToDraw);
+								try {
+									Thread.sleep(1200);
+								} catch (InterruptedException e) {
+									e.printStackTrace();
+								}
+								display.repaint();
+								
+							}
+						}).start();
+						
+					}
+					@Override
+					public void setEnabled(boolean b) {
+						enabled = b;
+					}
+
+					@Override
+					public void removePropertyChangeListener(
+							PropertyChangeListener listener) {}
+
+					@Override
+					public void putValue(String key, Object value) {}
+
+					@Override
+					public boolean isEnabled() {
+						return enabled;
+					}
+
+					@Override
+					public Object getValue(String key) {
+						return null;
+					}
+					@Override
+					public void addPropertyChangeListener(
+							PropertyChangeListener listener) {}
+				};
+				resupplyOption.setAction(a);
+				resupplyOption.setText("resupply");
+				resupplyOption.setIcon(supplyIcon);
+				ans.add(resupplyOption);
 			}
 		}
 

@@ -32,6 +32,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.Insets;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -52,6 +53,7 @@ import java.util.ResourceBundle;
 import java.util.Set;
 
 import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import javax.swing.JToolTip;
 import javax.swing.JViewport;
@@ -160,6 +162,14 @@ PseudoInfiniteViewport.Pannable
 			Point p = pointForLocation(l);
 			g2.drawRect(p.x - cellSize / 2 - 2, p.y - cellSize / 2 - 2,
 					cellSize + 3, cellSize + 3);
+		}
+	}
+	public void showIconsOnSetOfLocations(Image pic, Set<Terrain> where){
+		Graphics g2 = getGraphics();
+		for(Terrain t:where){
+			Location l = t;
+			Point p = pointForLocation(l);
+			g2.drawImage(pic, p.x, p.x, p.x+16, p.y+16, 0, 0, 16, 16, null);
 		}
 	}
 
