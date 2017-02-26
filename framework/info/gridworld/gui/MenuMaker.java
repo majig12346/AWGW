@@ -418,24 +418,37 @@ public class MenuMaker<T> {
 		System.out.println("checking weps");
 		if (u.getWeapons()[0].getWeaponType() != WeaponType.NONE
 				|| null != u.getWeapons()[1]) {
-			ArrayList<Unit> targetalbe = new ArrayList<>();
+			Set<Unit> targetable = new HashSet<>();
 			ArrayList<Location> occupied = u.getGrid().getOccupiedLocations();
 			for (Location l : occupied) {
 				Unit tmp = (Unit) u.getGrid().get(l);
 				if (u.couldTarget(tmp, (Terrain) newLoc)
 						&& (!u.getOwner().equals(tmp.getOwner()))) {
-					targetalbe.add(tmp);
+					targetable.add(tmp);
 				}
 			}
-			if (!targetalbe.isEmpty()) {
+			if (!targetable.isEmpty()) {
 
 				Action fireAction = new Action() {
 					public boolean enabled = true;
 
 					@Override
 					public void actionPerformed(ActionEvent e) {
-						// TODO add this
-
+						
+						new Thread(new Runnable(){
+							@Override
+							public void run() {
+								display.shouldBeHighlighted.clear();
+								for(Unit targetableUnit: targetable){
+									Terrain targetableTerrain = (Terrain) targetableUnit.getLocation();
+									display.shouldBeHighlighted.add(targetableTerrain);
+								}
+								display.avw.setMessage("Click highlighted tile to attack.\n\nClick unhighlighted to cancel");
+								display.repaint();
+								// TODO finish this
+							}
+							
+						}).start();
 					}
 
 					@Override
