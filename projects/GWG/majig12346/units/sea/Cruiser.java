@@ -3,6 +3,8 @@ package majig12346.units.sea;
 import java.util.ArrayList;
 
 import majig12346.Player;
+import majig12346.PassiveFlag.MoveType;
+import majig12346.terrain.Terrain;
 import majig12346.units.Carry;
 import majig12346.units.Sea;
 import majig12346.units.Unit;
@@ -83,6 +85,11 @@ public class Cruiser extends Sea implements Carry {
 		default:
 			return damage;
 		}
+	}
+	@Override
+	public boolean couldTarget(Unit toCheck, Terrain hypothetical) { //cannot target land
+		return super.couldTarget(toCheck, hypothetical)&&(MoveType.SEA.equals(toCheck.getMovementType())||
+				MoveType.AIR.equals(toCheck.getMovementType()));
 	}
 
 }

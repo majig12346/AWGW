@@ -1,5 +1,6 @@
 package majig12346.units.air;
 
+import majig12346.PassiveFlag.MoveType;
 import majig12346.Player;
 import majig12346.terrain.Terrain;
 import majig12346.units.Stealth;
@@ -70,8 +71,8 @@ public class AdvFighter extends Stealth {
 	}
 	@Override
 	public boolean couldTarget(Unit toCheck, Terrain hypothetical){
-		if(null==toCheck){
-			return false; //can't target nothing
+		if(null==toCheck||!MoveType.AIR.equals(toCheck.getMovementType())){
+			return false; //can't target nothing, can target Air units only
 		}
 		int dist = hypothetical.distanceTo((Terrain) toCheck.getLocation());
 		return (dist>=1&&dist<=3);

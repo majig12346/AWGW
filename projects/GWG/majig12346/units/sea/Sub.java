@@ -1,7 +1,10 @@
 package majig12346.units.sea;
 
 import majig12346.Player;
+import majig12346.PassiveFlag.MoveType;
+import majig12346.terrain.Terrain;
 import majig12346.units.Stealth2;
+import majig12346.units.Unit;
 import majig12346.weapons.WeaponType;
 
 /**
@@ -37,5 +40,8 @@ public class Sub extends Stealth2 {
 	public double getBaseArmorResistance() {
 		return 1;
 	}
-
+	@Override
+	public boolean couldTarget(Unit toCheck, Terrain hypothetical) { //can target boats only
+		return super.couldTarget(toCheck, hypothetical)&&MoveType.SEA.equals(toCheck.getMovementType());
+	}
 }

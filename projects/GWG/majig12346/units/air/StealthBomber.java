@@ -1,7 +1,10 @@
 package majig12346.units.air;
 
+import majig12346.PassiveFlag.MoveType;
 import majig12346.Player;
+import majig12346.terrain.Terrain;
 import majig12346.units.Stealth;
+import majig12346.units.Unit;
 import majig12346.weapons.WeaponType;
 
 /**
@@ -63,5 +66,8 @@ public class StealthBomber extends Stealth {
 			return damage;
 		}
 	}
-
+	@Override
+	public boolean couldTarget(Unit toCheck, Terrain hypothetical) { //cannot target air
+		return super.couldTarget(toCheck, hypothetical)&&!MoveType.AIR.equals(toCheck.getMovementType());
+	}
 }
