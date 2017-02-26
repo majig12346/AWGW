@@ -380,7 +380,7 @@ public class MenuMaker<T> {
 							display.repaint();
 						}
 					}).start();
-					
+
 				}
 				@Override
 				public void setEnabled(boolean b) {
@@ -443,25 +443,27 @@ public class MenuMaker<T> {
 						} catch (Exception e1) {
 							e1.printStackTrace();
 						}
-						((Carry)u).resupply();
+						((Carry)u).resupply();							
+						display.shouldBeHighlighted.clear();
+						display.paintImmediately(display.getBounds());
 						new Thread(new Runnable(){
 							public void run(){
-								display.shouldBeHighlighted.clear();
-								display.repaint();
 								Set<Terrain> whereToDraw= new HashSet<>();
 								for(Unit tOcc:adjacentAlliedUnits){
 									whereToDraw.add((Terrain) tOcc.getLocation());
 								}
-								display.showIconsOnSetOfLocations(bigSupplyIcon.getImage(), whereToDraw);
-								try {
-									Thread.sleep(1200);
-									display.repaint();
-								} catch (InterruptedException e) {
-									e.printStackTrace();
+								for(int x=0;x<4;x++){
+									display.showIconsOnSetOfLocations(bigSupplyIcon.getImage(), whereToDraw);
+									try {
+										Thread.sleep(250);
+									} catch (InterruptedException e1) {
+										e1.printStackTrace();
+									}
+									display.paintImmediately(display.getBounds());
 								}
 							}
 						}).start();
-						
+
 					}
 					@Override
 					public void setEnabled(boolean b) {

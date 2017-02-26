@@ -171,6 +171,11 @@ PseudoInfiniteViewport.Pannable
 			Location l = t;
 			Point p = pointForLocation(l);
 			g2.drawImage(pic, p.x, p.y, null);
+			try {
+				Thread.sleep(100);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		}
 //		this.repaint();
 	}
