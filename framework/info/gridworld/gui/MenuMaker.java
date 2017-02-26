@@ -663,7 +663,6 @@ public class MenuMaker<T> {
 				//				System.out.println("aaaaaa");
 				URL imagePath = this.getClass().getClassLoader().getResource(
 						"resources/units/"+constructor.getDeclaringClass().getSimpleName()+".png");
-
 				tmp.setIcon(get16xIcon(imagePath));
 				menu.add(tmp);
 			}

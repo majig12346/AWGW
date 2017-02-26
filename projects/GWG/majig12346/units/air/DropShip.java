@@ -12,7 +12,7 @@ import majig12346.weapons.WeaponType;
  * The DropShip is a flying transport unit
  * Gets NONE (unarmed)
  * Costs 3000
- * Can carry 4 Infantry
+ * Can carry 3 Land Units
  * Costs 5 fuel/turn to stay airborne
  */
 public class DropShip extends Air implements Carry {
@@ -50,6 +50,10 @@ public class DropShip extends Air implements Carry {
 		switch(u.getMovementType()){
 		case FOOT:
 			return true;
+		case TREADS:
+			return true;
+		case TIRES:
+			return true;
 		default:
 			return false;
 		}
@@ -70,7 +74,7 @@ public class DropShip extends Air implements Carry {
 	}
 	@Override
 	public int getMaxCapacity() {
-		return 4;
+		return 3;
 	}
 
 }
