@@ -7,6 +7,8 @@ import info.gridworld.world.AVWorld;
 
 public class TerrainTest {
 	public static void main(String[] args){
+		System.out.println("abcde".substring(4, 5));
+		
 		AVWorld avw = new AVWorld();
 		TerrainGrid<Actor> tg = new TerrainGrid<>(10, 10);
 		TestTerrain tt1 = new TestTerrain(0, 0, tg);

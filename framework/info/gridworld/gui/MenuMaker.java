@@ -317,6 +317,8 @@ public class MenuMaker<T> {
 											}
 											carried.putSelfInGrid(u.getGrid(), LZ);
 											carryU.getUnits().remove(carried);
+											display.shouldBeHighlighted.clear();
+											display.repaint();
 
 										}
 									}
