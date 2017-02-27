@@ -2,6 +2,7 @@ package info.gridworld.world;
 
 import info.gridworld.grid.Grid;
 import info.gridworld.gui.WorldFrame;
+import majig12346.Runner;
 import majig12346.TerrainGrid;
 
 public class AVWorld extends MouseWorld {

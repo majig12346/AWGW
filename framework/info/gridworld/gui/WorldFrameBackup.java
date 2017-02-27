@@ -74,7 +74,7 @@ import java.io.StringWriter;
  */
 public class WorldFrameBackup<T> extends JFrame
 {
-    private GUIController<T> control;
+    private GUIControllerDisabled<T> control;
     private GridPanel display;
     private JTextArea messageArea;
     private ArrayList<JMenuItem> menuItemsDisabledDuringRun;
@@ -184,7 +184,7 @@ public class WorldFrameBackup<T> extends JFrame
 
         makeNewGridMenu();
 
-        control = new GUIController<T>(this, display, displayMap, resources);
+        control = new GUIControllerDisabled<T>(this, display, displayMap, resources);
         content.add(control.controlPanel(), BorderLayout.SOUTH);
 
         messageArea = new JTextArea(2, 35);

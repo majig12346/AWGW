@@ -17,17 +17,20 @@ import majig12346.units.*;
 
 public class Runner {
 	public static Player[] players;
+	
 	public static void main(String[] args){
 		System.out.println("Currently 1337 PLANCK_TIMEs behind! Are we on "
 				+ "5nm or is Quantum tunneling somehow an issue "
 				+ "on Skylake's 14nm? Wait a PLANCK_TIME,"
 				+ " this is a Core 2 Duo!");
 		AVWorld avw = new AVWorld();
-		players = new Player[4];
-		Player p1 = new Player(new TestCO(),15000,new Color(255,85,50));
+		players = new Player[3];
+		Color color1 = new Color(255,85,50);
+		Player p1 = new Player(new TestCO(),15000,null);
 		Player p2 = new Player(new TestCO(), 90000, new Color(75, 150, 255));
 		players[p1.ID] = p1;
 		players[p2.ID] = p2;
+		turnPlayer = players[1];
 		TerrainGrid<Actor> g = new TerrainGrid<Actor>(10,10);
 		fillTerrainGrid(g);
 		customFill(g,p1,p2);
@@ -89,6 +92,22 @@ public class Runner {
 			System.out.println("error reading file");
 			e.printStackTrace();
 		}
+	}
+	private static Player turnPlayer;
+	public static void cycleTurnPlayer(){
+		Player old = turnPlayer;
+		Player next;
+		for(Unit u:old.getUnitsControlled()){
+			if(u.canMove()){
+				u.immobilize();
+			}
+		}
+		if(players[old.ID+1]==null){
+			next = players[1];
+		}else{
+			next = players[old.ID+1];
+		}
+		
 	}
 	public static Terrain makeTerrain(int r, int c, TerrainGrid<Actor> hostGrid, String terrainType) throws Exception{
 		switch (terrainType) {

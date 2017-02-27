@@ -5,7 +5,7 @@
 	<classpathentry kind="src" path="projects/critters"/>
 	<classpathentry kind="src" path="projects/firstProject"/>
 	<classpathentry kind="src" path="projects/GWG"/>
-	<classpathentry kind="lib" path="gridworld.jar"/>
+	<classpathentry kind="lib" path="F:/Program Files/eclipse/workspace/GridWorldGame/gridworld.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

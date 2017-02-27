@@ -22,6 +22,7 @@ package info.gridworld.gui;
 import info.gridworld.grid.Grid;
 import info.gridworld.grid.Location;
 import info.gridworld.world.World;
+import majig12346.Runner;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -74,7 +75,7 @@ import java.io.StringWriter;
  */
 public class WorldFrame<T> extends JFrame
 {
-    public GUIController<T> control;
+    public GUIControllerDisabled<T> control;
     private GridPanel display;
     private JTextArea messageArea;
     private ArrayList<JMenuItem> menuItemsDisabledDuringRun;
@@ -119,12 +120,14 @@ public class WorldFrame<T> extends JFrame
         });
 
         displayMap = new DisplayMap();
-        String title = System.getProperty("info.gridworld.gui.frametitle");
+        //String title = System.getProperty("info.gridworld.gui.frametitle");XXX
+        String title = "AdvanceWars GridWorld";
         if (title == null) title = resources.getString("frame.title"); 
         setTitle(title);
         setLocation(25, 15);
 
-        URL appIconUrl = getClass().getResource("GridWorld.gif");
+        //URL appIconUrl = getClass().getResource("GridWorld.gif");
+        URL appIconUrl = Runner.class.getClassLoader().getResource("resources/icon.png");
         ImageIcon appIcon = new ImageIcon(appIconUrl);
         setIconImage(appIcon.getImage());
         
@@ -184,7 +187,7 @@ public class WorldFrame<T> extends JFrame
 
         makeNewGridMenu();
 
-        control = new GUIController<T>(this, display, displayMap, resources);
+        control = new GUIControllerDisabled<T>(this, display, displayMap, resources);
         content.add(control.controlPanel(), BorderLayout.SOUTH);
 
         messageArea = new JTextArea(3, 35);

@@ -206,7 +206,7 @@ public class MenuMaker<T> {
 		}
 		return menu;
 	}
-	public ImageIcon get16xIcon(URL imagePath){
+	public static ImageIcon get16xIcon(URL imagePath){
 		ImageIcon pic = new ImageIcon(imagePath); // load the image to a imageIcon
 		Image image = pic.getImage(); // transform it 
 		Image newimg = image.getScaledInstance(16, 16,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  

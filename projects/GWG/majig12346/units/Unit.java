@@ -44,8 +44,8 @@ public abstract class Unit extends Actor{
 			this.resetMovement();
 		}else{
 			//FOR FACTORY MENU, FIXME in Factory class NOT VERY EFFICIENT
-//			System.out.println("Warning: owner is null");
-//			throw new IllegalArgumentException("owner is null");
+			//			System.out.println("Warning: owner is null");
+			//			throw new IllegalArgumentException("owner is null");
 
 		}
 	}
@@ -394,15 +394,17 @@ public abstract class Unit extends Actor{
 	}
 
 	/**
-	 * sets canMove to false
+	 * sets canMove to false, changes colors
 	 * @return whether or not the unit was already UNABLE to move
 	 */
-	protected boolean immobilize(){
+	public boolean immobilize(){
 		if(!canMove){
 			return true;
 		}else{
 			canMove = false;
-			setColor(getColor().darker());
+			if(getColor()!=null){
+				setColor(getColor().darker());
+			}
 			return false;
 		}
 	}
@@ -416,7 +418,7 @@ public abstract class Unit extends Actor{
 	 */
 	public void resetMovement(){
 		this.hasMoved = false;
-		if(!canMove){
+		if(!canMove&&getColor()!=null){
 			setColor(getColor().brighter());
 		}
 		this.canMove = true;
