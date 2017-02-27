@@ -30,9 +30,7 @@ import majig12346.weapons.WeaponType;
 
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Graphics2D;
 import java.awt.Image;
-import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -41,7 +39,6 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyEditor;
 import java.beans.PropertyEditorManager;
 import java.beans.PropertyEditorSupport;
-import java.io.File;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -71,7 +68,6 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import javax.swing.text.PlainDocument;
 
 /**
  * Makes the menus for constructing new occupants and grids, and for invoking
@@ -434,20 +430,52 @@ public class MenuMaker<T> {
 
 					@Override
 					public void actionPerformed(ActionEvent e) {
-						
-						new Thread(new Runnable(){
+						display.shouldBeHighlighted.clear();
+						for(Unit targetableUnit: targetable){
+							Terrain targetableTerrain = (Terrain) targetableUnit.getLocation();
+							display.shouldBeHighlighted.add(targetableTerrain);
+						}
+						display.avw.setMessage("Click highlighted tile to attack.\n\nClick unhighlighted to cancel");
+						display.repaint();
+						new Thread(new Runnable() {
+
 							@Override
 							public void run() {
-								display.shouldBeHighlighted.clear();
-								for(Unit targetableUnit: targetable){
-									Terrain targetableTerrain = (Terrain) targetableUnit.getLocation();
-									display.shouldBeHighlighted.add(targetableTerrain);
+								Location targetLocation = display.avw.getLocationWhenClicked();
+								display.avw.resetClickedLocation();
+								Unit targetedUnit = (Unit) u.getGrid().get(targetLocation);
+								if (!targetable.contains(targetedUnit)) {
+									display.shouldBeHighlighted.clear();
+									display.repaint();
+									display.invalidate();
+									System.err.println("attack canceled");
+									// attack canceled
+									return;
+								} else {
+									try {
+										u.move(MenuMaker.this.newLoc, true);
+									} catch (Exception e1) {
+										e1.printStackTrace();
+									}
+									u.fire(targetedUnit);
+									display.paintImmediately(display.getBounds());
+									URL fireIconLocation = this.getClass().getClassLoader().getResource(
+											"resources/32x/fire.png");
+									Set<Terrain> where = new HashSet<Terrain>();
+									where.add((Terrain) targetLocation);
+									if(targetedUnit.getHealth()>0&&targetedUnit.canCounter(u)){
+										where.add((Terrain) u.getLocation());
+									}
+									display.showIconsOnSetOfLocations(new ImageIcon(fireIconLocation).getImage(), where);
+									try {
+										Thread.sleep(2000);
+									} catch (InterruptedException e) {
+										e.printStackTrace();
+									}
+									display.repaint();
+									
 								}
-								display.avw.setMessage("Click highlighted tile to attack.\n\nClick unhighlighted to cancel");
-								display.repaint();
-								// TODO finish this
 							}
-							
 						}).start();
 					}
 
@@ -494,7 +522,7 @@ public class MenuMaker<T> {
 
 				System.out.println("added fireOption: MM " + "line "
 						+ new Throwable().getStackTrace()[0].getLineNumber());
-				System.out.println("targetable = " + targetalbe);
+				System.out.println("targetable = " + targetable);
 			}
 		}
 
@@ -587,7 +615,49 @@ public class MenuMaker<T> {
 		if (u instanceof Infantry) {
 			if (newLoc instanceof Property
 					&& ((Property) newLoc).getOwner() != u.getOwner()) {
-				MethodItem captureOption = new MethodItem(Infantry.class.getMethod("capture"));
+				JMenuItem captureOption = new JMenuItem();
+				Action captureAction = new Action(){
+					public boolean enabled = true;
+					@Override
+					public void actionPerformed(ActionEvent arg0) {
+						Infantry i = (Infantry) u;
+						try {
+							i.move(((Terrain)newLoc), true);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+						i.capture();
+						display.repaint();
+					}
+
+					@Override
+					public void addPropertyChangeListener(PropertyChangeListener arg0) {
+					}
+
+					@Override
+					public Object getValue(String arg0) {
+						return null;
+					}
+
+					@Override
+					public boolean isEnabled() {
+						return enabled;
+					}
+
+					@Override
+					public void putValue(String arg0, Object arg1) {
+					}
+
+					@Override
+					public void removePropertyChangeListener(PropertyChangeListener arg0) {
+					}
+
+					@Override
+					public void setEnabled(boolean arg0) {
+						enabled = arg0;
+					}
+				};
+				captureOption.setAction(captureAction);
 				URL imagePath = this.getClass().getClassLoader().getResource("resources/32x/capture.png");
 				captureOption.setIcon(get16xIcon(imagePath));
 				captureOption.setText("Capture");

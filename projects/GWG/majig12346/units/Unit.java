@@ -4,6 +4,7 @@ import majig12346.PassiveFlag.MoveType;
 import majig12346.PassiveFlag.UnitType;
 import majig12346.PassiveFlag.COFlag;
 import majig12346.weapons.Weapon;
+import majig12346.weapons.WeaponType;
 import majig12346.Player;
 import majig12346.terrain.Terrain;
 import majig12346.weapons.Suit;
@@ -151,6 +152,9 @@ public abstract class Unit extends Actor{
 	 * Gets overridden for ranged units, indirect fire, etc
 	 */
 	public boolean canTarget(Unit u){
+		if(WeaponType.NONE.equals(getWeapons()[0].getWeaponType())&&null==getWeapons()[1]){
+			return false;
+		}
 		return couldTarget(u,(Terrain) getLocation());
 	}
 
@@ -194,10 +198,8 @@ public abstract class Unit extends Actor{
 		if (usedPrimary){
 			this.setAmmo(getAmmo()-1);
 			damage = wep1;
-			//TODO primary anim
 		}else{
 			damage = wep2;
-			//TODO secondary anim
 		}
 		//luck
 		double luck = (double)Weapon.luck();
@@ -214,7 +216,9 @@ public abstract class Unit extends Actor{
 		//attacking uncloaks
 		if (this instanceof Stealth){
 			Stealth me = (Stealth)(this);
-			me.unHide();
+			if(me.isHidden()){
+				me.unHide();
+			}
 		}
 
 		//counter attack if target is alive and direct fire
@@ -229,10 +233,8 @@ public abstract class Unit extends Actor{
 			if (usedPrimary){
 				target.ammo--;
 				damage = wep1;
-				//TODO primary anim
 			}else{
 				damage = wep2;
-				//TODO secondary anim
 			}
 			//luck
 			luck = Math.random()*10+0.1;

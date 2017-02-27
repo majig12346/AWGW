@@ -34,17 +34,19 @@ public abstract class Stealth extends Air{
 		me.putSelfInGrid(gr, t);
 		this.hidden = true;
 	}
-	
+
 	/**
 	 * reveals the hidden unit -- does opposite of hide()
 	 */
 	public void unHide(){
-		Grid<Actor> gr = getGrid();
-		Terrain t = (Terrain) getLocation();
-		this.removeSelfFromGrid();
-		this.hiddenUnit.putSelfInGrid(gr, t);
-		this.hiddenUnit = null;
-		this.hidden = false;
+		if(null!=this.hiddenUnit){
+			Grid<Actor> gr = getGrid();
+			Terrain t = (Terrain) getLocation();
+			this.removeSelfFromGrid();
+			this.hiddenUnit.putSelfInGrid(gr, t);
+			this.hiddenUnit = null;
+			this.hidden = false;
+		}
 	}
 	/**
 	 * @return whether or not the unit is currently hidden

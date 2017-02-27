@@ -3,6 +3,7 @@ package majig12346.weapons;
 import java.util.ResourceBundle;
 
 import majig12346.PassiveFlag.COFlag;
+import majig12346.PassiveFlag.MoveType;
 import majig12346.terrain.Terrain;
 import majig12346.units.Unit;
 
@@ -72,32 +73,36 @@ public class Weapon {
 		int ans = 0;double base = 0;
 		switch (target.getMovementType()) {
 		case FOOT:
-			base = this.dmgInf;
+			base = this.dmgInf;break;
 		case TIRES:
-			base = this.dmgArm;
+			base = this.dmgArm;break;
 		case TREADS:
-			base = this.dmgArm;
+			base = this.dmgArm;break;
 		case AIR:
-			base = this.dmgAir;
+			base = this.dmgAir;break;
 		case SEA:
-			base = this.dmgSea;
+			base = this.dmgSea;break;
 		default:
 			base = 0;
 		}
+		base/=2.0;
 		Terrain t = (Terrain)(target.getLocation());
 		int defStar = t.getDefense();
+		if(MoveType.AIR.equals(target.getMovementType())){
+			defStar = 0;
+		}
 		//terrain defense
-		double dMilti1 = (10-defStar)/10;
+		double dMilti1 = (10.0-defStar)/10.0;
 		//base armor
 		double dMulti2 = target.getBaseArmorResistance();
 		//attacker strength
-		double dMulti3 = this.weilder.getHealth()/10;
+		double dMulti3 = this.weilder.getHealth()/100.0;
 		//Comm towers
-		double dMulti4 = (this.weilder.getOwner().getCommTowers()/10)+1;
+		double dMulti4 = (this.weilder.getOwner().getCommTowers()/10.0)+1;
 		double preResistAns = base*dMilti1*dMulti2*dMulti3*dMulti4;
 		preResistAns = target.getOwner().CO.passive(preResistAns, COFlag.DEFENSE, target.getUnitType());
 		//Pseudo-round and convert to percent
-		ans = (int) (target.resist(preResistAns, this.weaponType)*100);
+		ans = (int) (target.resist(preResistAns, this.weaponType)*10);
 		return ans;
 	}
 }

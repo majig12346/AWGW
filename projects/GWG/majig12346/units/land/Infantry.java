@@ -66,6 +66,8 @@ public class Infantry extends Unit {
 			System.out.println("capTimer = "+p.getCapTimer());
 			p.tickCapTimer(this);
 			System.out.println("property's capture timer down to "+p.getCapTimer());
+		}else{
+			System.err.println("?? not on property, loc = "+getLocation().getClass().getSimpleName()+" "+getLocation());
 		}
 		this.immobilize();
 	}

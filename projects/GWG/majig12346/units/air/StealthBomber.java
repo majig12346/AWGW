@@ -58,6 +58,8 @@ public class StealthBomber extends Stealth {
 			return damage*0.5;
 		case WeaponType.HMG:
 			return damage*0.5;
+		case WeaponType.ROTARY:
+			return damage*0.5;
 		case WeaponType.MISSILE:
 			return damage*0.7;
 		case WeaponType.MISSILES:
