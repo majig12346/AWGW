@@ -346,88 +346,88 @@ public class WorldFrame<T> extends JFrame
 
         menuItemsDisabledDuringRun = new ArrayList<JMenuItem>();
 
-        mbar.add(menu = makeMenu("menu.file"));
-
-        newGridMenu = makeMenu("menu.file.new");
-        menu.add(newGridMenu);
-        menuItemsDisabledDuringRun.add(newGridMenu);
-
-        menu.add(makeMenuItem("menu.file.quit", new ActionListener()
-        {
-            public void actionPerformed(ActionEvent e)
-            {
-                System.exit(0);
-            }
-        }));
-
-        mbar.add(menu = makeMenu("menu.view"));
-
-        menu.add(makeMenuItem("menu.view.up", new ActionListener()
-        {
-            public void actionPerformed(ActionEvent e)
-            {
-                display.moveLocation(-1, 0);
-            }
-        }));
-        menu.add(makeMenuItem("menu.view.down", new ActionListener()
-        {
-            public void actionPerformed(ActionEvent e)
-            {
-                display.moveLocation(1, 0);
-            }
-        }));
-        menu.add(makeMenuItem("menu.view.left", new ActionListener()
-        {
-            public void actionPerformed(ActionEvent e)
-            {
-                display.moveLocation(0, -1);
-            }
-        }));
-        menu.add(makeMenuItem("menu.view.right", new ActionListener()
-        {
-            public void actionPerformed(ActionEvent e)
-            {
-                display.moveLocation(0, 1);
-            }
-        }));
-
-        JMenuItem viewEditMenu;
-        menu.add(viewEditMenu = makeMenuItem("menu.view.edit",
-                new ActionListener()
-                {
-                    public void actionPerformed(ActionEvent e)
-                    {
-                        control.editLocation();
-                    }
-                }));
-        menuItemsDisabledDuringRun.add(viewEditMenu);
-
-        JMenuItem viewDeleteMenu;
-        menu.add(viewDeleteMenu = makeMenuItem("menu.view.delete",
-                new ActionListener()
-                {
-                    public void actionPerformed(ActionEvent e)
-                    {
-                        control.deleteLocation();
-                    }
-                }));
-        menuItemsDisabledDuringRun.add(viewDeleteMenu);
-
-        menu.add(makeMenuItem("menu.view.zoomin", new ActionListener()
-        {
-            public void actionPerformed(ActionEvent e)
-            {
-                display.zoomIn();
-            }
-        }));
-
-        menu.add(makeMenuItem("menu.view.zoomout", new ActionListener()
-        {
-            public void actionPerformed(ActionEvent e)
-            {
-                display.zoomOut();
-            }
-        }));
+//        mbar.add(menu = makeMenu("menu.file"));
+//
+//        newGridMenu = makeMenu("menu.file.new");
+//        menu.add(newGridMenu);
+//        menuItemsDisabledDuringRun.add(newGridMenu);
+//
+//        menu.add(makeMenuItem("menu.file.quit", new ActionListener()
+//        {
+//            public void actionPerformed(ActionEvent e)
+//            {
+//                System.exit(0);
+//            }
+//        }));
+//
+//        mbar.add(menu = makeMenu("menu.view"));
+//
+//        menu.add(makeMenuItem("menu.view.up", new ActionListener()
+//        {
+//            public void actionPerformed(ActionEvent e)
+//            {
+//                display.moveLocation(-1, 0);
+//            }
+//        }));
+//        menu.add(makeMenuItem("menu.view.down", new ActionListener()
+//        {
+//            public void actionPerformed(ActionEvent e)
+//            {
+//                display.moveLocation(1, 0);
+//            }
+//        }));
+//        menu.add(makeMenuItem("menu.view.left", new ActionListener()
+//        {
+//            public void actionPerformed(ActionEvent e)
+//            {
+//                display.moveLocation(0, -1);
+//            }
+//        }));
+//        menu.add(makeMenuItem("menu.view.right", new ActionListener()
+//        {
+//            public void actionPerformed(ActionEvent e)
+//            {
+//                display.moveLocation(0, 1);
+//            }
+//        }));
+//
+//        JMenuItem viewEditMenu;
+//        menu.add(viewEditMenu = makeMenuItem("menu.view.edit",
+//                new ActionListener()
+//                {
+//                    public void actionPerformed(ActionEvent e)
+//                    {
+//                        control.editLocation();
+//                    }
+//                }));
+//        menuItemsDisabledDuringRun.add(viewEditMenu);
+//
+//        JMenuItem viewDeleteMenu;
+//        menu.add(viewDeleteMenu = makeMenuItem("menu.view.delete",
+//                new ActionListener()
+//                {
+//                    public void actionPerformed(ActionEvent e)
+//                    {
+//                        control.deleteLocation();
+//                    }
+//                }));
+//        menuItemsDisabledDuringRun.add(viewDeleteMenu);
+//
+//        menu.add(makeMenuItem("menu.view.zoomin", new ActionListener()
+//        {
+//            public void actionPerformed(ActionEvent e)
+//            {
+//                display.zoomIn();
+//            }
+//        }));
+//
+//        menu.add(makeMenuItem("menu.view.zoomout", new ActionListener()
+//        {
+//            public void actionPerformed(ActionEvent e)
+//            {
+//                display.zoomOut();
+//            }
+//        }));
 
         mbar.add(menu = makeMenu("menu.help"));
         menu.add(makeMenuItem("menu.help.about", new ActionListener()
@@ -451,16 +451,16 @@ public class WorldFrame<T> extends JFrame
                 showLicense();
             }
         }));
-
+        //TODO show directions menu item
         setRunMenuItemsEnabled(true);
         setJMenuBar(mbar);
     }
 
     private void makeNewGridMenu()
     {
-        newGridMenu.removeAll();
-        MenuMaker<T> maker = new MenuMaker<T>(this, resources, displayMap);
-        maker.addConstructors(newGridMenu, gridClasses);
+//        newGridMenu.removeAll();
+//        MenuMaker<T> maker = new MenuMaker<T>(this, resources, displayMap);
+//        maker.addConstructors(newGridMenu, gridClasses);
     }
 
     /**
