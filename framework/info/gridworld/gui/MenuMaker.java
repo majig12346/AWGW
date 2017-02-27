@@ -20,6 +20,7 @@ import info.gridworld.grid.Grid;
 import info.gridworld.grid.Location;
 import majig12346.Player;
 import majig12346.Runner;
+import majig12346.TerrainGrid;
 import majig12346.terrain.Terrain;
 import majig12346.terrain.properties.Factory;
 import majig12346.terrain.properties.Property;
@@ -459,7 +460,11 @@ public class MenuMaker<T> {
 							@Override
 							public void run() {
 								Location targetLocation = display.avw.getLocationWhenClicked();
-								display.avw.resetClickedLocation();
+								//XXX cheaty bugfix hopefully
+								TerrainGrid tg = (TerrainGrid) u.getGrid();
+								Location clickMeForBugFree = tg.getLocationArray()[0][0];
+								display.avw.locationClicked(clickMeForBugFree);
+								display.avw.getWorldFrame().repaint();
 								Unit targetedUnit = (Unit) u.getGrid().get(targetLocation);
 								if (!targetable.contains(targetedUnit)) {
 									display.shouldBeHighlighted.clear();
@@ -492,8 +497,9 @@ public class MenuMaker<T> {
 										tryRepaint(display);
 									}
 									//display.avw.resetClickedLocation();
-									//									display.paintImmediately(display.getBounds());
-									display.avw.getWorldFrame().repaint();
+									//display.paintImmediately(display.getBounds());
+									
+									
 								}
 							}
 
