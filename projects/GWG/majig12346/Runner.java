@@ -25,8 +25,7 @@ public class Runner {
 				+ " this is a Core 2 Duo!");
 		AVWorld avw = new AVWorld();
 		players = new Player[3];
-		Color color1 = new Color(255,85,50);
-		Player p1 = new Player(new TestCO(),15000,null);
+		Player p1 = new Player(new TestCO(),15000,new Color(255,80,45));
 		Player p2 = new Player(new TestCO(), 90000, new Color(75, 150, 255));
 		players[p1.ID] = p1;
 		players[p2.ID] = p2;
@@ -65,6 +64,9 @@ public class Runner {
 		copter1.putSelfInGrid(g,g.getLocationArray()[7][7]);
 		TCopter copter2 = new TCopter(players[1]);
 		copter2.putSelfInGrid(g,g.getLocationArray()[7][6]);
+		AdvFighter avf1 = new AdvFighter(players[1]);
+		avf1.setFuel(1.0);
+		avf1.putSelfInGrid(g,g.getLocationArray()[5][5]);
 	}
 
 
@@ -102,11 +104,19 @@ public class Runner {
 				u.immobilize();
 			}
 		}
-		if(players[old.ID+1]==null){
+		try {
+			if(players[old.ID+1]==null){
+				next = players[1];
+			}else{
+				next = players[old.ID+1];
+			}
+		} catch (ArrayIndexOutOfBoundsException e) {
 			next = players[1];
-		}else{
-			next = players[old.ID+1];
 		}
+		for(Unit u:next.getUnitsControlled()){
+			u.resetMovement();
+		}
+		turnPlayer = next;
 		
 	}
 	public static Terrain makeTerrain(int r, int c, TerrainGrid<Actor> hostGrid, String terrainType) throws Exception{

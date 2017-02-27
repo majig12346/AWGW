@@ -79,6 +79,17 @@ import javax.swing.event.DocumentListener;
  * students.
  */
 public class MenuMaker<T> {
+	
+	/**
+	 * hacky display fixer lol
+	 */
+	public static void noBugsPls(GridPanel display, TerrainGrid gr){
+		//cheaty bugfix hopefully
+		TerrainGrid tg = (TerrainGrid) gr;
+		Location clickMeForBugFree = tg.getLocationArray()[0][0];
+		display.avw.locationClicked(clickMeForBugFree);
+		display.avw.getWorldFrame().repaint();
+	}
 	/**
 	 * This will be the common repaint.
 	 * @param display
@@ -460,11 +471,7 @@ public class MenuMaker<T> {
 							@Override
 							public void run() {
 								Location targetLocation = display.avw.getLocationWhenClicked();
-								//XXX cheaty bugfix hopefully
-								TerrainGrid tg = (TerrainGrid) u.getGrid();
-								Location clickMeForBugFree = tg.getLocationArray()[0][0];
-								display.avw.locationClicked(clickMeForBugFree);
-								display.avw.getWorldFrame().repaint();
+								noBugsPls(display, (TerrainGrid) u.getGrid());
 								Unit targetedUnit = (Unit) u.getGrid().get(targetLocation);
 								if (!targetable.contains(targetedUnit)) {
 									display.shouldBeHighlighted.clear();

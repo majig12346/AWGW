@@ -20,8 +20,6 @@ package info.gridworld.gui;
 
 import info.gridworld.grid.*;
 import info.gridworld.world.World;
-import majig12346.Runner;
-import majig12346.units.Unit;
 
 import java.awt.Dimension;
 import java.awt.Point;
@@ -30,7 +28,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.lang.reflect.Modifier;
-import java.net.URL;
 import java.util.Comparator;
 import java.util.ResourceBundle;
 import java.util.Set;
@@ -47,7 +44,7 @@ import javax.swing.*;
  * students.
  */
 
-public class GUIControllerDisabled<T>
+public class GUIControllerBackup<T>
 {
     public static final int INDEFINITE = 0, FIXED_STEPS = 1, PROMPT_STEPS = 2;
 
@@ -56,9 +53,9 @@ public class GUIControllerDisabled<T>
             + (MAX_DELAY_MSECS - MIN_DELAY_MSECS) / 2;
 
     private Timer timer;
-    private JButton stepButton, runButton, stopButton,turnCycleButton;
+    private JButton stepButton, runButton, stopButton;
     private JComponent controlPanel;
-    public GridPanel display;
+    private GridPanel display;
     private WorldFrame<T> parentFrame;
     private int numStepsToRun, numStepsSoFar;
     private ResourceBundle resources;
@@ -74,7 +71,7 @@ public class GUIControllerDisabled<T>
      * @param displayMap the map for occupant displays
      * @param res the resource bundle for message display
      */
-    public GUIControllerDisabled(WorldFrame<T> parent, GridPanel disp,
+    public GUIControllerBackup(WorldFrame<T> parent, GridPanel disp,
             DisplayMap displayMap, ResourceBundle res)
     {
         resources = res;
@@ -211,21 +208,17 @@ public class GUIControllerDisabled<T>
         
         controlPanel.add(Box.createRigidArea(spacer));
 
-        //TODO
-        turnCycleButton = makeTurnCycleButton();
-        turnCycleButton.setEnabled(true);
-        controlPanel.add(turnCycleButton);
-        //controlPanel.add(stepButton);
-        //controlPanel.add(Box.createRigidArea(spacer));
-        //controlPanel.add(runButton);
-        //controlPanel.add(Box.createRigidArea(spacer));
-        //controlPanel.add(stopButton);
+        controlPanel.add(stepButton);
+        controlPanel.add(Box.createRigidArea(spacer));
+        controlPanel.add(runButton);
+        controlPanel.add(Box.createRigidArea(spacer));
+        controlPanel.add(stopButton);
         runButton.setEnabled(false);
         stepButton.setEnabled(false);
         stopButton.setEnabled(false);
 
         controlPanel.add(Box.createRigidArea(spacer));
-        //controlPanel.add(new JLabel(resources.getString("slider.gui.slow")));
+        controlPanel.add(new JLabel(resources.getString("slider.gui.slow")));
         JSlider speedSlider = new JSlider(MIN_DELAY_MSECS, MAX_DELAY_MSECS,
                 INITIAL_DELAY);
         speedSlider.setInverted(true);
@@ -243,9 +236,8 @@ public class GUIControllerDisabled<T>
             map = map.getParent();
         }
 
-        //TODO
-        //controlPanel.add(speedSlider);
-        //controlPanel.add(new JLabel(resources.getString("slider.gui.fast")));
+        controlPanel.add(speedSlider);
+        controlPanel.add(new JLabel(resources.getString("slider.gui.fast")));
         controlPanel.add(Box.createRigidArea(new Dimension(5, 0)));
 
         stepButton.addActionListener(new ActionListener()
@@ -278,24 +270,6 @@ public class GUIControllerDisabled<T>
         });
     }
 
-    private JButton makeTurnCycleButton(){
-    	JButton TCB = new JButton();
-    	URL TCPicLoc = getClass().getClassLoader().getResource("resources/32x/endTurn.png");
-    	ImageIcon TCIco = MenuMaker.get16xIcon(TCPicLoc);
-    	ActionListener turnCycleActionL = new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				JOptionPane.showMessageDialog(null, "turn end phase\ninsert witty text here");//TODO text
-				Runner.cycleTurnPlayer();
-			}
-		};
-		TCB.addActionListener(turnCycleActionL);
-		TCB.setText("End Turn");
-		TCB.setIcon(TCIco);
-		return TCB;
-    }
-    
-    
     /**
      * Returns the panel containing the controls.
      * @return the control panel
@@ -328,50 +302,23 @@ public class GUIControllerDisabled<T>
         Location loc = display.getCurrentLocation();
         if (loc != null)
         {
-            //TODO
-        	T occupant = world.getGrid().get(loc);
-        	
-        	//T occupant = world.getGrid().get(display.originalLocation);
-            
-        	if (occupant == null)
+            T occupant = world.getGrid().get(loc);
+            if (occupant == null)
             {
                 MenuMaker<T> maker = new MenuMaker<T>(parentFrame, resources,
                         displayMap);
-                maker.display = this.display;
                 JPopupMenu popup = maker.makeConstructorMenu(occupantClasses,
                         loc);
-                Point p = display.pointForLocation(null!=maker.newLoc?maker.newLoc:loc);
-//                if(null!=p){
-                	popup.show(display, p.x, p.y);
-//                }else{
-//                	display.shouldBeHighlighted.clear();
-//                }
+                Point p = display.pointForLocation(loc);
+                popup.show(display, p.x, p.y);
             }
             else
             {
-            	//XXX testing
-             	if(!((Unit)(occupant)).canMove()){
-            		System.out.println("line 309 GUIController, already cant move huh??");
-            	}
-            	
                 MenuMaker<T> maker = new MenuMaker<T>(parentFrame, resources,
                         displayMap);
-                maker.display = this.display;
-                System.out.println("invoking makeMethodMenu, see line 334 of GUIController");
-                JPopupMenu popup = null;
-//					System.out.println("trying");
-					popup = maker.makeMethodMenu(occupant, loc);
-//					System.out.println("success");
-					// TODO Auto-generated catch block
-                Point p = display.pointForLocation(null!=maker.newLoc?maker.newLoc:loc);
-                if(null==popup){
-                	return;
-                }
-//                if(null!=p){
-                	popup.show(display, p.x, p.y);
-//                }else{
-//                	display.shouldBeHighlighted.clear();
-//                }
+                JPopupMenu popup = maker.makeMethodMenu(occupant, loc);
+                Point p = display.pointForLocation(loc);
+                popup.show(display, p.x, p.y);
             }
         }
         parentFrame.repaint();

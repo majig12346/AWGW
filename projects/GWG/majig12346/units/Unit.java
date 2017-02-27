@@ -6,10 +6,12 @@ import majig12346.PassiveFlag.COFlag;
 import majig12346.weapons.Weapon;
 import majig12346.weapons.WeaponType;
 import majig12346.Player;
+import majig12346.TerrainGrid;
 import majig12346.terrain.Terrain;
 import majig12346.weapons.Suit;
 import majig12346.units.air.*;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -22,8 +24,14 @@ import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.Stack;
 
+import javax.swing.ImageIcon;
+
 import info.gridworld.actor.Actor;
 import info.gridworld.grid.Grid;
+import info.gridworld.gui.GridPanel;
+import info.gridworld.gui.MenuMaker;
+import info.gridworld.world.AVWorld;
+import javafx.scene.layout.GridPane;
 
 public abstract class Unit extends Actor{
 	//FIXME kinda useless
@@ -120,6 +128,42 @@ public abstract class Unit extends Actor{
 	}
 	protected void selfDestruct(){
 		//TODO animation
+		
+		URL fireIconLocation = this.getClass().getClassLoader().getResource("resources/32x/fire.png");
+		URL noFuelIconLocation = this.getClass().getClassLoader().getResource("resources/32x/noFuel.png");
+		Set<Terrain> where = new HashSet<Terrain>();
+		where.add((Terrain) getLocation());
+		try{
+			TerrainGrid tg = (TerrainGrid)getGrid();
+			GridPanel display = tg.hostWorld.getWorldFrame().control.display;
+			AVWorld avw = tg.hostWorld;
+			new Thread(new Runnable(){
+
+				@Override
+				public void run() {
+					try {
+						for(int x=0;x<3;x++){
+							display.showIconsOnSetOfLocations(new ImageIcon(noFuelIconLocation).getImage(), where);
+							Thread.sleep(250);
+							display.repaint();
+						}
+						for(int x=0;x<3;x++){
+							display.showIconsOnSetOfLocations(new ImageIcon(fireIconLocation).getImage(), where);
+							Thread.sleep(250);
+							display.repaint();
+						}
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
+			}).start();
+			
+		}catch(ClassCastException cce){
+			System.err.println("?? Host grid is not TerrainGrid. wat. PROBABLY FATAL ERROR Moving on...");
+			this.removeSelfFromGrid();
+			this.getOwner().getUnitsControlled().remove(this);
+			return;
+		}
 		this.removeSelfFromGrid();
 		this.getOwner().getUnitsControlled().remove(this);
 	}
@@ -424,7 +468,7 @@ public abstract class Unit extends Actor{
 		this.canMove = true;
 		this.fuel = (int)(getFuel());
 		this.mobility = this.maxMobility;
-		this.setFuel(this.getFuel()-this.maxMobility);
+		this.setFuel(this.getFuel()-(this.maxMobility-mobility));
 		this.deductDailyCost();
 
 	}
