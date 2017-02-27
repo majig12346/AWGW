@@ -30,6 +30,7 @@ import majig12346.weapons.WeaponType;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Container;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -77,6 +78,21 @@ import javax.swing.event.DocumentListener;
  * students.
  */
 public class MenuMaker<T> {
+	/**
+	 * This will be the common repaint.
+	 * @param display
+	 */
+	public static void tryRepaint(GridPanel display) {
+		//display.revalidate();
+		Container c = display.getParent();
+		display.revalidate();
+		display.paintImmediately(display.getBounds());
+		//display.avw.getWorldFrame().repaint();
+		//c.repaint();
+		//display.repaint();
+
+	}
+
 	/**
 	 * Constructs a menu maker for a given world.
 	 * 
@@ -141,10 +157,11 @@ public class MenuMaker<T> {
 		display.avw.setMessage(dispMessage.toString());
 		display.repaint();
 		// inefficient
-		Set<Terrain> validMoveSpaces = u.getValidMoveSpaces();
-		display.shouldBeHighlighted = validMoveSpaces;
-		display.avw.resetClickedLocation();
-
+		//if(u.getHealth()>0){ FIXME
+			Set<Terrain> validMoveSpaces = u.getValidMoveSpaces();
+			display.shouldBeHighlighted = validMoveSpaces;
+			display.avw.resetClickedLocation();
+		//}
 		//TODO thread stuff
 		//		new Thread(new Runnable() {
 		//			@Override
@@ -446,8 +463,7 @@ public class MenuMaker<T> {
 								Unit targetedUnit = (Unit) u.getGrid().get(targetLocation);
 								if (!targetable.contains(targetedUnit)) {
 									display.shouldBeHighlighted.clear();
-									display.repaint();
-									display.invalidate();
+									tryRepaint(display);
 									System.err.println("attack canceled");
 									// attack canceled
 									return;
@@ -463,19 +479,24 @@ public class MenuMaker<T> {
 											"resources/32x/fire.png");
 									Set<Terrain> where = new HashSet<Terrain>();
 									where.add((Terrain) targetLocation);
-									if(targetedUnit.getHealth()>0&&targetedUnit.canCounter(u)){
+									if(targetedUnit.getHealth()>0&&u.getHealth()>0&&targetedUnit.canCounter(u)){
 										where.add((Terrain) u.getLocation());
 									}
+									for (int i = 0; i < 2; i++) {
 									display.showIconsOnSetOfLocations(new ImageIcon(fireIconLocation).getImage(), where);
 									try {
-										Thread.sleep(2000);
+										Thread.sleep(500); 
 									} catch (InterruptedException e) {
 										e.printStackTrace();
 									}
-									display.repaint();
-									
+									tryRepaint(display);
+									}
+									//display.avw.resetClickedLocation();
+									//									display.paintImmediately(display.getBounds());
+									display.avw.getWorldFrame().repaint();
 								}
 							}
+
 						}).start();
 					}
 

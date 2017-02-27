@@ -25,7 +25,7 @@ public class Runner {
 		AVWorld avw = new AVWorld();
 		players = new Player[4];
 		Player p1 = new Player(new TestCO(),15000,new Color(255,85,50));
-		Player p2 = new Player(new TestCO(), 9000, new Color(75, 150, 255));
+		Player p2 = new Player(new TestCO(), 90000, new Color(75, 150, 255));
 		players[p1.ID] = p1;
 		players[p2.ID] = p2;
 		TerrainGrid<Actor> g = new TerrainGrid<Actor>(10,10);
