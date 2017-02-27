@@ -135,7 +135,7 @@ public class MenuMaker<T> {
 		// TODO tidy up
 		StringBuilder dispMessage = new StringBuilder(50);
 		dispMessage.append("Currently Selected: " + u.getType() + " at " + loc
-				+" ["+ u.getHealth() + " HP] ["+u.getFuel()+" fuel]");
+				+" ["+ u.getHealth() + " HP, "+((int)u.getFuel())+" fuel, "+u.getAmmo()+" ammo]");
 		if (u instanceof Carry) {
 			Carry c = (Carry) u;
 			dispMessage.append("\nCurrently Carrying("+c.getUnits().size()+"/"+c.getMaxCapacity()+"): ");
