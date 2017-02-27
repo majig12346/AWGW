@@ -158,9 +158,9 @@ public class MenuMaker<T> {
 		display.repaint();
 		// inefficient
 		//if(u.getHealth()>0){ FIXME
-			Set<Terrain> validMoveSpaces = u.getValidMoveSpaces();
-			display.shouldBeHighlighted = validMoveSpaces;
-			display.avw.resetClickedLocation();
+		Set<Terrain> validMoveSpaces = u.getValidMoveSpaces();
+		display.shouldBeHighlighted = validMoveSpaces;
+		display.avw.resetClickedLocation();
 		//}
 		//TODO thread stuff
 		//		new Thread(new Runnable() {
@@ -483,13 +483,13 @@ public class MenuMaker<T> {
 										where.add((Terrain) u.getLocation());
 									}
 									for (int i = 0; i < 2; i++) {
-									display.showIconsOnSetOfLocations(new ImageIcon(fireIconLocation).getImage(), where);
-									try {
-										Thread.sleep(500); 
-									} catch (InterruptedException e) {
-										e.printStackTrace();
-									}
-									tryRepaint(display);
+										display.showIconsOnSetOfLocations(new ImageIcon(fireIconLocation).getImage(), where);
+										try {
+											Thread.sleep(500); 
+										} catch (InterruptedException e) {
+											e.printStackTrace();
+										}
+										tryRepaint(display);
 									}
 									//display.avw.resetClickedLocation();
 									//									display.paintImmediately(display.getBounds());
@@ -583,6 +583,7 @@ public class MenuMaker<T> {
 								for(Unit tOcc:adjacentAlliedUnits){
 									whereToDraw.add((Terrain) tOcc.getLocation());
 								}
+								whereToDraw.remove(u.getLocation());
 								for(int x=0;x<4;x++){
 									display.showIconsOnSetOfLocations(bigSupplyIcon.getImage(), whereToDraw);
 									try {
