@@ -79,7 +79,7 @@ import javax.swing.event.DocumentListener;
  * students.
  */
 public class MenuMaker<T> {
-	
+
 	/**
 	 * hacky display fixer lol
 	 */
@@ -151,7 +151,7 @@ public class MenuMaker<T> {
 			dispMessage.append("\nCurrently Carrying("+c.getUnits().size()+"/"+c.getMaxCapacity()+"): ");
 			ArrayList<String> types = new ArrayList<>();
 			for (Unit carried : c.getUnits()) {
-				types.add(carried.getInfo());
+				types.add(carried.getConciseInfo());
 			}
 			if (!types.isEmpty()) {
 				dispMessage.append(types.toString());
@@ -228,60 +228,60 @@ public class MenuMaker<T> {
 		ArrayList<JMenuItem> ans = new ArrayList<JMenuItem>();
 		// every unit has the wait option if not loading into carry
 		Unit newLocOcc = (Unit) u.getGrid().get(newLoc);
-		if (u.canMove() && null == newLocOcc) {
-			System.out.println("can move, added!");
-			JMenuItem waitOption = new JMenuItem();
-			Action a = new Action() {
-				public boolean enabled = true;
+		if (u.canMove() && (null == newLocOcc||u==newLocOcc)) {
+			if(!(u==newLocOcc)){//if moving somewhere
+				JMenuItem waitOption = new JMenuItem();
+				Action a = new Action() {
+					public boolean enabled = true;
 
-				@Override
-				public void actionPerformed(ActionEvent arg0) {
-					try {
-						u.move(((Terrain) newLoc),true);
-					} catch (Exception e) {
-						e.printStackTrace();
+					@Override
+					public void actionPerformed(ActionEvent arg0) {
+						try {
+							u.move(((Terrain) newLoc),true);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+						display.shouldBeHighlighted.clear();
+						display.repaint();
+
 					}
-					display.shouldBeHighlighted.clear();
-					display.repaint();
 
-				}
+					@Override
+					public void addPropertyChangeListener(
+							PropertyChangeListener arg0) {
+					}
 
-				@Override
-				public void addPropertyChangeListener(
-						PropertyChangeListener arg0) {
-				}
+					@Override
+					public Object getValue(String arg0) {
+						return null; // idk
+					}
 
-				@Override
-				public Object getValue(String arg0) {
-					return null; // idk
-				}
+					@Override
+					public boolean isEnabled() {
+						return enabled;
+					}
 
-				@Override
-				public boolean isEnabled() {
-					return enabled;
-				}
+					@Override
+					public void putValue(String key, Object value) {
+					}
 
-				@Override
-				public void putValue(String key, Object value) {
-				}
+					@Override
+					public void removePropertyChangeListener(
+							PropertyChangeListener listener) {
+					}
 
-				@Override
-				public void removePropertyChangeListener(
-						PropertyChangeListener listener) {
-				}
-
-				@Override
-				public void setEnabled(boolean b) {
-					enabled = b;
-				}
-			};
-			a.setEnabled(true);
-			waitOption.setAction(a);
-			URL imagePath = this.getClass().getClassLoader().getResource("resources/32x/wait.png");
-			waitOption.setIcon(get16xIcon(imagePath));
-			waitOption.setText("Wait");
-			ans.add(waitOption);
-
+					@Override
+					public void setEnabled(boolean b) {
+						enabled = b;
+					}
+				};
+				a.setEnabled(true);
+				waitOption.setAction(a);
+				URL imagePath = this.getClass().getClassLoader().getResource("resources/32x/wait.png");
+				waitOption.setIcon(get16xIcon(imagePath));
+				waitOption.setText("Wait");
+				ans.add(waitOption);
+			}
 
 			// if unit is carry, can drop something off
 			System.out.println("checking drop");
@@ -294,7 +294,7 @@ public class MenuMaker<T> {
 					ArrayList<Terrain> validLZs = new ArrayList<>();
 					for (Terrain t : ((Terrain) newLoc)
 							.getAllAdjacentTerrains()) {
-						if ((null == u.getGrid().get(t)||(u==u.getGrid().get(t)&&!newLoc.equals(t)))
+						if ((null == u.getGrid().get(t)||(u==u.getGrid().get(t)/*&&!newLoc.equals(t)*/))
 								&& 999 != t.getMoveCost(carried
 										.getMovementType())) {
 							validLZs.add(t);
@@ -311,7 +311,7 @@ public class MenuMaker<T> {
 								display.shouldBeHighlighted = new HashSet<Terrain>(
 										validLZs);
 								display.avw.setMessage("Dropping off: "+carried.getConciseInfo()
-								+" fuel]\n\nClick where you would like to drop "+carried.getType()+" off."
+								+"\n\nClick where you would like to drop "+carried.getType()+" off."
 								+ "  Click an unhighlighted tile to cancel.");
 								display.avw.resetClickedLocation();
 								display.repaint();
@@ -378,7 +378,7 @@ public class MenuMaker<T> {
 					}
 				}
 			}
-			
+
 			// units can fire on enemies if not unarmed and in range and unit can move
 			System.out.println("checking weps");
 			if (u.canMove()&&u.getWeapons()[0].getWeaponType() != WeaponType.NONE
@@ -443,10 +443,11 @@ public class MenuMaker<T> {
 											}
 											tryRepaint(display);
 										}
+										noBugsPls(display, (TerrainGrid) u.getGrid());
 										//display.avw.resetClickedLocation();
 										//display.paintImmediately(display.getBounds());
-										
-										
+
+
 									}
 								}
 

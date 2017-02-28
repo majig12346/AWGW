@@ -138,6 +138,14 @@ public abstract class Terrain extends Location{
 		}
 		return adjacent;
 	}
+	public String getUIName(){
+		switch(this.getClass().getSimpleName()){
+		case "Property":
+			return "City";
+		default:
+			return this.getClass().getSimpleName();
+		}
+	}
 	public String getDefenseStarsAsString(){
 		Object a;
 		if((a = hostGrid.get(this))!=null&&a instanceof Air){

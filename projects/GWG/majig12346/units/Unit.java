@@ -153,7 +153,7 @@ public abstract class Unit extends Actor{
 						for(int x=0;x<3;x++){
 							display.showIconsOnSetOfLocations(new ImageIcon(fireIconLocation).getImage(), where);
 							Thread.sleep(250);
-							
+
 						}
 					} catch (InterruptedException e) {
 						e.printStackTrace();
@@ -476,8 +476,10 @@ public abstract class Unit extends Actor{
 		this.canMove = true;
 		this.fuel = (int)(getFuel());
 		this.mobility = this.maxMobility;
-		this.setFuel(this.getFuel()-(this.maxMobility-mobility));
-		this.deductDailyCost();
+		if(null!=getLocation()){//If not carried
+			this.setFuel(this.getFuel()-(this.maxMobility-mobility));
+			this.deductDailyCost();
+		}
 
 	}
 	/**
@@ -733,13 +735,13 @@ public abstract class Unit extends Actor{
 		}
 	}
 	public String getInfo(){
-		return getType() + ((null!=getLocation())?" at " + getLocation():"")
+		return getType() + ((null!=getLocation()&&getLocation() instanceof Terrain)?" at " + ((Terrain) getLocation()).getUIName() + getLocation():"")
 				+" ["+ getHealth() + " HP, "+((int)getFuel())+" fuel, "+getWeaponInfo()+ " ]";
 	}
 	public String getConciseInfo(){
 		return getType()+" ["+ getHealth() + " HP]";
 	}
-	
+
 	/**
 	 * @return whether or not this unit is a jet aircraft
 	 */
