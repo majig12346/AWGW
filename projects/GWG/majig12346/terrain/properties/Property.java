@@ -2,6 +2,8 @@ package majig12346.terrain.properties;
 
 import info.gridworld.actor.Actor;
 
+import java.util.ArrayList;
+
 import javax.swing.JOptionPane;
 
 import majig12346.PassiveFlag.COFlag;
@@ -81,11 +83,13 @@ public class Property extends Terrain{
 			System.exit(-1);
 		}
 		//actual code
-		//checks for extra capturing points, to be implemented in CO
+		//TODO checks for extra capturing points, to be implemented in CO
 		int tickBy = (int) u.getOwner().CO.passive(u.getHealth(), COFlag.CAPTURE, u.getUnitType()); 
 		this.capTimer-=tickBy;
+		System.out.println("capTimer = "+capTimer);
 		if(capTimer<=0){
-			getOwner().getPropertiesOwned().remove(this);
+			ArrayList<Property> oldOwnerProperties = getOwner().getPropertiesOwned();
+			oldOwnerProperties.remove(this);
 			this.setOwner(u.getOwner());
 		}
 	}

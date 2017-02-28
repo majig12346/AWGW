@@ -1,4 +1,5 @@
 package majig12346;
+import majig12346.terrain.properties.HQ;
 import majig12346.terrain.properties.Property;
 import majig12346.units.Unit;
 
@@ -95,5 +96,13 @@ public class Player {
 	}
 	public void setCommTowers(int commTowers) {
 		this.commTowers = commTowers;
+	}
+	public boolean hasHQ(){
+		for(Property prop:getPropertiesOwned()){
+			if(prop instanceof HQ){
+				return true;
+			}
+		}
+		return false;
 	}
 }
