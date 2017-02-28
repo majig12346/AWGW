@@ -16,7 +16,7 @@ import majig12346.CO.CO;
 public class Player {
 	public static int numberOfPlayers;
 	public final CO CO;
-	public final int ID;
+	public final int id;
 	private ArrayList<Unit> unitsControlled;
 	private int money;
 	private ArrayList<Property> propertiesOwned;
@@ -35,7 +35,7 @@ public class Player {
 		}else{
 			setMoney(startingMoney);
 		}
-		this.ID = ++Player.numberOfPlayers;
+		this.id = ++Player.numberOfPlayers;
 		this.CO = commandingOfficer;
 		this.teamColor = teamColor;
 		this.unitsControlled = new ArrayList<Unit>();

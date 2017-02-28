@@ -28,14 +28,14 @@ public class Runner {
 		players = new Player[3];
 		Player p1 = new Player(new TestCO(),15000,new Color(255,80,45));
 		Player p2 = new Player(new TestCO(), 90000, new Color(75, 150, 255));
-		players[p1.ID] = p1;
-		players[p2.ID] = p2;
+		players[p1.id] = p1;
+		players[p2.id] = p2;
 		turnPlayer = players[1];
 		TerrainGrid<Actor> g = new TerrainGrid<Actor>(10,10);
 		fillTerrainGrid(g);
 		customFill(g,p1,p2);
 		avw.setGrid(g);
-		avw.show();asdf
+		avw.show();
 		//I will fix this
 		while(true){
 			avw.setMessage("Currently selected: none.\n\nUse your units to move. Click your factories to build. "+
@@ -97,7 +97,23 @@ public class Runner {
 		}
 	}
 	private static Player turnPlayer;
-	public static void cycleTurnPlayer(){
+	public static Player getTurnPlayer() {
+		return turnPlayer;
+	}
+	public static Player getNextTurnPlayer(){
+		Player old = getTurnPlayer(), next;
+		try {
+			if(players[old.id+1]==null){
+				next = players[1];
+			}else{
+				next = players[old.id+1];
+			}
+		} catch (ArrayIndexOutOfBoundsException e) {
+			next = players[1];
+		}
+		return next;
+	}
+	public static Player cycleTurnPlayer(){
 		Player old = turnPlayer;
 		Player next;
 		for(Unit u:old.getUnitsControlled()){
@@ -106,10 +122,10 @@ public class Runner {
 			}
 		}
 		try {
-			if(players[old.ID+1]==null){
+			if(players[old.id+1]==null){
 				next = players[1];
 			}else{
-				next = players[old.ID+1];
+				next = players[old.id+1];
 			}
 		} catch (ArrayIndexOutOfBoundsException e) {
 			next = players[1];
@@ -125,6 +141,7 @@ public class Runner {
 //			u.resetMovement();
 //		}
 		turnPlayer = next;
+		return turnPlayer;
 		
 	}
 	public static Terrain makeTerrain(int r, int c, TerrainGrid<Actor> hostGrid, String terrainType) throws Exception{

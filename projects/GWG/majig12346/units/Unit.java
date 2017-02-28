@@ -147,20 +147,21 @@ public abstract class Unit extends Actor{
 							for(int x=0;x<3;x++){
 								display.showIconsOnSetOfLocations(new ImageIcon(noFuelIconLocation).getImage(), where);
 								Thread.sleep(250);
-								display.repaint();
 							}
 						}
+						display.repaint();
 						for(int x=0;x<3;x++){
 							display.showIconsOnSetOfLocations(new ImageIcon(fireIconLocation).getImage(), where);
 							Thread.sleep(250);
-							display.repaint();
+							
 						}
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
 					finally {
 						_this.removeSelfFromGrid();
-						_this.getOwner().getUnitsControlled().remove(_this);			
+						_this.getOwner().getUnitsControlled().remove(_this);	
+						display.repaint();
 					}
 
 				}
