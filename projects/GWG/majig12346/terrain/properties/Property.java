@@ -1,6 +1,7 @@
 package majig12346.terrain.properties;
 
 import info.gridworld.actor.Actor;
+import info.gridworld.gui.MenuMaker;
 
 import java.util.ArrayList;
 
@@ -91,6 +92,7 @@ public class Property extends Terrain{
 			ArrayList<Property> oldOwnerProperties = getOwner().getPropertiesOwned();
 			oldOwnerProperties.remove(this);
 			this.setOwner(u.getOwner());
+			MenuMaker.noBugsPls(hostGrid.hostWorld.getWorldFrame().control.display, hostGrid);
 		}
 	}
 	

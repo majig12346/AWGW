@@ -8,6 +8,7 @@ import java.util.Iterator;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 
+import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
 import info.gridworld.actor.Actor;
@@ -50,7 +51,11 @@ public class Runner {
 					"P1 money: " + players[1].getMoney() + "  P2 money: " + players[2].getMoney());
 			avw.go();
 		}
-		JOptionPane.showMessageDialog(avw.getWorldFrame(), (victoryDiag()));
+		avw.getWorldFrame().control.turnCycleButton.setEnabled(false);
+		String victoryDiag = victoryDiag();
+		avw.setMessage(victoryDiag);
+		JOptionPane.showMessageDialog(avw.getWorldFrame(), (victoryDiag), "Game Over", 0,
+				new ImageIcon(Runner.class.getClassLoader().getResource("resources/victory.png")));
 	}
 
 	private static void customFill(TerrainGrid<Actor> g, Player p1, Player p2) {

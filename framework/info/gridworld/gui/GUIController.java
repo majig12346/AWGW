@@ -57,7 +57,8 @@ public class GUIController<T> {
 	private static final int INITIAL_DELAY = MIN_DELAY_MSECS + (MAX_DELAY_MSECS - MIN_DELAY_MSECS) / 2;
 
 	private Timer timer;
-	private JButton stepButton, runButton, stopButton, turnCycleButton;
+	private JButton stepButton, runButton, stopButton;
+	public JButton turnCycleButton;
 	private JComponent controlPanel;
 	public GridPanel display;
 	private WorldFrame<T> parentFrame;
@@ -251,7 +252,18 @@ public class GUIController<T> {
 			}
 		});
 	}
-
+	private static void killJOP(){
+		Window[] windows = Window.getWindows();
+        for (Window window : windows) {
+            if (window instanceof JDialog) {
+                JDialog dialog = (JDialog) window;
+                if (dialog.getContentPane().getComponentCount() == 1
+                    && dialog.getContentPane().getComponent(0) instanceof JOptionPane){
+                    dialog.dispose();
+                }
+            }
+        }
+	}
 	private JButton makeTurnCycleButton() {
 		JButton tcButton = new JButton();
 		URL tcpIcoLoc = getClass().getClassLoader().getResource("resources/32x/endTurn.png");
@@ -259,29 +271,30 @@ public class GUIController<T> {
 		ActionListener turnCycleActionL = new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				JButton okButton = new JButton();
+				JButton okButton = new JButton(),cancelButton = new JButton();
 				okButton.addActionListener(new ActionListener() {
 					@Override
 					public void actionPerformed(ActionEvent e) {
 						Runner.cycleTurnPlayer();
 						MenuMaker.noBugsPls(display, (TerrainGrid) display.avw.getGrid());
-						 Window[] windows = Window.getWindows();
-			                for (Window window : windows) {
-			                    if (window instanceof JDialog) {
-			                        JDialog dialog = (JDialog) window;
-			                        if (dialog.getContentPane().getComponentCount() == 1
-			                            && dialog.getContentPane().getComponent(0) instanceof JOptionPane){
-			                            dialog.dispose();
-			                        }
-			                    }
-			                }
+						 killJOP();
 					}
 				});
-				JButton[] options = new JButton[1];
+				cancelButton.addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						killJOP();
+					}
+				});
+				JButton[] options = new JButton[2];
+				cancelButton.setIcon(MenuMaker.get16xIcon(getClass().getClassLoader().getResource("resources/32x/cancel.png")));
+				okButton.setIcon(MenuMaker.get16xIcon(getClass().getClassLoader().getResource("resources/32x/endturn.png")));
 				okButton.setText("okay");
+				cancelButton.setText("cancel");
 				options[0] = okButton;
-				JOptionPane.showOptionDialog(display.avw.getWorldFrame(), "Now Player " +Runner.getNextTurnPlayer().id+"'s turn...", 
-						"Turn ended", 0, 0, tcIco, options, 0);
+				options[1] = cancelButton;
+				JOptionPane.showOptionDialog(display.avw.getWorldFrame(), "Proceeding to Player " +Runner.getNextTurnPlayer().id+"'s turn...", 
+						"Turn ended", 0, 0, tcIco, options, 1);
 			}
 		};
 		tcButton.addActionListener(turnCycleActionL);
