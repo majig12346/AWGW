@@ -378,6 +378,264 @@ public class MenuMaker<T> {
 					}
 				}
 			}
+			
+			// units can fire on enemies if not unarmed and in range and unit can move
+			System.out.println("checking weps");
+			if (u.canMove()&&u.getWeapons()[0].getWeaponType() != WeaponType.NONE
+					|| null != u.getWeapons()[1]) {
+				Set<Unit> targetable = new HashSet<>();
+				ArrayList<Location> occupied = u.getGrid().getOccupiedLocations();
+				for (Location l : occupied) {
+					Unit tmp = (Unit) u.getGrid().get(l);
+					if (u.couldTarget(tmp, (Terrain) newLoc)
+							&& (!u.getOwner().equals(tmp.getOwner()))) {
+						targetable.add(tmp);
+					}
+				}
+				if (!targetable.isEmpty()) {
+
+					Action fireAction = new Action() {
+						public boolean enabled = true;
+
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							display.shouldBeHighlighted.clear();
+							for(Unit targetableUnit: targetable){
+								Terrain targetableTerrain = (Terrain) targetableUnit.getLocation();
+								display.shouldBeHighlighted.add(targetableTerrain);
+							}
+							display.avw.setMessage("Click highlighted tile to attack.\n\nClick unhighlighted to cancel");
+							display.repaint();
+							new Thread(new Runnable() {
+
+								@Override
+								public void run() {
+									Location targetLocation = display.avw.getLocationWhenClicked();
+									noBugsPls(display, (TerrainGrid) u.getGrid());
+									Unit targetedUnit = (Unit) u.getGrid().get(targetLocation);
+									if (!targetable.contains(targetedUnit)) {
+										display.shouldBeHighlighted.clear();
+										tryRepaint(display);
+										System.err.println("attack canceled");
+										// attack canceled
+										return;
+									} else {
+										try {
+											u.move(MenuMaker.this.newLoc, true);
+										} catch (Exception e1) {
+											e1.printStackTrace();
+										}
+										u.fire(targetedUnit);
+										display.paintImmediately(display.getBounds());
+										URL fireIconLocation = this.getClass().getClassLoader().getResource(
+												"resources/32x/fire.png");
+										Set<Terrain> where = new HashSet<Terrain>();
+										where.add((Terrain) targetLocation);
+										if(targetedUnit.getHealth()>0&&u.getHealth()>0&&targetedUnit.canCounter(u)){
+											where.add((Terrain) u.getLocation());
+										}
+										for (int i = 0; i < 2; i++) {
+											display.showIconsOnSetOfLocations(new ImageIcon(fireIconLocation).getImage(), where);
+											try {
+												Thread.sleep(500); 
+											} catch (InterruptedException e) {
+												e.printStackTrace();
+											}
+											tryRepaint(display);
+										}
+										//display.avw.resetClickedLocation();
+										//display.paintImmediately(display.getBounds());
+										
+										
+									}
+								}
+
+							}).start();
+						}
+
+						@Override
+						public void addPropertyChangeListener(
+								PropertyChangeListener listener) {
+						}
+
+						@Override
+						public Object getValue(String key) {
+							return null;
+						}
+
+						@Override
+						public boolean isEnabled() {
+							return enabled;
+						}
+
+						@Override
+						public void putValue(String key, Object value) {
+							// TODO Auto-generated method stub
+
+						}
+
+						@Override
+						public void removePropertyChangeListener(
+								PropertyChangeListener listener) {
+							// TODO Auto-generated method stub
+
+						}
+
+						@Override
+						public void setEnabled(boolean b) {
+							enabled = b;
+						}
+					};
+					JMenuItem fireOption = new JMenuItem();
+					fireOption.setAction(fireAction);
+					fireOption.setText("Fire");
+					fireOption.setIcon(get16xIcon(this.getClass().getClassLoader().getResource(
+							"resources/32x/fire.png")));
+					ans.add(fireOption);
+
+
+					System.out.println("added fireOption: MM " + "line "
+							+ new Throwable().getStackTrace()[0].getLineNumber());
+					System.out.println("targetable = " + targetable);
+				}
+			}
+
+			//check resupply
+			System.out.println("checking resupply");
+			if(u.canMove()&&u instanceof Carry && ((Carry) u).canResupply()){
+				Terrain newTerrain = (Terrain) newLoc;
+				ArrayList<Unit> adjacentAlliedUnits = new ArrayList<>();
+				for(Terrain t:newTerrain.getAllAdjacentTerrains()){
+					Unit tOcc = (Unit) u.getGrid().get(t);
+					if(tOcc!=null&&tOcc.getOwner()==u.getOwner()){
+						adjacentAlliedUnits.add(tOcc);
+					}
+				}
+				if(!adjacentAlliedUnits.isEmpty()){
+					JMenuItem resupplyOption = new JMenuItem();
+					URL supplyPicLocation = this.getClass().getClassLoader().getResource(
+							"resources/32x/supply.png");
+					ImageIcon supplyIcon = get16xIcon(supplyPicLocation);
+					ImageIcon bigSupplyIcon = new ImageIcon(supplyPicLocation);
+					Action resupplyAction = new Action() {
+						public boolean enabled = true;
+
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							try {
+								u.move((Terrain) newLoc,true);
+							} catch (Exception e1) {
+								e1.printStackTrace();
+							}
+							display.shouldBeHighlighted.clear();
+							display.paintImmediately(display.getBounds());
+							((Carry)u).resupply();							
+							new Thread(new Runnable(){
+								public void run(){
+									Set<Terrain> whereToDraw= new HashSet<>();
+									for(Unit tOcc:adjacentAlliedUnits){
+										whereToDraw.add((Terrain) tOcc.getLocation());
+									}
+									whereToDraw.remove(u.getLocation());
+									for(int x=0;x<4;x++){
+										display.showIconsOnSetOfLocations(bigSupplyIcon.getImage(), whereToDraw);
+										try {
+											Thread.sleep(250);
+										} catch (InterruptedException e1) {
+											e1.printStackTrace();
+										}
+										display.paintImmediately(display.getBounds());
+									}
+								}
+							}).start();
+
+						}
+						@Override
+						public void setEnabled(boolean b) {
+							enabled = b;
+						}
+
+						@Override
+						public void removePropertyChangeListener(
+								PropertyChangeListener listener) {}
+
+						@Override
+						public void putValue(String key, Object value) {}
+
+						@Override
+						public boolean isEnabled() {
+							return enabled;
+						}
+
+						@Override
+						public Object getValue(String key) {
+							return null;
+						}
+						@Override
+						public void addPropertyChangeListener(
+								PropertyChangeListener listener) {}
+					};
+					resupplyOption.setAction(resupplyAction);
+					resupplyOption.setText("resupply");
+					resupplyOption.setIcon(supplyIcon);
+					ans.add(resupplyOption);
+				}
+			}
+			// TODO stealth functions
+
+			// infantry can capture
+			if (u instanceof Infantry) {
+				if (newLoc instanceof Property
+						&& ((Property) newLoc).getOwner() != u.getOwner()) {
+					JMenuItem captureOption = new JMenuItem();
+					Action captureAction = new Action(){
+						public boolean enabled = true;
+						@Override
+						public void actionPerformed(ActionEvent arg0) {
+							Infantry i = (Infantry) u;
+							try {
+								i.move(((Terrain)newLoc), true);
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+							i.capture();
+							display.repaint();
+						}
+
+						@Override
+						public void addPropertyChangeListener(PropertyChangeListener arg0) {
+						}
+
+						@Override
+						public Object getValue(String arg0) {
+							return null;
+						}
+
+						@Override
+						public boolean isEnabled() {
+							return enabled;
+						}
+
+						@Override
+						public void putValue(String arg0, Object arg1) {
+						}
+
+						@Override
+						public void removePropertyChangeListener(PropertyChangeListener arg0) {
+						}
+
+						@Override
+						public void setEnabled(boolean arg0) {
+							enabled = arg0;
+						}
+					};
+					captureOption.setAction(captureAction);
+					URL capImagePath = this.getClass().getClassLoader().getResource("resources/32x/capture.png");
+					captureOption.setIcon(get16xIcon(capImagePath));
+					captureOption.setText("Capture");
+					ans.add(captureOption);
+				}
+			}
 		} else if (newLocOcc instanceof Carry
 				&& !((Carry) newLocOcc).isFull()
 				&& ((Carry) newLocOcc).canCarry(u)) {
@@ -437,266 +695,6 @@ public class MenuMaker<T> {
 			//do nothing
 		}
 
-		// units can fire on enemies if not unarmed and in range and unit can move
-		System.out.println("checking weps");
-		if (u.canMove()&&u.getWeapons()[0].getWeaponType() != WeaponType.NONE
-				|| null != u.getWeapons()[1]) {
-			Set<Unit> targetable = new HashSet<>();
-			ArrayList<Location> occupied = u.getGrid().getOccupiedLocations();
-			for (Location l : occupied) {
-				Unit tmp = (Unit) u.getGrid().get(l);
-				if (u.couldTarget(tmp, (Terrain) newLoc)
-						&& (!u.getOwner().equals(tmp.getOwner()))) {
-					targetable.add(tmp);
-				}
-			}
-			if (!targetable.isEmpty()) {
-
-				Action fireAction = new Action() {
-					public boolean enabled = true;
-
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						display.shouldBeHighlighted.clear();
-						for(Unit targetableUnit: targetable){
-							Terrain targetableTerrain = (Terrain) targetableUnit.getLocation();
-							display.shouldBeHighlighted.add(targetableTerrain);
-						}
-						display.avw.setMessage("Click highlighted tile to attack.\n\nClick unhighlighted to cancel");
-						display.repaint();
-						new Thread(new Runnable() {
-
-							@Override
-							public void run() {
-								Location targetLocation = display.avw.getLocationWhenClicked();
-								noBugsPls(display, (TerrainGrid) u.getGrid());
-								Unit targetedUnit = (Unit) u.getGrid().get(targetLocation);
-								if (!targetable.contains(targetedUnit)) {
-									display.shouldBeHighlighted.clear();
-									tryRepaint(display);
-									System.err.println("attack canceled");
-									// attack canceled
-									return;
-								} else {
-									try {
-										u.move(MenuMaker.this.newLoc, true);
-									} catch (Exception e1) {
-										e1.printStackTrace();
-									}
-									u.fire(targetedUnit);
-									display.paintImmediately(display.getBounds());
-									URL fireIconLocation = this.getClass().getClassLoader().getResource(
-											"resources/32x/fire.png");
-									Set<Terrain> where = new HashSet<Terrain>();
-									where.add((Terrain) targetLocation);
-									if(targetedUnit.getHealth()>0&&u.getHealth()>0&&targetedUnit.canCounter(u)){
-										where.add((Terrain) u.getLocation());
-									}
-									for (int i = 0; i < 2; i++) {
-										display.showIconsOnSetOfLocations(new ImageIcon(fireIconLocation).getImage(), where);
-										try {
-											Thread.sleep(500); 
-										} catch (InterruptedException e) {
-											e.printStackTrace();
-										}
-										tryRepaint(display);
-									}
-									//display.avw.resetClickedLocation();
-									//display.paintImmediately(display.getBounds());
-									
-									
-								}
-							}
-
-						}).start();
-					}
-
-					@Override
-					public void addPropertyChangeListener(
-							PropertyChangeListener listener) {
-					}
-
-					@Override
-					public Object getValue(String key) {
-						return null;
-					}
-
-					@Override
-					public boolean isEnabled() {
-						return enabled;
-					}
-
-					@Override
-					public void putValue(String key, Object value) {
-						// TODO Auto-generated method stub
-
-					}
-
-					@Override
-					public void removePropertyChangeListener(
-							PropertyChangeListener listener) {
-						// TODO Auto-generated method stub
-
-					}
-
-					@Override
-					public void setEnabled(boolean b) {
-						enabled = b;
-					}
-				};
-				JMenuItem fireOption = new JMenuItem();
-				fireOption.setAction(fireAction);
-				fireOption.setText("Fire");
-				fireOption.setIcon(get16xIcon(this.getClass().getClassLoader().getResource(
-						"resources/32x/fire.png")));
-				ans.add(fireOption);
-
-
-				System.out.println("added fireOption: MM " + "line "
-						+ new Throwable().getStackTrace()[0].getLineNumber());
-				System.out.println("targetable = " + targetable);
-			}
-		}
-
-		//check resupply
-		System.out.println("checking resupply");
-		if(u.canMove()&&u instanceof Carry && ((Carry) u).canResupply()){
-			Terrain newTerrain = (Terrain) newLoc;
-			ArrayList<Unit> adjacentAlliedUnits = new ArrayList<>();
-			for(Terrain t:newTerrain.getAllAdjacentTerrains()){
-				Unit tOcc = (Unit) u.getGrid().get(t);
-				if(tOcc!=null&&tOcc.getOwner()==u.getOwner()){
-					adjacentAlliedUnits.add(tOcc);
-				}
-			}
-			if(!adjacentAlliedUnits.isEmpty()){
-				JMenuItem resupplyOption = new JMenuItem();
-				URL supplyPicLocation = this.getClass().getClassLoader().getResource(
-						"resources/32x/supply.png");
-				ImageIcon supplyIcon = get16xIcon(supplyPicLocation);
-				ImageIcon bigSupplyIcon = new ImageIcon(supplyPicLocation);
-				Action a = new Action() {
-					public boolean enabled = true;
-
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						try {
-							u.move((Terrain) newLoc,true);
-						} catch (Exception e1) {
-							e1.printStackTrace();
-						}
-						display.shouldBeHighlighted.clear();
-						display.paintImmediately(display.getBounds());
-						((Carry)u).resupply();							
-						new Thread(new Runnable(){
-							public void run(){
-								Set<Terrain> whereToDraw= new HashSet<>();
-								for(Unit tOcc:adjacentAlliedUnits){
-									whereToDraw.add((Terrain) tOcc.getLocation());
-								}
-								whereToDraw.remove(u.getLocation());
-								for(int x=0;x<4;x++){
-									display.showIconsOnSetOfLocations(bigSupplyIcon.getImage(), whereToDraw);
-									try {
-										Thread.sleep(250);
-									} catch (InterruptedException e1) {
-										e1.printStackTrace();
-									}
-									display.paintImmediately(display.getBounds());
-								}
-							}
-						}).start();
-
-					}
-					@Override
-					public void setEnabled(boolean b) {
-						enabled = b;
-					}
-
-					@Override
-					public void removePropertyChangeListener(
-							PropertyChangeListener listener) {}
-
-					@Override
-					public void putValue(String key, Object value) {}
-
-					@Override
-					public boolean isEnabled() {
-						return enabled;
-					}
-
-					@Override
-					public Object getValue(String key) {
-						return null;
-					}
-					@Override
-					public void addPropertyChangeListener(
-							PropertyChangeListener listener) {}
-				};
-				resupplyOption.setAction(a);
-				resupplyOption.setText("resupply");
-				resupplyOption.setIcon(supplyIcon);
-				ans.add(resupplyOption);
-			}
-		}
-
-
-
-		// TODO stealth functions
-
-		// infantry can capture
-		if (u instanceof Infantry) {
-			if (newLoc instanceof Property
-					&& ((Property) newLoc).getOwner() != u.getOwner()) {
-				JMenuItem captureOption = new JMenuItem();
-				Action captureAction = new Action(){
-					public boolean enabled = true;
-					@Override
-					public void actionPerformed(ActionEvent arg0) {
-						Infantry i = (Infantry) u;
-						try {
-							i.move(((Terrain)newLoc), true);
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-						i.capture();
-						display.repaint();
-					}
-
-					@Override
-					public void addPropertyChangeListener(PropertyChangeListener arg0) {
-					}
-
-					@Override
-					public Object getValue(String arg0) {
-						return null;
-					}
-
-					@Override
-					public boolean isEnabled() {
-						return enabled;
-					}
-
-					@Override
-					public void putValue(String arg0, Object arg1) {
-					}
-
-					@Override
-					public void removePropertyChangeListener(PropertyChangeListener arg0) {
-					}
-
-					@Override
-					public void setEnabled(boolean arg0) {
-						enabled = arg0;
-					}
-				};
-				captureOption.setAction(captureAction);
-				URL imagePath = this.getClass().getClassLoader().getResource("resources/32x/capture.png");
-				captureOption.setIcon(get16xIcon(imagePath));
-				captureOption.setText("Capture");
-				ans.add(captureOption);
-			}
-		}
 		//always a cancel option if anything else is do able
 		if(!ans.isEmpty()){
 			JMenuItem cancelOption = new JMenuItem("cancel",
