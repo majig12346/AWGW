@@ -720,6 +720,26 @@ public abstract class Unit extends Actor{
 		}
 		immobilize();
 	}
+	public String getWeaponInfo(){
+		if(WeaponType.NONE.equals(getWeapons()[0].getWeaponType())){
+			if(getWeapons()[1]==null){
+				return "Unarmed";
+			}else{
+				return "∞ ammo: " + getWeapons()[1].getWeaponType();
+			}
+		}else{
+			return getAmmo()+" ammo: "+getWeapons()[0].getWeaponType()+
+					((null!=getWeapons()[1])?", ∞ ammo: "+ getWeapons()[1].getWeaponType():"");
+		}
+	}
+	public String getInfo(){
+		return getType() + ((null!=getLocation())?" at " + getLocation():"")
+				+" ["+ getHealth() + " HP, "+((int)getFuel())+" fuel, "+getWeaponInfo()+ " ]";
+	}
+	public String getConciseInfo(){
+		return getType()+" ["+ getHealth() + " HP]";
+	}
+	
 	/**
 	 * @return whether or not this unit is a jet aircraft
 	 */

@@ -145,15 +145,13 @@ public class MenuMaker<T> {
 		currentLocation = loc;
 		// TODO tidy up
 		StringBuilder dispMessage = new StringBuilder(50);
-		dispMessage.append("Currently Selected: " + u.getType() + " at " + loc
-				+" ["+ u.getHealth() + " HP, "+((int)u.getFuel())+" fuel, "+u.getAmmo()+" ammo]");
+		dispMessage.append(u.getInfo());
 		if (u instanceof Carry) {
 			Carry c = (Carry) u;
 			dispMessage.append("\nCurrently Carrying("+c.getUnits().size()+"/"+c.getMaxCapacity()+"): ");
 			ArrayList<String> types = new ArrayList<>();
 			for (Unit carried : c.getUnits()) {
-				types.add(carried.getType() + "[" + carried.getHealth()
-				+ " HP] ["+u.getFuel()+" fuel]");
+				types.add(carried.getInfo());
 			}
 			if (!types.isEmpty()) {
 				dispMessage.append(types.toString());
@@ -312,8 +310,8 @@ public class MenuMaker<T> {
 
 								display.shouldBeHighlighted = new HashSet<Terrain>(
 										validLZs);
-								display.avw.setMessage("Dropping off: "+carried.getType() + "[" + carried.getHealth()
-								+ " HP] ["+u.getFuel()+" fuel]\n\nClick where you would like to drop "+carried.getType()+" off."
+								display.avw.setMessage("Dropping off: "+carried.getConciseInfo()
+								+" fuel]\n\nClick where you would like to drop "+carried.getType()+" off."
 								+ "  Click an unhighlighted tile to cancel.");
 								display.avw.resetClickedLocation();
 								display.repaint();
@@ -439,9 +437,9 @@ public class MenuMaker<T> {
 			//do nothing
 		}
 
-		// units can fire on enemies if not unarmed and in range
+		// units can fire on enemies if not unarmed and in range and unit can move
 		System.out.println("checking weps");
-		if (u.getWeapons()[0].getWeaponType() != WeaponType.NONE
+		if (u.canMove()&&u.getWeapons()[0].getWeaponType() != WeaponType.NONE
 				|| null != u.getWeapons()[1]) {
 			Set<Unit> targetable = new HashSet<>();
 			ArrayList<Location> occupied = u.getGrid().getOccupiedLocations();
@@ -562,7 +560,7 @@ public class MenuMaker<T> {
 
 		//check resupply
 		System.out.println("checking resupply");
-		if(u instanceof Carry && ((Carry) u).canResupply()){
+		if(u.canMove()&&u instanceof Carry && ((Carry) u).canResupply()){
 			Terrain newTerrain = (Terrain) newLoc;
 			ArrayList<Unit> adjacentAlliedUnits = new ArrayList<>();
 			for(Terrain t:newTerrain.getAllAdjacentTerrains()){
