@@ -2,6 +2,7 @@ package majig12346;
 
 import java.awt.Color;
 import java.io.File;
+import java.util.Iterator;
 import java.util.Scanner;
 
 import info.gridworld.actor.Actor;
@@ -34,7 +35,7 @@ public class Runner {
 		fillTerrainGrid(g);
 		customFill(g,p1,p2);
 		avw.setGrid(g);
-		avw.show();
+		avw.show();asdf
 		//I will fix this
 		while(true){
 			avw.setMessage("Currently selected: none.\n\nUse your units to move. Click your factories to build. "+
@@ -113,9 +114,16 @@ public class Runner {
 		} catch (ArrayIndexOutOfBoundsException e) {
 			next = players[1];
 		}
-		for(Unit u:next.getUnitsControlled()){
+		
+		Iterator<Unit> i = next.getUnitsControlled().iterator();
+		while(i.hasNext()) {
+			Unit u = i.next();
 			u.resetMovement();
 		}
+		
+//		for(Unit u:next.getUnitsControlled()){
+//			u.resetMovement();
+//		}
 		turnPlayer = next;
 		
 	}

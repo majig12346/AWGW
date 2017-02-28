@@ -23,7 +23,7 @@ public abstract class Air extends Unit {
 	@Override
 	public void outOfFuel() {
 		//TODO crash animation
-		this.selfDestruct();
+		this.selfDestruct(true);
 	}
 
 	@Override

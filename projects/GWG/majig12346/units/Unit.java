@@ -126,9 +126,9 @@ public abstract class Unit extends Actor{
 			this.selfDestruct();
 		}
 	}
-	protected void selfDestruct(){
+	protected void selfDestruct(boolean...showNoFuelIcon){
 		//TODO animation
-		
+
 		URL fireIconLocation = this.getClass().getClassLoader().getResource("resources/32x/fire.png");
 		URL noFuelIconLocation = this.getClass().getClassLoader().getResource("resources/32x/noFuel.png");
 		Set<Terrain> where = new HashSet<Terrain>();
@@ -137,15 +137,18 @@ public abstract class Unit extends Actor{
 			TerrainGrid tg = (TerrainGrid)getGrid();
 			GridPanel display = tg.hostWorld.getWorldFrame().control.display;
 			AVWorld avw = tg.hostWorld;
+			final Unit _this = this;
 			new Thread(new Runnable(){
 
 				@Override
 				public void run() {
 					try {
-						for(int x=0;x<3;x++){
-							display.showIconsOnSetOfLocations(new ImageIcon(noFuelIconLocation).getImage(), where);
-							Thread.sleep(250);
-							display.repaint();
+						if(showNoFuelIcon.length!=0&&showNoFuelIcon[0]){	
+							for(int x=0;x<3;x++){
+								display.showIconsOnSetOfLocations(new ImageIcon(noFuelIconLocation).getImage(), where);
+								Thread.sleep(250);
+								display.repaint();
+							}
 						}
 						for(int x=0;x<3;x++){
 							display.showIconsOnSetOfLocations(new ImageIcon(fireIconLocation).getImage(), where);
@@ -155,17 +158,21 @@ public abstract class Unit extends Actor{
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
+					finally {
+						_this.removeSelfFromGrid();
+						_this.getOwner().getUnitsControlled().remove(_this);			
+					}
+
 				}
+
 			}).start();
-			
+
 		}catch(ClassCastException cce){
 			System.err.println("?? Host grid is not TerrainGrid. wat. PROBABLY FATAL ERROR Moving on...");
 			this.removeSelfFromGrid();
 			this.getOwner().getUnitsControlled().remove(this);
 			return;
 		}
-		this.removeSelfFromGrid();
-		this.getOwner().getUnitsControlled().remove(this);
 	}
 
 
