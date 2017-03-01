@@ -22,5 +22,9 @@ public class HQ extends Property {
 	public HQ(int r, int c, TerrainGrid<Actor> hostGrid, Player owner) {
 		super(r, c, hostGrid, owner);
 	}
+	@Override
+	public int getDefense() {
+		return 4;
+	}
 
 }

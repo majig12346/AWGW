@@ -26,6 +26,7 @@ import majig12346.Runner;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.KeyEventDispatcher;
 import java.awt.KeyboardFocusManager;
@@ -34,6 +35,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -48,6 +51,7 @@ import java.util.TreeSet;
 import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JEditorPane;
 import javax.swing.JFrame;
@@ -63,6 +67,7 @@ import javax.swing.KeyStroke;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
@@ -177,9 +182,9 @@ public class WorldFrame<T> extends JFrame
             {
                 gridClasses.add(Class.forName(name));
             }
-            catch (Exception ex)
+            catch (Exception ex1)
             {
-                ex.printStackTrace();
+                ex1.printStackTrace();
             }
 
         Grid<T> gr = world.getGrid();
@@ -431,8 +436,20 @@ public class WorldFrame<T> extends JFrame
 //                display.zoomOut();
 //            }
 //        }));
-
+       
         mbar.add(menu = makeMenu("menu.help"));
+        JMenuItem dispDirections = new JMenuItem();
+        ImageIcon dirIco = MenuMaker.get16xIcon(getClass().getClassLoader().getResource("resources/32x/intel.png"));
+        dispDirections.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				showDirectionsPopup(dirIco);
+			}
+			
+		});
+        dispDirections.setIcon(dirIco);
+        dispDirections.setText("How to Play");
+        menu.add(dispDirections);
+        menu.addSeparator();
         menu.add(makeMenuItem("menu.help.about", new ActionListener()
         {
             public void actionPerformed(ActionEvent e)
@@ -458,7 +475,35 @@ public class WorldFrame<T> extends JFrame
         setRunMenuItemsEnabled(true);
         setJMenuBar(mbar);
     }
+    private void showDirectionsPopup(ImageIcon ico) {
+    	JButton[] options = new JButton[2];
+    	JButton nahButton = GUIController.generateOkayButton(null, display);
+    	nahButton.setText("I already know how to play");
+    	nahButton.setFocusable(false);
+    	options[0] = nahButton;
+    	JButton openLink = new JButton("<html> <a href=\"\">https://en.wikipedia.org/wiki/Advance_Wars#Gameplay</a></html>");
+    	openLink.setIcon(ico);
+    	openLink.setFocusable(false);
+    	openLink.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (Desktop.isDesktopSupported()) {
+				      try {
+				        Desktop.getDesktop().browse(new URI("https://en.wikipedia.org/wiki/Advance_Wars#Gameplay"));
+				      } catch (Exception exept) { /* TODO: error handling */ } 
 
+				    } else { /* TODO: error handling */ }
+				
+			}
+		});
+    	options[1] = openLink;
+    	
+		JOptionPane.showOptionDialog(this, "Please see the following page (click button below):\n"
+				+ ""
+				+ "\nI added quite a few more Units to the game."
+				+ "\nCommanding Officers are not yet implemented", "How to Play", 0, 0, ico, options, 0);
+		
+	}
     private void makeNewGridMenu()
     {
 //        newGridMenu.removeAll();
@@ -521,7 +566,7 @@ public class WorldFrame<T> extends JFrame
 
             helpText.setPage(url);
         }
-        catch (Exception e)
+        catch (Exception eh)
         {
             helpText.setText(resources.getString("dialog.help.error"));
         }
@@ -562,7 +607,7 @@ public class WorldFrame<T> extends JFrame
 
             text.setPage(url);
         }
-        catch (Exception e)
+        catch (Exception el)
         {
             text.setText(resources.getString("dialog.license.error"));
         }

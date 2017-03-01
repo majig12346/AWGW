@@ -252,17 +252,33 @@ public class GUIController<T> {
 			}
 		});
 	}
-	private static void killJOP(){
+	public static void killJOP(){
 		Window[] windows = Window.getWindows();
-        for (Window window : windows) {
-            if (window instanceof JDialog) {
-                JDialog dialog = (JDialog) window;
-                if (dialog.getContentPane().getComponentCount() == 1
-                    && dialog.getContentPane().getComponent(0) instanceof JOptionPane){
-                    dialog.dispose();
-                }
-            }
-        }
+		for (Window window : windows) {
+			if (window instanceof JDialog) {
+				JDialog dialog = (JDialog) window;
+				if (dialog.getContentPane().getComponentCount() == 1
+						&& dialog.getContentPane().getComponent(0) instanceof JOptionPane){
+					dialog.dispose();
+				}
+			}
+		}
+	}
+	public static JButton generateOkayButton(ImageIcon ico, GridPanel display,boolean...cycleTurnPlayer){
+		JButton okButton = new JButton();
+		okButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(cycleTurnPlayer.length!=0&&cycleTurnPlayer[0]){
+					Runner.cycleTurnPlayer();
+				}
+				MenuMaker.noBugsPls(display, (TerrainGrid) display.avw.getGrid());
+				killJOP();
+			}
+		});
+		okButton.setIcon(ico);
+		okButton.setText("okay");
+		return okButton;
 	}
 	private JButton makeTurnCycleButton() {
 		JButton tcButton = new JButton();
@@ -271,15 +287,7 @@ public class GUIController<T> {
 		ActionListener turnCycleActionL = new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				JButton okButton = new JButton(),cancelButton = new JButton();
-				okButton.addActionListener(new ActionListener() {
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						Runner.cycleTurnPlayer();
-						MenuMaker.noBugsPls(display, (TerrainGrid) display.avw.getGrid());
-						 killJOP();
-					}
-				});
+				JButton cancelButton = new JButton();
 				cancelButton.addActionListener(new ActionListener() {
 					@Override
 					public void actionPerformed(ActionEvent e) {
@@ -288,10 +296,10 @@ public class GUIController<T> {
 				});
 				JButton[] options = new JButton[2];
 				cancelButton.setIcon(MenuMaker.get16xIcon(getClass().getClassLoader().getResource("resources/32x/cancel.png")));
-				okButton.setIcon(MenuMaker.get16xIcon(getClass().getClassLoader().getResource("resources/32x/endturn.png")));
-				okButton.setText("okay");
+
 				cancelButton.setText("cancel");
-				options[0] = okButton;
+				options[0] = generateOkayButton(MenuMaker.get16xIcon(getClass().getClassLoader().getResource
+						("resources/32x/endturn.png")),display,true);
 				options[1] = cancelButton;
 				JOptionPane.showOptionDialog(display.avw.getWorldFrame(), "Proceeding to Player " +Runner.getNextTurnPlayer().id+"'s turn...", 
 						"Turn ended", 0, 0, tcIco, options, 1);

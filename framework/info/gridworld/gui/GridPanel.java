@@ -24,6 +24,8 @@ import info.gridworld.grid.Location;
 import info.gridworld.world.AVWorld;
 import majig12346.TerrainGrid;
 import majig12346.terrain.Terrain;
+import majig12346.units.Air;
+import majig12346.units.Sea;
 import majig12346.units.Unit;
 
 import java.awt.Color;
@@ -131,11 +133,11 @@ PseudoInfiniteViewport.Pannable
 		drawWatermark(g2);
 
 		//comment out following line to hide grid lines
-//		drawGridlines(g2);
+		//		drawGridlines(g2);
 		drawOccupants(g2);
 		drawCurrentLocation(g2);
 		//i think this is okay
-//		drawBoxesFromLocation(g2,currentLocation);
+		//		drawBoxesFromLocation(g2,currentLocation);
 		drawBoxesOnSetOfLocations(g2, shouldBeHighlighted);
 	}
 
@@ -149,7 +151,7 @@ PseudoInfiniteViewport.Pannable
 			//System.out.println("invoking getValidMoveSpaces() from GridPanel line 142");
 			Set<Terrain> validMoveSpaces = u.getValidMoveSpaces();
 			drawBoxesOnSetOfLocations(g2, validMoveSpaces);
-			
+
 		}catch(Exception e){
 			System.out.println("some error, see drawBoxesFromLocation() in GridPanel");
 			e.printStackTrace();
@@ -160,7 +162,7 @@ PseudoInfiniteViewport.Pannable
 		for(Terrain t:validMoveSpaces){
 			Location l = t;
 			Point p = pointForLocation(l);
-//			g2 = (Graphics2D) getGraphics(); //This should work but problem is already solved
+			//			g2 = (Graphics2D) getGraphics(); //This should work but problem is already solved
 			g2.drawRect(p.x - cellSize / 2 - 2, p.y - cellSize / 2 - 2,
 					cellSize + 3, cellSize + 3);
 		}
@@ -177,7 +179,7 @@ PseudoInfiniteViewport.Pannable
 				e.printStackTrace();
 			}
 		}
-//		this.repaint();
+		//		this.repaint();
 	}
 
 
@@ -515,17 +517,38 @@ PseudoInfiniteViewport.Pannable
 
 	private String getToolTipText(Location loc)
 	{
-		if (!toolTipsEnabled || loc == null || !grid.isValid(loc))
+		if (!toolTipsEnabled || loc == null || !grid.isValid(loc)){
 			return null;
+		}
 		Object f = grid.get(loc);
-		if (f != null)
-			return MessageFormat.format(resources
-					.getString("cell.tooltip.nonempty"), new Object[]
-							{ loc, f });
-		else
-			return MessageFormat.format(resources
-					.getString("cell.tooltip.empty"), new Object[]
-							{ loc, f });
+		TerrainGrid tg;
+		if(grid instanceof TerrainGrid){
+			tg = (TerrainGrid) grid;
+			loc = tg.getLocationArray()[loc.getRow()][loc.getCol()];
+		}
+		
+		if(!(loc instanceof Terrain)){
+			
+			if (f != null)
+				return MessageFormat.format(resources
+						.getString("cell.tooltip.nonempty"), new Object[]
+								{ loc, f });
+			else
+				return MessageFormat.format(resources
+						.getString("cell.tooltip.empty"), new Object[]
+								{ loc, f });
+		}else{
+			Terrain tLoc = (Terrain) loc;
+			String ans = tLoc.getClass().getSimpleName()+tLoc+" "+tLoc.getDefenseStarsAsString()+" defense";
+			if(f!=null){
+				if(f instanceof Air){
+					ans+=" (no def+ for air)";
+				}else if( f instanceof Sea){
+					ans+= " (no def+ for naval)";
+				}
+			}
+			return ans;
+		}
 	}
 
 	/**
