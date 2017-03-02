@@ -23,11 +23,11 @@ import majig12346.units.*;
 
 public class Runner {
 	public static Player[] players;
-
+	
 	private enum VictoryCondition {
 		CAPTURING_HQ, ELIMINATING_ALL_UNITS;
 	}
-
+	public final static int MONEY_PER_PROPERTY = 200;
 	public static void main(String[] args) {
 		System.out.println(
 				"Currently 1337 PLANCK_TIMEs behind! Are we on " + "5nm or is Quantum tunneling somehow an issue "
@@ -204,6 +204,9 @@ public class Runner {
 		// u.resetMovement();
 		// }
 		turnPlayer = next;
+		for(Property p :turnPlayer.getPropertiesOwned()){
+			turnPlayer.setMoney(turnPlayer.getMoney()+MONEY_PER_PROPERTY);
+		}
 		return turnPlayer;
 
 	}
