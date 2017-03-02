@@ -104,7 +104,7 @@ public abstract class Unit extends Actor{
 		}
 	}
 	public UnitType getUnitType(){
-		ResourceBundle b = ResourceBundle.getBundle("unit_to_unit_type");
+		ResourceBundle b = ResourceBundle.getBundle("resources/unit_to_unit_type");
 		return UnitType.valueOf(b.getString(getType()));
 	}
 	public String getType() {
@@ -369,7 +369,7 @@ public abstract class Unit extends Actor{
 	 * @return maximum mobility value for the unit
 	 */
 	private double loadMaxMobility(){
-		ResourceBundle b = ResourceBundle.getBundle("unit_move");
+		ResourceBundle b = ResourceBundle.getBundle("resources/unit_move");
 		return (double)((int)(Double.parseDouble(b.getString(getType()))+0.5));
 	}
 
@@ -379,7 +379,7 @@ public abstract class Unit extends Actor{
 	 * @return maximum mobility value for the unit
 	 */
 	private int loadDailyCost(){
-		ResourceBundle b = ResourceBundle.getBundle("unit_daily_fuel");
+		ResourceBundle b = ResourceBundle.getBundle("resources/unit_daily_fuel");
 		try {
 			double ans = Double.parseDouble(b.getString(getType()));
 			return (int)(this.owner.CO.passive(ans, COFlag.DAILY_COST, getUnitType()));

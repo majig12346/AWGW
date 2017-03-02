@@ -22,8 +22,10 @@ import info.gridworld.actor.Actor;
 import info.gridworld.grid.Grid;
 import info.gridworld.grid.Location;
 import info.gridworld.world.AVWorld;
+import majig12346.Player;
 import majig12346.TerrainGrid;
 import majig12346.terrain.Terrain;
+import majig12346.terrain.properties.Property;
 import majig12346.units.Air;
 import majig12346.units.Sea;
 import majig12346.units.Unit;
@@ -187,7 +189,7 @@ PseudoInfiniteViewport.Pannable
 		BufferedImage img = null;
 		try {
 			//TODO insert map pic here
-			img = ImageIO.read(new File("projects/GWG/resources/map_pic/demo2.gif"));
+			img = ImageIO.read(GridPanel.class.getClassLoader().getResourceAsStream("resources/map_pic/demo2.gif"));
 
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -545,6 +547,15 @@ PseudoInfiniteViewport.Pannable
 					ans+=" (no def+ for air)";
 				}else if( f instanceof Sea){
 					ans+= " (no def+ for naval)";
+				}
+			}
+			if(tLoc instanceof Property){
+				Property pLoc = (Property) tLoc;
+				Player owner = (pLoc).getOwner();
+				String xtraDesc = owner!=null?"Player "+owner.id:"no one";
+				ans+=" | owned by: "+xtraDesc;
+				if(pLoc.getCapTimer()!=Property.FULL_CAP_TIMER){
+					ans+= " | cap timer="+pLoc.getCapTimer();
 				}
 			}
 			return ans;

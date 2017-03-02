@@ -132,9 +132,9 @@ public class Runner {
 	public static void fillTerrainGrid(TerrainGrid<Actor> g) {
 
 		// String fileName = JOptionPane.showInputDialog("file name");
-		String fileName = "projects/GWG/resources/map.txt";
+		String fileName = "resources/map.txt";
 		try {
-			Scanner sc = new Scanner(new File(fileName));
+			Scanner sc = new Scanner(Runner.class.getClassLoader().getResourceAsStream(fileName));
 			if (!(g.getNumRows() == sc.nextInt() && g.getNumCols() == sc.nextInt())) {
 				throw new Exception("map size != grid size");
 			}
