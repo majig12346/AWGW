@@ -41,7 +41,8 @@ public class Runner {
 		turnPlayer = players[2];
 		TerrainGrid<Actor> g = new TerrainGrid<Actor>(10, 10);
 		fillTerrainGrid(g);
-		customFill(g, p1, p2);
+		minFill(g,p1,p2);
+		//customFill(g, p1, p2);
 		avw.setGrid(g);
 		avw.show();
 		cycleTurnPlayer();
@@ -78,6 +79,12 @@ public class Runner {
 		AdvFighter avf1 = new AdvFighter(players[1]);
 		avf1.setFuel(1.0);
 		avf1.putSelfInGrid(g, g.getLocationArray()[5][5]);
+	}
+	private static void minFill(TerrainGrid<Actor> g, Player p1, Player p2){
+		Infantry inf1 = new Infantry(players[2]);
+		inf1.putSelfInGrid(g, g.getLocationArray()[6][0]);
+		Infantry inf2 = new Infantry(players[1]);
+		inf2.putSelfInGrid(g, g.getLocationArray()[6][9]);
 	}
 
 	/**

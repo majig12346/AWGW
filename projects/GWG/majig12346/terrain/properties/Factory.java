@@ -42,7 +42,7 @@ public abstract class Factory extends Property {
 			if(u.getBuildCost()>getOwner().getMoney()){
 				System.out.println("costs "+u.getBuildCost());
 				System.out.println("when money = "+getOwner().getMoney());
-				JOptionPane.showMessageDialog(null, "not enough money");
+				JOptionPane.showMessageDialog(hostGrid.hostWorld.getWorldFrame(), "not enough money");
 				return;
 			}else{
 				getOwner().setMoney(getOwner().getMoney()-u.getBuildCost());
