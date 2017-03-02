@@ -196,7 +196,6 @@ public class GUIController<T> {
 
 		controlPanel.add(Box.createRigidArea(spacer));
 
-		// TODO
 		turnCycleButton = makeTurnCycleButton();
 		turnCycleButton.setEnabled(true);
 		turnCycleButton.setFocusable(false);
@@ -295,11 +294,11 @@ public class GUIController<T> {
 					}
 				});
 				JButton[] options = new JButton[2];
-				cancelButton.setIcon(MenuMaker.get16xIcon(getClass().getClassLoader().getResource("resources/32x/cancel.png")));
+				cancelButton.setIcon(MenuMaker.get16xIcon(GUIController.class.getClassLoader().getResource("resources/32x/cancel.png")));
 
 				cancelButton.setText("cancel");
-				options[0] = generateOkayButton(MenuMaker.get16xIcon(getClass().getClassLoader().getResource
-						("resources/32x/endturn.png")),display,true);
+				options[0] = generateOkayButton(MenuMaker.get16xIcon(GUIController.class.getClassLoader().getResource
+						("resources/32x/endTurn.png")),display,true);
 				options[1] = cancelButton;
 				JOptionPane.showOptionDialog(display.avw.getWorldFrame(), "Proceeding to Player " +Runner.getNextTurnPlayer().id+"'s turn...", 
 						"Turn ended", 0, 0, tcIco, options, 1);

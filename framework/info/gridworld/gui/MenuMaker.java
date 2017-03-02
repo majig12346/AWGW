@@ -217,11 +217,16 @@ public class MenuMaker<T> {
 		return menu;
 	}
 	public static ImageIcon get16xIcon(URL imagePath){
-		ImageIcon pic = new ImageIcon(imagePath); // load the image to a imageIcon
-		Image image = pic.getImage(); // transform it 
-		Image newimg = image.getScaledInstance(16, 16,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
-		pic = new ImageIcon(newimg);  // transform it back
-		return pic;
+		try {
+			ImageIcon pic = new ImageIcon(imagePath); // load the image to a imageIcon
+			Image image = pic.getImage(); // transform it 
+			Image newimg = image.getScaledInstance(16, 16,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
+			pic = new ImageIcon(newimg);  // transform it back
+			return pic;
+		} catch (NullPointerException e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 	private ArrayList<JMenuItem> getValidActions(Location newLoc)
 			throws NoSuchMethodException, SecurityException {
