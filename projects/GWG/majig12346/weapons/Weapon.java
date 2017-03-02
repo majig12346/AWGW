@@ -5,6 +5,7 @@ import java.util.ResourceBundle;
 import majig12346.PassiveFlag.COFlag;
 import majig12346.PassiveFlag.MoveType;
 import majig12346.terrain.Terrain;
+import majig12346.units.Air;
 import majig12346.units.Unit;
 
 
@@ -93,6 +94,9 @@ public class Weapon {
 		}
 		//terrain defense
 		double dMilti1 = (10.0-defStar)/10.0;
+		if(target instanceof Air){
+			dMilti1 = 1.0;
+		}
 		//base armor
 		double dMulti2 = target.getBaseArmorResistance();
 		//attacker strength

@@ -545,8 +545,6 @@ PseudoInfiniteViewport.Pannable
 			if(f!=null){
 				if(f instanceof Air){
 					ans+=" (no def+ for air)";
-				}else if( f instanceof Sea){
-					ans+= " (no def+ for naval)";
 				}
 			}
 			if(tLoc instanceof Property){

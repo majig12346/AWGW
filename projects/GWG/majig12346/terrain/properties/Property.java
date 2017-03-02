@@ -17,6 +17,8 @@ import majig12346.PassiveFlag.COFlag;
 import majig12346.Player;
 import majig12346.TerrainGrid;
 import majig12346.terrain.Terrain;
+import majig12346.units.Air;
+import majig12346.units.Sea;
 import majig12346.units.Unit;
 import majig12346.units.land.Infantry;
 import majig12346.weapons.Weapon;
@@ -124,43 +126,46 @@ public class Property extends Terrain {
 				if(tryRepair(occ)){
 					getOwner().setMoney((int) Math.max(0.0, getOwner().getMoney()-(0.2*occ.getBuildCost())));
 				}
-			}
-			Set<Terrain> where = new HashSet<>();
-			where.add(this);
-			GridPanel display = hostGrid.hostWorld.getWorldFrame().control.display;
-			new Thread(new Runnable() {
-				@Override
-				public void run() {
-					ImageIcon supplyIco = new ImageIcon(this.getClass().getClassLoader().getResource(
-							"resources/32x/supply.png"));
-					for(int x=0;x<4;x++){
-						display.showIconsOnSetOfLocations(supplyIco.getImage(), where);
-						try {
-							Thread.sleep(250);
-						} catch (InterruptedException e1) {
-							e1.printStackTrace();
+
+				Set<Terrain> where = new HashSet<>();
+				where.add(this);
+				GridPanel display = hostGrid.hostWorld.getWorldFrame().control.display;
+				new Thread(new Runnable() {
+					@Override
+					public void run() {
+						ImageIcon supplyIco = new ImageIcon(this.getClass().getClassLoader().getResource(
+								"resources/32x/supply.png"));
+						for(int x=0;x<4;x++){
+							display.showIconsOnSetOfLocations(supplyIco.getImage(), where);
+							try {
+								Thread.sleep(250);
+							} catch (InterruptedException e1) {
+								e1.printStackTrace();
+							}
+							display.paintImmediately(display.getBounds());
 						}
-						display.paintImmediately(display.getBounds());
+
 					}
-					
-				}
-			}).start();
-			
+				}).start();
+			}
 		}
 	}
 	private boolean tryRepair(Unit occ){
 		if(getOwner()!=occ.getOwner()){
 			return false;
-		}else{
-			if(occ.getHealth()==100){
-				return false;
-			}else{
-				occ.setHealth((int) Math.min(100.0, occ.getHealth()+20));
-				return true;
-			}
 		}
+		if(occ.getHealth()==100){
+			return false;
+		}else if ((occ instanceof Air&&this instanceof AirPort)||
+				(occ instanceof Sea&&this instanceof SeaPort)||
+				(!(occ instanceof Sea || occ instanceof Air))){
+			occ.setHealth((int) Math.min(100.0, occ.getHealth()+20));
+			return true;
+		}
+		return false;
+
 	}
-	
+
 	@Override
 	protected double getMoveCostFoot() {
 		return 1;

@@ -6,6 +6,7 @@ import info.gridworld.grid.Location;
 import majig12346.PassiveFlag.MoveType;
 import majig12346.TerrainGrid;
 import majig12346.units.Air;
+import majig12346.units.Sea;
 
 /**
  * A unit is a Location. This is the base class for all the other Terrains to extend
@@ -148,7 +149,7 @@ public abstract class Terrain extends Location{
 	}
 	public String getDefenseStarsAsString(){
 		Object a;
-		if((a = hostGrid.get(this))!=null&&a instanceof Air){
+		if((a = hostGrid.get(this))!=null&&(a instanceof Air)){
 			return "☆☆☆☆☆";
 		}
 		int def = getDefense();
