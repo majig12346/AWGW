@@ -26,27 +26,25 @@ public abstract class Stealth extends Air{
 	 * by version casted to Stealth
 	 */
 	public void hide(){
-		this.hiddenUnit = this;
-		Grid<Actor> gr = getGrid();
-		Terrain t = (Terrain) getLocation();
-		this.removeSelfFromGrid();
-		Stealth me = (Stealth)(this);
-		me.putSelfInGrid(gr, t);
+		
 		this.hidden = true;
 	}
+	public void hideRender(){
+		Grid<Actor> gr = getGrid();
+		Terrain loc = (Terrain) getLocation();
+		Player owner = getOwner();
+		owner.getUnitsControlled().remove(this);
+		this.removeSelfFromGrid();
+		new HiddenUnit(owner, this).putSelfInGrid(gr, loc);		
+	}
+
 
 	/**
 	 * reveals the hidden unit -- does opposite of hide()
 	 */
 	public void unHide(){
-		if(null!=this.hiddenUnit){
-			Grid<Actor> gr = getGrid();
-			Terrain t = (Terrain) getLocation();
-			this.removeSelfFromGrid();
-			this.hiddenUnit.putSelfInGrid(gr, t);
-			this.hiddenUnit = null;
+		
 			this.hidden = false;
-		}
 	}
 	/**
 	 * @return whether or not the unit is currently hidden

@@ -26,6 +26,7 @@ import majig12346.terrain.Terrain;
 import majig12346.terrain.properties.Factory;
 import majig12346.terrain.properties.Property;
 import majig12346.units.Carry;
+import majig12346.units.Stealth;
 import majig12346.units.Unit;
 import majig12346.units.land.Infantry;
 import majig12346.weapons.WeaponType;
@@ -88,8 +89,8 @@ public class MenuMaker<T> {
 		//cheaty bugfix hopefully
 		TerrainGrid tg = (TerrainGrid) gr;
 		if(gr!=null){
-		Location clickMeForBugFree = tg.getLocationArray()[0][0];
-		display.avw.locationClicked(clickMeForBugFree);
+			Location clickMeForBugFree = tg.getLocationArray()[0][0];
+			display.avw.locationClicked(clickMeForBugFree);
 		}
 		display.avw.getWorldFrame().repaint();
 	}
@@ -591,7 +592,82 @@ public class MenuMaker<T> {
 					ans.add(resupplyOption);
 				}
 			}
-			// TODO stealth functions
+			if(u instanceof Stealth){
+				Stealth s = (Stealth) u;
+				{
+					JMenuItem hidingOption = new JMenuItem();
+					ImageIcon hideIco = get16xIcon(MenuMaker.class.getClassLoader().getResource("resources/32x/hide.png"));
+					ImageIcon hidePic = new ImageIcon(MenuMaker.class.getClassLoader().getResource("resources/32x/poof.png"));
+					Action hidingAction = new Action(){
+						public boolean enabled = true;
+						@Override
+						public void actionPerformed(ActionEvent arg0) {
+							try {
+								u.move((Terrain)newLoc, true);
+							} catch (Exception e1) {
+								e1.printStackTrace();
+							}
+							if(!s.isHidden()){
+								s.hide();
+							}else{
+								s.unHide();
+							}
+							new Thread(new Runnable() {
+
+								@Override
+								public void run() {
+									Set<Terrain> where = new HashSet<>();
+									where.add((Terrain)newLoc);
+									noBugsPls(display, (TerrainGrid) u.getGrid());
+									for (int i = 0; i < 2; i++) {
+										display.showIconsOnSetOfLocations(hidePic.getImage(), where);
+										try {
+											Thread.sleep(500); 
+										} catch (InterruptedException e) {
+											e.printStackTrace();
+										}
+										tryRepaint(display);
+									}
+									noBugsPls(display, (TerrainGrid) u.getGrid());
+
+								}
+							}).start();
+							display.repaint();
+						}
+
+						@Override
+						public void addPropertyChangeListener(PropertyChangeListener arg0) {
+						}
+
+						@Override
+						public Object getValue(String arg0) {
+							return null;
+						}
+
+						@Override
+						public boolean isEnabled() {
+							return enabled;
+						}
+
+						@Override
+						public void putValue(String arg0, Object arg1) {
+						}
+
+						@Override
+						public void removePropertyChangeListener(PropertyChangeListener arg0) {
+						}
+
+						@Override
+						public void setEnabled(boolean arg0) {
+							enabled = arg0;
+						}
+					};
+					hidingOption.setAction(hidingAction);
+					hidingOption.setIcon(hideIco);
+					hidingOption.setText(s.isHidden()?"unhide":"hide");
+					ans.add(hidingOption);
+				}
+			}
 
 			// infantry can capture
 			if (u instanceof Infantry) {
@@ -612,7 +688,7 @@ public class MenuMaker<T> {
 							URL flagIconLoc = MenuMaker.class.getClassLoader().getResource("resources/32x/capture.png");
 							ImageIcon flagIco = new ImageIcon(flagIconLoc);
 							new Thread(new Runnable() {
-								
+
 								@Override
 								public void run() {
 									Set<Terrain> where = new HashSet<>();
@@ -628,7 +704,7 @@ public class MenuMaker<T> {
 										tryRepaint(display);
 									}
 									noBugsPls(display, (TerrainGrid) u.getGrid());
-									
+
 								}
 							}).start();
 							display.repaint();

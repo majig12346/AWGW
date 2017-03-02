@@ -57,6 +57,8 @@ public abstract class Unit extends Actor{
 
 		}
 	}
+	//debug purposes ONLY
+	public Unit(){}
 
 
 	//ownership
@@ -215,8 +217,8 @@ public abstract class Unit extends Actor{
 	 * Gets overridden for ranged units, indirect fire, etc
 	 */
 	public boolean couldTarget(Unit toCheck, Terrain hypothetical){
-		if(null==toCheck){
-			return false; //can't target nothing
+		if(null==toCheck||toCheck instanceof HiddenUnit){
+			return false; //can't target nothing or hidden things
 		}
 		return hypothetical.distanceTo((Terrain) toCheck.getLocation())==1;
 	}
@@ -379,6 +381,11 @@ public abstract class Unit extends Actor{
 	 * @return maximum mobility value for the unit
 	 */
 	private int loadDailyCost(){
+		if(this instanceof HiddenUnit){
+			HiddenUnit me = (HiddenUnit) this;
+			Unit cont = (me).getContainedUnit();
+			return (cont.loadDailyCost());
+		}
 		ResourceBundle b = ResourceBundle.getBundle("resources/unit_daily_fuel");
 		try {
 			double ans = Double.parseDouble(b.getString(getType()));
@@ -494,6 +501,20 @@ public abstract class Unit extends Actor{
 				move(findPathTo(toMoveTo)):move(findPathTo(toMoveTo),realMove[0]);
 				if(moveSuccess){
 					immobilize();
+					t = (Terrain) getLocation();
+					for(Terrain checkingForHidden: t.getAllAdjacentTerrains()){
+						Actor occ = getGrid().get(checkingForHidden);
+						if(occ instanceof HiddenUnit&&((HiddenUnit) occ).getContainedUnit().getOwner()!=this.getOwner()){
+							HiddenUnit hu = (HiddenUnit) occ;
+							Unit aha = hu.unBox();
+							aha.immobilize();
+							if(aha instanceof Stealth){
+								((Stealth) aha).unHide();
+							}else if(aha instanceof Stealth2){
+								((Stealth2) aha).unHide();
+							}
+						}
+					}
 				}else{
 					System.out.println("move failed, see line 441 of Unit");
 				}
@@ -723,6 +744,7 @@ public abstract class Unit extends Actor{
 		immobilize();
 	}
 	public String getWeaponInfo(){
+		if(this instanceof HiddenUnit){return null;}
 		if(WeaponType.NONE.equals(getWeapons()[0].getWeaponType())){
 			if(getWeapons()[1]==null){
 				return "Unarmed";

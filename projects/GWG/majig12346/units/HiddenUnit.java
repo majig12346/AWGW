@@ -1,0 +1,54 @@
+package majig12346.units;
+
+import info.gridworld.actor.Actor;
+import info.gridworld.grid.Grid;
+import majig12346.PassiveFlag.MoveType;
+import majig12346.Player;
+import majig12346.terrain.Terrain;
+
+public class HiddenUnit extends Unit {
+	private Unit containedUnit;
+	public Unit getContainedUnit(){
+		return containedUnit;
+	}
+	public Unit unBox(){
+		Grid<Actor> gr = getGrid();
+		Terrain loc = (Terrain) getLocation();
+		Player owner = getOwner();
+		owner.getUnitsControlled().remove(this);
+		this.removeSelfFromGrid();
+		containedUnit.getOwner().getUnitsControlled().add(containedUnit);
+		containedUnit.putSelfInGrid(gr, loc);
+		containedUnit.resetMovement();
+		return containedUnit;
+	}
+	public HiddenUnit(Player owner, Stealth s) {
+		setOwner(owner);
+		containedUnit = s;
+	}
+	public HiddenUnit(Player owner, Stealth2 s) {
+		setOwner(owner);;
+		containedUnit = s;
+	}
+
+	@Override
+	public int getBuildCost() {
+		return 0;
+	}
+
+	@Override
+	public double getBaseArmorResistance() {
+		return 0;
+	}
+
+	@Override
+	public void outOfFuel() {
+		//do nothing?
+	}
+
+	@Override
+	public MoveType getMovementType() {
+		return MoveType.AIR;
+	}
+
+}

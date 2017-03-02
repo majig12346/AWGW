@@ -1,8 +1,6 @@
 package majig12346;
 
 import java.awt.Color;
-import java.awt.Window;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -35,8 +33,8 @@ public class Runner {
 						+ "on Skylake's 14nm? Wait a PLANCK_TIME," + " this is a Core 2 Duo!");
 		AVWorld avw = new AVWorld();
 		players = new Player[3];
-		Player p1 = new Player(new TestCO(), 0, new Color(255, 80, 45));
-		Player p2 = new Player(new TestCO(), 0, new Color(75, 150, 255));
+		Player p1 = new Player(new TestCO(), 10000, new Color(255, 80, 45));
+		Player p2 = new Player(new TestCO(), 10000, new Color(75, 150, 255));
 		players[p1.id] = p1;
 		players[p2.id] = p2;
 		turnPlayer = players[2];
@@ -188,9 +186,15 @@ public class Runner {
 	public static Player cycleTurnPlayer() {
 		Player old = turnPlayer;
 		Player next;
-		for (Unit u : old.getUnitsControlled()) {
+		Iterator<Unit> i0 = old.getUnitsControlled().iterator();
+		while(i0.hasNext()) {
+			Unit u = i0.next();
 			if (u.canMove()) {
 				u.immobilize();
+			}
+			if(u instanceof Stealth && ((Stealth) u).isHidden()){
+				Stealth s = (Stealth) u;
+				s.hideRender();
 			}
 		}
 		try {
@@ -202,21 +206,22 @@ public class Runner {
 		} catch (ArrayIndexOutOfBoundsException e) {
 			next = players[1];
 		}
-
+		//reset movement
 		Iterator<Unit> i = next.getUnitsControlled().iterator();
 		while (i.hasNext()) {
 			Unit u = i.next();
 			u.resetMovement();
+			if(u instanceof HiddenUnit){
+				((HiddenUnit) u).unBox();
+			}
 		}
+		//supply from properties
 		Iterator<Property> i2 = next.getPropertiesOwned().iterator();
 		while (i2.hasNext()){
 			Property p = i2.next();
 			p.tryResupply();
 		}
 
-		// for(Unit u:next.getUnitsControlled()){
-		// u.resetMovement();
-		// }
 		turnPlayer = next;
 		turnPlayer.getPropertiesOwned().get(0).getHostGrid().hostWorld.getWorldFrame().setTitle("AdvanceWars GridWorld: player "+turnPlayer.id);
 		for(Property p :turnPlayer.getPropertiesOwned()){

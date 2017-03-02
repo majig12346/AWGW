@@ -3,6 +3,7 @@ package majig12346.units.land;
 import majig12346.PassiveFlag.MoveType;
 import majig12346.Player;
 import majig12346.terrain.Terrain;
+import majig12346.units.HiddenUnit;
 import majig12346.units.Unit;
 import majig12346.weapons.WeaponType;
 
@@ -43,6 +44,6 @@ public class AntiAir extends Tank{
 		if(null==toCheck){
 			return false; //can't target nothing
 		}
-		return hypothetical.distanceTo((Terrain) toCheck.getLocation())==1&&!MoveType.SEA.equals(toCheck.getMovementType());
+		return hypothetical.distanceTo((Terrain) toCheck.getLocation())==1&&!(toCheck instanceof HiddenUnit)&&!MoveType.SEA.equals(toCheck.getMovementType());
 	}
 }
