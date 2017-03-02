@@ -552,7 +552,7 @@ PseudoInfiniteViewport.Pannable
 			if(tLoc instanceof Property){
 				Property pLoc = (Property) tLoc;
 				Player owner = (pLoc).getOwner();
-				String xtraDesc = owner!=null?"Player "+owner.id:"no one";
+				String xtraDesc = owner!=null?"Player "+owner.id:"(neutral)";
 				ans+=" | owned by: "+xtraDesc;
 				if(pLoc.getCapTimer()!=Property.FULL_CAP_TIMER){
 					ans+= " | cap timer="+pLoc.getCapTimer();

@@ -23,7 +23,7 @@ import majig12346.units.*;
 
 public class Runner {
 	public static Player[] players;
-	
+
 	private enum VictoryCondition {
 		CAPTURING_HQ, ELIMINATING_ALL_UNITS;
 	}
@@ -34,8 +34,8 @@ public class Runner {
 						+ "on Skylake's 14nm? Wait a PLANCK_TIME," + " this is a Core 2 Duo!");
 		AVWorld avw = new AVWorld();
 		players = new Player[3];
-		Player p1 = new Player(new TestCO(), 15000, new Color(255, 80, 45));
-		Player p2 = new Player(new TestCO(), 90000, new Color(75, 150, 255));
+		Player p1 = new Player(new TestCO(), 0, new Color(255, 80, 45));
+		Player p2 = new Player(new TestCO(), 0, new Color(75, 150, 255));
 		players[p1.id] = p1;
 		players[p2.id] = p2;
 		turnPlayer = players[2];
@@ -47,7 +47,7 @@ public class Runner {
 		cycleTurnPlayer();
 		while (allPlayersCompeting(getCompetitivePlayers())) {
 			avw.setMessage("Currently selected: none.\n\nUse your units to move. Click your factories to build. " +
-			// "DO NOT use arrow keys or Enter"+
+					// "DO NOT use arrow keys or Enter"+
 					"P1 money: " + players[1].getMoney() + "  P2 money: " + players[2].getMoney());
 			avw.go();
 		}
@@ -199,6 +199,11 @@ public class Runner {
 			Unit u = i.next();
 			u.resetMovement();
 		}
+		Iterator<Property> i2 = next.getPropertiesOwned().iterator();
+		while (i2.hasNext()){
+			Property p = i2.next();
+			p.tryResupply();
+		}
 
 		// for(Unit u:next.getUnitsControlled()){
 		// u.resetMovement();
@@ -236,7 +241,13 @@ public class Runner {
 			if (propProp.length != 2) {
 				throw new Exception("error reading file, bad property?");
 			} else {
-				Player ownerOfProp = players[Integer.parseInt(propProp[1])];
+				String ownerID = propProp[1];
+				Player ownerOfProp;
+				if(!"none".equals(ownerID)){
+					ownerOfProp = players[Integer.parseInt(ownerID)];
+				}else{
+					ownerOfProp = null;
+				}
 				switch (propProp[0]) {
 				case "Property":
 					return new Property(r, c, hostGrid, ownerOfProp);

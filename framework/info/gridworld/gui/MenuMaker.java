@@ -825,7 +825,10 @@ public class MenuMaker<T> {
 					@Override
 					public void actionPerformed(ActionEvent e) {
 						fac.buildUnit(constructor);
-						((Unit) fac.getHostGrid().get(fac)).immobilize();
+						Unit occ = (Unit) fac.getHostGrid().get(fac);
+						if(null!=occ){
+							(occ).immobilize();
+						}
 						MenuMaker.noBugsPls(display, fac.getHostGrid());
 					}
 

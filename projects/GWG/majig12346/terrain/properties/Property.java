@@ -1,13 +1,17 @@
 package majig12346.terrain.properties;
 
 import info.gridworld.actor.Actor;
+import info.gridworld.gui.GridPanel;
 import info.gridworld.gui.MenuMaker;
 import javafx.scene.image.Image;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 
 import majig12346.PassiveFlag.COFlag;
 import majig12346.Player;
@@ -15,6 +19,7 @@ import majig12346.TerrainGrid;
 import majig12346.terrain.Terrain;
 import majig12346.units.Unit;
 import majig12346.units.land.Infantry;
+import majig12346.weapons.Weapon;
 
 /**
  * Property represents all capturable Terrains Instantiated, it is a plain city.
@@ -97,16 +102,65 @@ public class Property extends Terrain {
 		this.capTimer -= tickBy;
 		System.out.println("capTimer = " + capTimer);
 		if (capTimer <= 0) {
-			ArrayList<Property> oldOwnerProperties = getOwner().getPropertiesOwned();
-			oldOwnerProperties.remove(this);
+			if(null!=getOwner()){
+				ArrayList<Property> oldOwnerProperties = getOwner().getPropertiesOwned();
+				oldOwnerProperties.remove(this);
+			}
 			this.setOwner(u.getOwner());
+			resetCapTimer();
 			MenuMaker.noBugsPls(hostGrid.hostWorld.getWorldFrame().control.display, hostGrid);
 			JOptionPane.showMessageDialog(hostGrid.hostWorld.getWorldFrame(),
 					this.getClass().getSimpleName() + " at " + this + " captured", "Poperty Captured!", 0,
 					new ImageIcon(Property.class.getClassLoader().getResource("resources/32x/capture.png")));
 		}
 	}
-
+	public void tryResupply(){
+		Unit occ = (Unit) hostGrid.get(this);
+		if(occ!=null&&
+				(occ.getAmmo()!=occ.getWeapons()[0].getMaxAmmo()||occ.getFuel()!=99||occ.getHealth()!=100)){
+			if(this.getOwner()==occ.getOwner()){
+				occ.setAmmo(occ.getWeapons()[0].getMaxAmmo());
+				occ.setFuel(99);
+				if(tryRepair(occ)){
+					getOwner().setMoney((int) Math.max(0.0, getOwner().getMoney()-(0.2*occ.getBuildCost())));
+				}
+			}
+			Set<Terrain> where = new HashSet<>();
+			where.add(this);
+			GridPanel display = hostGrid.hostWorld.getWorldFrame().control.display;
+			new Thread(new Runnable() {
+				@Override
+				public void run() {
+					ImageIcon supplyIco = new ImageIcon(this.getClass().getClassLoader().getResource(
+							"resources/32x/supply.png"));
+					for(int x=0;x<4;x++){
+						display.showIconsOnSetOfLocations(supplyIco.getImage(), where);
+						try {
+							Thread.sleep(250);
+						} catch (InterruptedException e1) {
+							e1.printStackTrace();
+						}
+						display.paintImmediately(display.getBounds());
+					}
+					
+				}
+			}).start();
+			
+		}
+	}
+	private boolean tryRepair(Unit occ){
+		if(getOwner()!=occ.getOwner()){
+			return false;
+		}else{
+			if(occ.getHealth()==100){
+				return false;
+			}else{
+				occ.setHealth((int) Math.min(100.0, occ.getHealth()+20));
+				return true;
+			}
+		}
+	}
+	
 	@Override
 	protected double getMoveCostFoot() {
 		return 1;

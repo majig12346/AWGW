@@ -40,6 +40,9 @@ public class AntiAir extends Tank{
 	}
 	@Override
 	public boolean couldTarget(Unit toCheck, Terrain hypothetical) { //cannot target Boats
-		return super.couldTarget(toCheck, hypothetical)&&!MoveType.SEA.equals(toCheck.getMovementType());
+		if(null==toCheck){
+			return false; //can't target nothing
+		}
+		return hypothetical.distanceTo((Terrain) toCheck.getLocation())==1&&!MoveType.SEA.equals(toCheck.getMovementType());
 	}
 }
