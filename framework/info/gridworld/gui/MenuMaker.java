@@ -18,6 +18,7 @@ package info.gridworld.gui;
 
 import info.gridworld.grid.Grid;
 import info.gridworld.grid.Location;
+import info.gridworld.world.AVWorld;
 import majig12346.Player;
 import majig12346.Runner;
 import majig12346.TerrainGrid;
@@ -600,6 +601,28 @@ public class MenuMaker<T> {
 								e.printStackTrace();
 							}
 							i.capture();
+							URL flagIconLoc = MenuMaker.class.getClassLoader().getResource("resources/32x/capture.png");
+							ImageIcon flagIco = new ImageIcon(flagIconLoc);
+							new Thread(new Runnable() {
+								
+								@Override
+								public void run() {
+									Set<Terrain> where = new HashSet<>();
+									where.add((Terrain)newLoc);
+									noBugsPls(display, (TerrainGrid) u.getGrid());
+									for (int i = 0; i < 2; i++) {
+										display.showIconsOnSetOfLocations(flagIco.getImage(), where);
+										try {
+											Thread.sleep(500); 
+										} catch (InterruptedException e) {
+											e.printStackTrace();
+										}
+										tryRepaint(display);
+									}
+									noBugsPls(display, (TerrainGrid) u.getGrid());
+									
+								}
+							}).start();
 							display.repaint();
 						}
 
@@ -802,7 +825,8 @@ public class MenuMaker<T> {
 					@Override
 					public void actionPerformed(ActionEvent e) {
 						fac.buildUnit(constructor);
-						display.repaint();
+						((Unit) fac.getHostGrid().get(fac)).immobilize();
+						MenuMaker.noBugsPls(display, fac.getHostGrid());
 					}
 
 					@Override

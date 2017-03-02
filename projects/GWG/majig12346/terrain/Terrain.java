@@ -155,4 +155,7 @@ public abstract class Terrain extends Location{
 		return "★★★★★".substring(0, def)+"☆☆☆☆☆".substring(def, 5);
 	}
 	protected TerrainGrid hostGrid;
+	public TerrainGrid getHostGrid(){
+		return hostGrid;
+	}
 }
