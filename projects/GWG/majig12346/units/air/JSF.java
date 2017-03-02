@@ -43,26 +43,15 @@ public class JSF extends Stealth {
 	public int getDailyCost() {
 		return 5;
 	}
-	/**
-     * 90% of small arms miss, HMG lacks net velocity -- 90% damage reduction
-	 * missiles have limited effectiveness against stealth, 30% damage reduction
-     */
 	@Override
 	public double resist(double damage, String source) {
-		//
 		switch(source){
-		case WeaponType.RIFLE:
-			return damage*0.1;
-		case WeaponType.MG:
-			return damage*0.1;
-		case WeaponType.HMG:
-			return damage*0.1;
-		case WeaponType.MISSILE:
-			return damage*0.7;
 		case WeaponType.MISSILES:
 			return damage*0.7;
+		case WeaponType.MISSILE:
+			return damage*0.7;
 		default:
-			return damage;
+			return damage*0.85;
 		}
 	}
 	@Override

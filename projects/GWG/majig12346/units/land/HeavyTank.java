@@ -28,8 +28,8 @@ public class HeavyTank extends Tank {
 	}
 	@Override
 	public double getBaseArmorResistance() {
-		//30% resistance
-		return 0.7;
+		//35% resistance
+		return 0.65;
 	}
 
 }

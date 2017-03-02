@@ -87,8 +87,10 @@ public class MenuMaker<T> {
 	public static void noBugsPls(GridPanel display, TerrainGrid gr){
 		//cheaty bugfix hopefully
 		TerrainGrid tg = (TerrainGrid) gr;
+		if(gr!=null){
 		Location clickMeForBugFree = tg.getLocationArray()[0][0];
 		display.avw.locationClicked(clickMeForBugFree);
+		}
 		display.avw.getWorldFrame().repaint();
 	}
 	/**
@@ -308,7 +310,7 @@ public class MenuMaker<T> {
 					}
 					if(!validLZs.isEmpty()){
 						JMenuItem tmpDropOption = new JMenuItem();
-						Action tmpAction = new Action() {
+						Action tmpDropAction = new Action() {
 							public boolean enabled = true;
 
 							@Override
@@ -343,6 +345,7 @@ public class MenuMaker<T> {
 												e.printStackTrace();
 											}
 											carried.putSelfInGrid(u.getGrid(), LZ);
+											carried.immobilize();
 											carryU.getUnits().remove(carried);
 											display.shouldBeHighlighted.clear();
 											display.repaint();
@@ -376,7 +379,7 @@ public class MenuMaker<T> {
 								enabled = b;
 							}
 						};
-						tmpDropOption.setAction(tmpAction);
+						tmpDropOption.setAction(tmpDropAction);
 						tmpDropOption.setText("Drop: " + carried.getType());
 						tmpDropOption.setIcon(get16xIcon(this.getClass().getClassLoader().getResource(
 								"resources/units/"+carried.getType()+".png")));

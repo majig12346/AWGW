@@ -23,7 +23,7 @@ public class StealthBomber extends Stealth {
 	 */
 	public StealthBomber(Player owner) {
 		super(owner);
-		setWeapon(0, WeaponType.HEAT);
+		setWeapon(0, WeaponType.AP);
 	}
 
 	@Override

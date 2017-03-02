@@ -1,6 +1,7 @@
 package majig12346;
 
 import java.awt.Color;
+import java.awt.Window;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -46,6 +47,7 @@ public class Runner {
 		avw.setGrid(g);
 		avw.show();
 		cycleTurnPlayer();
+		avw.getWorldFrame().showDirectionsPopup();
 		while (allPlayersCompeting(getCompetitivePlayers())) {
 			avw.setMessage("Currently selected: none.\n\nUse your units to move. Click your factories to build. " +
 					// "DO NOT use arrow keys or Enter"+
@@ -216,8 +218,13 @@ public class Runner {
 		// u.resetMovement();
 		// }
 		turnPlayer = next;
+		turnPlayer.getPropertiesOwned().get(0).getHostGrid().hostWorld.getWorldFrame().setTitle("AdvanceWars GridWorld: player "+turnPlayer.id);
 		for(Property p :turnPlayer.getPropertiesOwned()){
 			turnPlayer.setMoney(turnPlayer.getMoney()+MONEY_PER_PROPERTY);
+			if(p.getCapTimer()!=p.FULL_CAP_TIMER&&(
+					p.getHostGrid().get(p)==null||((Unit) p.getHostGrid().get(p)).getOwner()==p.getOwner())){
+				p.resetCapTimer();
+			}
 		}
 		return turnPlayer;
 

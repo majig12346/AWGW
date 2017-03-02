@@ -33,8 +33,8 @@ public class Tank extends Unit{
 
 	@Override
 	public double getBaseArmorResistance() {
-		//5% resistance
-		return 0.95;
+		//10% resistance
+		return 0.9;
 	}
 	
 	@Override

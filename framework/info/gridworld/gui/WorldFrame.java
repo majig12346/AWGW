@@ -442,7 +442,7 @@ public class WorldFrame<T> extends JFrame
         ImageIcon dirIco = MenuMaker.get16xIcon(getClass().getClassLoader().getResource("resources/32x/intel.png"));
         dispDirections.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				showDirectionsPopup(dirIco);
+				showDirectionsPopup();
 			}
 			
 		});
@@ -475,7 +475,8 @@ public class WorldFrame<T> extends JFrame
         setRunMenuItemsEnabled(true);
         setJMenuBar(mbar);
     }
-    private void showDirectionsPopup(ImageIcon ico) {
+    public void showDirectionsPopup() {
+    	ImageIcon ico = MenuMaker.get16xIcon(getClass().getClassLoader().getResource("resources/32x/intel.png"));
     	JButton[] options = new JButton[2];
     	JButton nahButton = GUIController.generateOkayButton(null, display);
     	nahButton.setText("I already know how to play");
@@ -498,10 +499,11 @@ public class WorldFrame<T> extends JFrame
 		});
     	options[1] = openLink;
     	
-		JOptionPane.showOptionDialog(this, "Please see the following page (click button below):\n"
+		JOptionPane.showOptionDialog(this, "Please see the following page (click link below):\n"
 				+ ""
 				+ "\nI added quite a few more Units to the game."
-				+ "\nCommanding Officers are not yet implemented", "How to Play", 0, 0, ico, options, 0);
+				+ "\nCommanding Officers are not yet implemented\n"
+				+ "\nIn short, click a unit you wish to move, where to move, and what to do", "How to Play", 0, 0, ico, options, 0);
 		
 	}
     private void makeNewGridMenu()

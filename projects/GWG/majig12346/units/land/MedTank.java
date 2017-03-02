@@ -32,8 +32,8 @@ public class MedTank extends Tank {
 
 	@Override
 	public double getBaseArmorResistance() {
-		//20% resistance
-		return 0.80;
+		//25% resistance
+		return 0.75;
 	}
 	@Override
 	public boolean couldTarget(Unit toCheck, Terrain hypothetical) { //cannot target jet fighters

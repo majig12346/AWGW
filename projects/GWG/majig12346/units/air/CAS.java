@@ -23,7 +23,7 @@ public class CAS extends Air {
 	 */
 	public CAS(Player owner) {
 		super(owner);
-		setWeapon(0, WeaponType.SHELL);
+		setWeapon(0, WeaponType.AP);
 	}
 
 	@Override

@@ -271,7 +271,9 @@ public class GUIController<T> {
 				if(cycleTurnPlayer.length!=0&&cycleTurnPlayer[0]){
 					Runner.cycleTurnPlayer();
 				}
+				try{
 				MenuMaker.noBugsPls(display, (TerrainGrid) display.avw.getGrid());
+				}catch(Exception idc){}
 				killJOP();
 			}
 		});

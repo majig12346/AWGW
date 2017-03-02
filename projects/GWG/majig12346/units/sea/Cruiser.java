@@ -88,7 +88,7 @@ public class Cruiser extends Sea implements Carry {
 	}
 	@Override
 	public boolean couldTarget(Unit toCheck, Terrain hypothetical) { //cannot target land
-		return super.couldTarget(toCheck, hypothetical)&&(MoveType.SEA.equals(toCheck.getMovementType())||
+		return super.couldTarget(toCheck, hypothetical)&&(toCheck instanceof Sub||
 				MoveType.AIR.equals(toCheck.getMovementType()));
 	}
 
