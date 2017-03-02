@@ -382,7 +382,7 @@ public class MenuMaker<T> {
 
 			// units can fire on enemies if not unarmed and in range and unit can move
 			System.out.println("checking weps");
-			if (u.canMove()&&u.getWeapons()[0].getWeaponType() != WeaponType.NONE
+			if (u.canMove()&&u.getAmmo()>0&&u.getWeapons()[0].getWeaponType() != WeaponType.NONE
 					|| null != u.getWeapons()[1]) {
 				Set<Unit> targetable = new HashSet<>();
 				ArrayList<Location> occupied = u.getGrid().getOccupiedLocations();
