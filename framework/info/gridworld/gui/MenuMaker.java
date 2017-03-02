@@ -780,8 +780,6 @@ public class MenuMaker<T> {
 	 */
 	public JPopupMenu makeConstructorMenu(Collection<Class> classes,
 			Location loc) {
-		System.out
-		.println("making constructor menu. See line 362 of MenuMaker");
 		this.currentLocation = loc;
 		JPopupMenu menu = new JPopupMenu();
 		// ???
@@ -789,6 +787,8 @@ public class MenuMaker<T> {
 
 		//
 		if (!(loc instanceof Factory)) {
+			return menu;
+		}else if(((Property) loc).getOwner()!=Runner.getTurnPlayer()){
 			return menu;
 		}
 		try {
