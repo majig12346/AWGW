@@ -33,8 +33,8 @@ public class Runner {
 						+ "on Skylake's 14nm? Wait a PLANCK_TIME," + " this is a Core 2 Duo!");
 		AVWorld avw = new AVWorld();
 		players = new Player[3];
-		Player p1 = new Player(new TestCO(), 10000, new Color(255, 80, 45));
-		Player p2 = new Player(new TestCO(), 10000, new Color(75, 150, 255));
+		Player p1 = new Player(new TestCO(), 0, new Color(255, 80, 45));
+		Player p2 = new Player(new TestCO(), 0, new Color(75, 150, 255));
 		players[p1.id] = p1;
 		players[p2.id] = p2;
 		turnPlayer = players[2];
