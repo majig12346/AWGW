@@ -26,6 +26,7 @@ import majig12346.terrain.Terrain;
 import majig12346.terrain.properties.Factory;
 import majig12346.terrain.properties.Property;
 import majig12346.units.Carry;
+import majig12346.units.HiddenUnit;
 import majig12346.units.Stealth;
 import majig12346.units.Unit;
 import majig12346.units.land.Infantry;
@@ -168,6 +169,11 @@ public class MenuMaker<T> {
 		dispMessage
 		.append(u.canMove() ? "\nClick highlighted tile to move, click unhighlighted to cancel"
 				: "\nUnit currently immobile; wait until next turn to move again.");
+		if(u instanceof HiddenUnit){
+			dispMessage = new StringBuilder("Currently selected: none.\n\nUse your units to move. Click your factories to build. "+
+					//					 "DO NOT use arrow keys or Enter"+
+					"P1 money: "+Runner.players[1].getMoney()+"  P2 money: "+Runner.players[2].getMoney());
+		}
 		display.avw.setMessage(dispMessage.toString());
 		display.repaint();
 		// inefficient
@@ -235,6 +241,9 @@ public class MenuMaker<T> {
 			throws NoSuchMethodException, SecurityException {
 		Unit u = (Unit) occupant;
 		ArrayList<JMenuItem> ans = new ArrayList<JMenuItem>();
+		if(u instanceof HiddenUnit){
+			return ans;
+		}
 		// every unit has the wait option if not loading into carry
 		Unit newLocOcc = (Unit) u.getGrid().get(newLoc);
 		if (u.canMove() && (null == newLocOcc||u==newLocOcc)) {
@@ -758,6 +767,9 @@ public class MenuMaker<T> {
 						u.move((Terrain) newLoc);
 					} catch (Exception e1) {
 						e1.printStackTrace();
+					}
+					if(u instanceof Stealth&&((Stealth) u).isHidden()){
+						((Stealth) u).unHide();
 					}
 					c.addUnit(u);
 					u.removeSelfFromGrid();

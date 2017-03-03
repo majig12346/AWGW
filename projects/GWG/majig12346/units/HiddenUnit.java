@@ -4,6 +4,7 @@ import info.gridworld.actor.Actor;
 import info.gridworld.grid.Grid;
 import majig12346.PassiveFlag.MoveType;
 import majig12346.Player;
+import majig12346.Runner;
 import majig12346.terrain.Terrain;
 
 public class HiddenUnit extends Unit {
@@ -49,6 +50,12 @@ public class HiddenUnit extends Unit {
 	@Override
 	public MoveType getMovementType() {
 		return MoveType.AIR;
+	}
+	@Override
+	public String getInfo() {
+		return "Currently selected: none.\n\nUse your units to move. Click your factories to build. "+
+				//					 "DO NOT use arrow keys or Enter"+
+				"P1 money: "+Runner.players[1].getMoney()+"  P2 money: "+Runner.players[2].getMoney();
 	}
 
 }
