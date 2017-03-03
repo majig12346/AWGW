@@ -758,7 +758,9 @@ public abstract class Unit extends Actor{
 	}
 	public String getInfo(){
 		return getType() + ((null!=getLocation()&&getLocation() instanceof Terrain)?" at " + ((Terrain) getLocation()).getUIName() + getLocation():"")
-				+" ["+ getHealth() + " HP, "+((int)getFuel())+" fuel, "+getWeaponInfo()+ " ]";
+				+" ["+ getHealth() + " HP, "+((int)getFuel())+" fuel, "+getWeaponInfo()+ " ]"+
+				(((this instanceof Stealth&&((Stealth) this).isHidden())||(this instanceof Stealth2&&((Stealth2) this).isHidden()))?
+						"[hidden]":"");
 	}
 	public String getConciseInfo(){
 		return getType()+" ["+ getHealth() + " HP]";

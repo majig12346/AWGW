@@ -278,7 +278,7 @@ public class GUIController<T> {
 			}
 		});
 		okButton.setIcon(ico);
-		okButton.setText("okay");
+		okButton.setText("I am Player "+Runner.getNextTurnPlayer().id);
 		return okButton;
 	}
 	private JButton makeTurnCycleButton() {
