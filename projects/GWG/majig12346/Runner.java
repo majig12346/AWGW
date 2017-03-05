@@ -118,6 +118,8 @@ public class Runner {
 	private static void minFill1(TerrainGrid<Actor> g, Player p1, Player p2) {
 		Infantry inf1 = new Infantry(players[2]);
 		inf1.putSelfInGrid(g, g.getLocationArray()[6][0]);
+		Infantry inf3 = new Infantry(players[2]);
+		inf3.putSelfInGrid(g, g.getLocationArray()[7][1]);
 		Infantry inf2 = new Infantry(players[1]);
 		inf2.putSelfInGrid(g, g.getLocationArray()[6][9]);
 	}
@@ -125,6 +127,8 @@ public class Runner {
 	private static void minFill2(TerrainGrid<Actor> g, Player p1, Player p2) {
 		Infantry inf1 = new Infantry(players[2]);
 		inf1.putSelfInGrid(g, g.getLocationArray()[2][19]);
+		Infantry inf3 = new Infantry(players[2]);
+		inf3.putSelfInGrid(g, g.getLocationArray()[2][17]);
 		Infantry inf2 = new Infantry(players[1]);
 		inf2.putSelfInGrid(g, g.getLocationArray()[21][4]);
 	}
