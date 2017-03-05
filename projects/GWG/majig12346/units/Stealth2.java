@@ -15,34 +15,35 @@ public abstract class Stealth2 extends Sea{
 	 * don't invoke this
 	 * @param owner
 	 */
-	public Stealth2(Player p) {
-		super(p);
+	public Stealth2(Player owner) {
+		super(owner);
 	}
 	private boolean hidden;
 	/**
 	 * Hides the stealth unit -- consumes extra daily fuel.
 	 * hides sprite by replacing self in grid
-	 * by version casted to Stealth2
+	 * by version casted to Stealth
 	 */
 	public void hide(){
-		this.hiddenUnit = this;
-		Grid<Actor> gr = getGrid();
-		Terrain t = (Terrain) getLocation();
-		this.removeSelfFromGrid();
-		Stealth2 me = (Stealth2)(this);
-		me.putSelfInGrid(gr, t);
+		
 		this.hidden = true;
 	}
+	public void hideRender(){
+		Grid<Actor> gr = getGrid();
+		Terrain loc = (Terrain) getLocation();
+		Player owner = getOwner();
+		owner.getUnitsControlled().remove(this);
+		this.removeSelfFromGrid();
+		new HiddenUnit(owner, this).putSelfInGrid(gr, loc);		
+	}
+
+
 	/**
 	 * reveals the hidden unit -- does opposite of hide()
 	 */
 	public void unHide(){
-		Grid<Actor> gr = getGrid();
-		Terrain t = (Terrain) getLocation();
-		this.removeSelfFromGrid();
-		this.hiddenUnit.putSelfInGrid(gr, t);
-		this.hiddenUnit = null;
-		this.hidden = false;
+		
+			this.hidden = false;
 	}
 	/**
 	 * @return whether or not the unit is currently hidden

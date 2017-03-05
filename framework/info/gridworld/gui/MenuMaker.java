@@ -28,6 +28,7 @@ import majig12346.terrain.properties.Property;
 import majig12346.units.Carry;
 import majig12346.units.HiddenUnit;
 import majig12346.units.Stealth;
+import majig12346.units.Stealth2;
 import majig12346.units.Unit;
 import majig12346.units.land.Infantry;
 import majig12346.weapons.WeaponType;
@@ -667,6 +668,66 @@ public class MenuMaker<T> {
 						}
 
 						@Override
+						public void setEnabled(boolean arg0) {
+							enabled = arg0;
+						}
+					};
+					hidingOption.setAction(hidingAction);
+					hidingOption.setIcon(hideIco);
+					hidingOption.setText(s.isHidden()?"unhide":"hide");
+					ans.add(hidingOption);
+				}
+			}else if(u instanceof Stealth2){
+				Stealth2 s = (Stealth2) u;
+				{
+					JMenuItem hidingOption = new JMenuItem();
+					ImageIcon hideIco = get16xIcon(MenuMaker.class.getClassLoader().getResource("resources/32x/hide.png"));
+					ImageIcon hidePic = new ImageIcon(MenuMaker.class.getClassLoader().getResource("resources/32x/poof.png"));
+					Action hidingAction = new Action(){
+						public boolean enabled = true;
+						@Override
+						public void actionPerformed(ActionEvent arg0) {
+							try {
+								u.move((Terrain)newLoc, true);
+							} catch (Exception e1) {
+								e1.printStackTrace();
+							}
+							if(!s.isHidden()){
+								s.hide();
+							}else{
+								s.unHide();
+							}
+							new Thread(new Runnable() {
+
+								@Override
+								public void run() {
+									Set<Terrain> where = new HashSet<>();
+									where.add((Terrain)newLoc);
+									noBugsPls(display, (TerrainGrid) u.getGrid());
+									for (int i = 0; i < 2; i++) {
+										display.showIconsOnSetOfLocations(hidePic.getImage(), where);
+										try {
+											Thread.sleep(500); 
+										} catch (InterruptedException e) {
+											e.printStackTrace();
+										}
+										tryRepaint(display);
+									}
+									noBugsPls(display, (TerrainGrid) u.getGrid());								
+								}
+							}).start();
+							display.repaint();
+						}
+						public void addPropertyChangeListener(PropertyChangeListener arg0) {
+						}
+						public Object getValue(String arg0) {
+							return null;
+						}
+						public boolean isEnabled() {
+							return enabled;
+						}
+						public void putValue(String arg0, Object arg1) {}
+						public void removePropertyChangeListener(PropertyChangeListener arg0) {}
 						public void setEnabled(boolean arg0) {
 							enabled = arg0;
 						}

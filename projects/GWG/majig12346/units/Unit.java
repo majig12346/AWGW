@@ -273,6 +273,11 @@ public abstract class Unit extends Actor{
 			if(me.isHidden()){
 				me.unHide();
 			}
+		}else if (this instanceof Stealth2){
+			Stealth2 me = (Stealth2)(this);
+			if(me.isHidden()){
+				me.unHide();
+			}
 		}
 
 		//counter attack if target is alive and direct fire
