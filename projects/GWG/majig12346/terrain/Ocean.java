@@ -24,6 +24,10 @@ public class Ocean extends Terrain{
 		return 1;
 	}
 	@Override
+	protected double getMoveCostLander() {
+		return 1;
+	}
+	@Override
 	public int getDefense() {
 		return 0;
 	}

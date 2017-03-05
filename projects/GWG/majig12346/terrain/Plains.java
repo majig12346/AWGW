@@ -22,7 +22,7 @@ public class Plains extends Terrain{
 
 	@Override
 	protected double getMoveCostTires() {
-		return 1;
+		return 2;
 	}
 
 	@Override

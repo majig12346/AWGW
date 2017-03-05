@@ -40,8 +40,8 @@ public class Beach extends Terrain {
 		return 1;
 	}
 	@Override
-	protected double getMoveCostBoat() {
-		return 2;
+	protected double getMoveCostLander() {
+		return 1;
 	}
 
 }

@@ -27,17 +27,17 @@ public class Road extends Terrain {
 
 	@Override
 	protected double getMoveCostFoot() {
-		return 0.5;
+		return 1;
 	}
 
 	@Override
 	protected double getMoveCostTires() {
-		return 0.5;
+		return 1;
 	}
 
 	@Override
 	protected double getMoveCostTreads() {
-		return 0.5;
+		return 1;
 	}
 
 }

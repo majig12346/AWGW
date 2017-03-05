@@ -21,25 +21,22 @@ public class Forest extends Terrain {
 
 	@Override
 	public int getDefense() {
-		return 0;
+		return 2;
 	}
 
 	@Override
 	protected double getMoveCostFoot() {
-		// TODO Auto-generated method stub
-		return 0;
+		return 1;
 	}
 
 	@Override
 	protected double getMoveCostTires() {
-		// TODO Auto-generated method stub
-		return 0;
+		return 3;
 	}
 
 	@Override
 	protected double getMoveCostTreads() {
-		// TODO Auto-generated method stub
-		return 0;
+		return 2;
 	}
 
 }

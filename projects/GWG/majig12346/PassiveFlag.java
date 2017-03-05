@@ -6,7 +6,8 @@ public class PassiveFlag {
 			TIRES, 
 			TREADS, 
 			SEA, 
-			AIR
+			AIR,
+			LANDER
 	}
 	public enum COFlag{
             COST,

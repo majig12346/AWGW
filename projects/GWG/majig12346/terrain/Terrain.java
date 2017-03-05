@@ -38,6 +38,7 @@ public abstract class Terrain extends Location{
 		case FOOT:return getMoveCostFoot();
 		case TIRES:return getMoveCostTires();
 		case TREADS:return getMoveCostTreads();
+		case LANDER: return getMoveCostLander();
 		default:throw new IllegalArgumentException();
 		}
 	}
@@ -71,6 +72,13 @@ public abstract class Terrain extends Location{
 	 * to traverse this terrain -- override to set
 	 */
 	protected double getMoveCostBoat(){
+		return 999;
+	}
+	/**
+	 * @return the cost of mobility points that a unit of movementType.LANDER would take 
+	 * to traverse this terrain -- override to set
+	 */
+	protected double getMoveCostLander(){
 		return 999;
 	}
 	
