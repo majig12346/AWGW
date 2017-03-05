@@ -313,8 +313,8 @@ public class MenuMaker<T> {
 					for (Terrain t : ((Terrain) newLoc)
 							.getAllAdjacentTerrains()) {
 						if ((null == u.getGrid().get(t)||(u==u.getGrid().get(t)/*&&!newLoc.equals(t)*/))
-								&& 999 != t.getMoveCost(carried
-										.getMovementType())) {
+								&& 999 != t.getMoveCost(carried.getMovementType())
+								&& 999 != ((Terrain) newLoc).getMoveCost(carried.getMovementType())) {
 							validLZs.add(t);
 						}
 					}
