@@ -490,9 +490,9 @@ public abstract class Unit extends Actor{
 		if(null!=getLocation()){//If not carried
 			this.setFuel(this.getFuel()-(this.maxMobility-mobility));
 			this.deductDailyCost();
+		}if(getFuel()>0){
+			this.mobility = this.maxMobility;
 		}
-		this.mobility = this.maxMobility;
-
 	}
 	/**
 	 * Gets invoked in GUI by player
