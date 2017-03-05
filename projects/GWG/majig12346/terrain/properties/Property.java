@@ -112,7 +112,7 @@ public class Property extends Terrain {
 			resetCapTimer();
 			MenuMaker.noBugsPls(hostGrid.hostWorld.getWorldFrame().control.display, hostGrid);
 			JOptionPane.showMessageDialog(hostGrid.hostWorld.getWorldFrame(),
-					this.getClass().getSimpleName() + " at " + this + " captured", "Poperty Captured!", 0,
+					this.getClass().getSimpleName() + " at " + this + " captured\n\tby: Player "+getOwner().id, "Poperty Captured!", 0,
 					new ImageIcon(Property.class.getClassLoader().getResource("resources/32x/capture.png")));
 		}
 	}

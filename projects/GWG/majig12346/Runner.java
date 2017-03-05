@@ -1,6 +1,7 @@
 package majig12346;
 
 import java.awt.Color;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -26,29 +27,44 @@ public class Runner {
 	private enum VictoryCondition {
 		CAPTURING_HQ, ELIMINATING_ALL_UNITS;
 	}
+
 	public final static int MONEY_PER_PROPERTY = 200;
+	public static String pathToMapPic;
+
 	public static void main(String[] args) {
 		System.out.println(
 				"Currently 1337 PLANCK_TIMEs behind! Are we on " + "5nm or is Quantum tunneling somehow an issue "
 						+ "on Skylake's 14nm? Wait a PLANCK_TIME," + " this is a Core 2 Duo!");
 		AVWorld avw = new AVWorld();
-		players = new Player[3];
 		Player p1 = new Player(new TestCO(), 0, new Color(255, 80, 45));
 		Player p2 = new Player(new TestCO(), 0, new Color(75, 150, 255));
-		players[p1.id] = p1;
-		players[p2.id] = p2;
-		turnPlayer = players[2];
-		TerrainGrid<Actor> g = new TerrainGrid<Actor>(10, 10);
-		fillTerrainGrid(g);
-		minFill(g,p1,p2);
-		//customFill(g, p1, p2);
-		avw.setGrid(g);
-		avw.show();
+		setUpPlayers(p1, p2);
+		TerrainGrid<Actor> g = null;
+		String[] options = { "map 1", "map 2", "Exit" };
+		int selection = JOptionPane.showOptionDialog(null,
+				"which map?\n\tMap 1: small demo map (10x10)\n\tMap 2: large map (24x24)", "Map Selection", 0, 0,
+				getMainIcon(), options, 2);
+		if (selection == 1) {
+			g = new TerrainGrid<Actor>(24, 24);
+			fillTerrainGrid(g, "resources/maps/map2.dat");
+			pathToMapPic = "resources/maps/Map_2.png";
+			minFill2(g, p1, p2);
+			renderAVW(avw, g);
+			avw.getWorldFrame().control.display.zoomIn();
+		} else if (selection == 0) {
+			pathToMapPic = "resources/maps/Map_1.gif";
+			g = new TerrainGrid<Actor>(10, 10);
+			fillTerrainGrid(g, "resources/maps/map1.dat");
+			minFill1(g, p1, p2);
+			renderAVW(avw, g);
+		} else {
+			System.exit(0);
+		}
 		cycleTurnPlayer();
 		avw.getWorldFrame().showDirectionsPopup();
 		while (allPlayersCompeting(getCompetitivePlayers())) {
 			avw.setMessage("Currently selected: none.\n\nUse your units to move. Click your factories to build. " +
-					// "DO NOT use arrow keys or Enter"+
+			// "DO NOT use arrow keys or Enter"+
 					"P1 money: " + players[1].getMoney() + "  P2 money: " + players[2].getMoney());
 			avw.go();
 		}
@@ -59,7 +75,24 @@ public class Runner {
 				new ImageIcon(Runner.class.getClassLoader().getResource("resources/victory.png")));
 	}
 
-	private static void customFill(TerrainGrid<Actor> g, Player p1, Player p2) {
+	public static void renderAVW(AVWorld avw, TerrainGrid<Actor> g) {
+		avw.setGrid(g);
+		avw.show();
+	}
+
+	private static void setUpPlayers(Player p1, Player p2) {
+		players = new Player[3];
+		players[p1.id] = p1;
+		players[p2.id] = p2;
+		turnPlayer = players[2];
+	}
+
+	private static ImageIcon getMainIcon() {
+		URL icoLoc = Runner.class.getClassLoader().getResource("resources/icon.png");
+		return new ImageIcon(icoLoc);
+	}
+
+	private static void customFillTest1(TerrainGrid<Actor> g, Player p1, Player p2) {
 		Infantry inf1 = new Infantry(players[1]);
 		inf1.putSelfInGrid(g, g.getLocationArray()[1][1]);
 		Infantry inf2 = new Infantry(players[1]);
@@ -80,11 +113,19 @@ public class Runner {
 		avf1.setFuel(1.0);
 		avf1.putSelfInGrid(g, g.getLocationArray()[5][5]);
 	}
-	private static void minFill(TerrainGrid<Actor> g, Player p1, Player p2){
+
+	private static void minFill1(TerrainGrid<Actor> g, Player p1, Player p2) {
 		Infantry inf1 = new Infantry(players[2]);
 		inf1.putSelfInGrid(g, g.getLocationArray()[6][0]);
 		Infantry inf2 = new Infantry(players[1]);
 		inf2.putSelfInGrid(g, g.getLocationArray()[6][9]);
+	}
+
+	private static void minFill2(TerrainGrid<Actor> g, Player p1, Player p2) {
+		Infantry inf1 = new Infantry(players[2]);
+		inf1.putSelfInGrid(g, g.getLocationArray()[2][19]);
+		Infantry inf2 = new Infantry(players[1]);
+		inf2.putSelfInGrid(g, g.getLocationArray()[21][4]);
 	}
 
 	/**
@@ -136,13 +177,13 @@ public class Runner {
 		return victoryMessage.toString();
 	}
 
-	public static void fillTerrainGrid(TerrainGrid<Actor> g) {
+	public static void fillTerrainGrid(TerrainGrid<Actor> g, String fileName) {
 
 		// String fileName = JOptionPane.showInputDialog("file name");
-		String fileName = "resources/map.txt";
 		try {
 			Scanner sc = new Scanner(Runner.class.getClassLoader().getResourceAsStream(fileName));
 			if (!(g.getNumRows() == sc.nextInt() && g.getNumCols() == sc.nextInt())) {
+				System.out.println("map size != grid size");
 				throw new Exception("map size != grid size");
 			}
 			// hmm??? good
@@ -154,7 +195,12 @@ public class Runner {
 				// System.out.print(new
 				// ArrayList<String>(Arrays.asList(rowStringForm)));
 				for (int c = 0; c < g.getNumCols(); c++) {
-					g.getLocationArray()[r][c] = makeTerrain(r, c, g, rowStringForm[c]);
+					try {
+						g.getLocationArray()[r][c] = makeTerrain(r, c, g, rowStringForm[c]);
+					} catch (ArrayIndexOutOfBoundsException e) {
+						System.out.println("array out of bounds");
+						System.err.println("check map, row:" + r + "\tcol:" + c);
+					}
 				}
 			}
 		} catch (Exception e) {
@@ -187,12 +233,12 @@ public class Runner {
 		Player old = turnPlayer;
 		Player next;
 		Iterator<Unit> i0 = old.getUnitsControlled().iterator();
-		while(i0.hasNext()) {
+		while (i0.hasNext()) {
 			Unit u = i0.next();
 			if (u.canMove()) {
 				u.immobilize();
 			}
-			if(u instanceof Stealth && ((Stealth) u).isHidden()){
+			if (u instanceof Stealth && ((Stealth) u).isHidden()) {
 				Stealth s = (Stealth) u;
 				s.hideRender();
 			}
@@ -206,28 +252,29 @@ public class Runner {
 		} catch (ArrayIndexOutOfBoundsException e) {
 			next = players[1];
 		}
-		//reset movement
+		// reset movement
 		Iterator<Unit> i = next.getUnitsControlled().iterator();
 		while (i.hasNext()) {
 			Unit u = i.next();
 			u.resetMovement();
-			if(u instanceof HiddenUnit){
+			if (u instanceof HiddenUnit) {
 				((HiddenUnit) u).unBox();
 			}
 		}
-		//supply from properties
+		// supply from properties
 		Iterator<Property> i2 = next.getPropertiesOwned().iterator();
-		while (i2.hasNext()){
+		while (i2.hasNext()) {
 			Property p = i2.next();
 			p.tryResupply();
 		}
 
 		turnPlayer = next;
-		turnPlayer.getPropertiesOwned().get(0).getHostGrid().hostWorld.getWorldFrame().setTitle("AdvanceWars GridWorld: player "+turnPlayer.id);
-		for(Property p :turnPlayer.getPropertiesOwned()){
-			turnPlayer.setMoney(turnPlayer.getMoney()+MONEY_PER_PROPERTY);
-			if(p.getCapTimer()!=p.FULL_CAP_TIMER&&(
-					p.getHostGrid().get(p)==null||((Unit) p.getHostGrid().get(p)).getOwner()==p.getOwner())){
+		turnPlayer.getPropertiesOwned().get(0).getHostGrid().hostWorld.getWorldFrame()
+				.setTitle("AdvanceWars GridWorld: player " + turnPlayer.id);
+		for (Property p : turnPlayer.getPropertiesOwned()) {
+			turnPlayer.setMoney(turnPlayer.getMoney() + MONEY_PER_PROPERTY);
+			if (p.getCapTimer() != p.FULL_CAP_TIMER
+					&& (p.getHostGrid().get(p) == null || ((Unit) p.getHostGrid().get(p)).getOwner() == p.getOwner())) {
 				p.resetCapTimer();
 			}
 		}
@@ -249,6 +296,8 @@ public class Runner {
 			return new Mountain(r, c, hostGrid);
 		case "Ocean":
 			return new Ocean(r, c, hostGrid);
+		case "Reef":
+			return new Reef(r, c, hostGrid);
 		case "River":
 			return new River(r, c, hostGrid);
 		case "Road":
@@ -262,9 +311,9 @@ public class Runner {
 			} else {
 				String ownerID = propProp[1];
 				Player ownerOfProp;
-				if(!"none".equals(ownerID)){
+				if (!("none".equals(ownerID) || "neutral".equals(ownerID))) {
 					ownerOfProp = players[Integer.parseInt(ownerID)];
-				}else{
+				} else {
 					ownerOfProp = null;
 				}
 				switch (propProp[0]) {
@@ -279,7 +328,9 @@ public class Runner {
 				case "HQ":
 					return new HQ(r, c, hostGrid, ownerOfProp);
 				default:
+					System.err.println("r:" + r + "\tc:" + c);
 					throw new Exception("error reading file, bad property?");
+
 				}
 			}
 		}

@@ -23,6 +23,7 @@ import info.gridworld.grid.Grid;
 import info.gridworld.grid.Location;
 import info.gridworld.world.AVWorld;
 import majig12346.Player;
+import majig12346.Runner;
 import majig12346.TerrainGrid;
 import majig12346.terrain.Terrain;
 import majig12346.terrain.properties.Property;
@@ -188,8 +189,7 @@ PseudoInfiniteViewport.Pannable
 	private void drawBG(Graphics2D g2,Insets insets){
 		BufferedImage img = null;
 		try {
-			//TODO insert map pic here
-			img = ImageIO.read(GridPanel.class.getClassLoader().getResourceAsStream("resources/map_pic/demo2.gif"));
+			img = ImageIO.read(GridPanel.class.getClassLoader().getResourceAsStream(Runner.pathToMapPic));
 
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -426,7 +426,7 @@ PseudoInfiniteViewport.Pannable
 	 */
 	public void zoomIn()
 	{
-		cellSize *= 2;
+		cellSize *= 1.5;
 		revalidate();
 	}
 
@@ -435,7 +435,7 @@ PseudoInfiniteViewport.Pannable
 	 */
 	public void zoomOut()
 	{
-		cellSize = Math.max(cellSize / 2, MIN_CELL_SIZE);
+		cellSize = (int) Math.max(cellSize / 1.5, MIN_CELL_SIZE);
 		revalidate();
 	}
 
