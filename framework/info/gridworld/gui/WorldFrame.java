@@ -503,7 +503,8 @@ public class WorldFrame<T> extends JFrame
 				+ ""
 				+ "\nI added quite a few more Units to the game."
 				+ "\nCommanding Officers are not yet implemented\n"
-				+ "\nIn short, click a unit you wish to move, where to move, and what to do", "How to Play", 0, 0, ico, options, 0);
+				+ "\nIn short, click a unit you wish to move, where to move, and what to do"
+				+ "\n To win, capture the enemy HQ or destroy all enemy units!", "How to Play", 0, 0, ico, options, 0);
 		
 	}
     private void makeNewGridMenu()
