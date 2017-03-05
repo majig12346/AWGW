@@ -3,6 +3,7 @@ package majig12346.units.sea;
 import java.util.ArrayList;
 
 import majig12346.Player;
+import majig12346.PassiveFlag.MoveType;
 import majig12346.units.Carry;
 import majig12346.units.Sea;
 import majig12346.units.Unit;
@@ -57,7 +58,11 @@ public class Lander extends Sea implements Carry {
 			return false;
 		}
 	}
-
+	@Override
+	public MoveType getMovementType() {
+		return MoveType.LANDER;
+	}
+	
 	@Override
 	public int getBuildCost() {
 		return 1200;

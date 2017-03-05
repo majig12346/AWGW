@@ -206,7 +206,7 @@ public abstract class Unit extends Actor{
 	 * Gets overridden for ranged units, indirect fire, etc
 	 */
 	public boolean canTarget(Unit u){
-		if(WeaponType.NONE.equals(getWeapons()[0].getWeaponType())&&null==getWeapons()[1]){
+		if((WeaponType.NONE.equals(getWeapons()[0].getWeaponType())&&null==getWeapons()[1])||(getAmmo()==0)){
 			return false;
 		}
 		return couldTarget(u,(Terrain) getLocation());
@@ -481,17 +481,17 @@ public abstract class Unit extends Actor{
 	 *   added to mobility. 
 	 */
 	public void resetMovement(){
-		this.hasMoved = false;
+		//this.hasMoved = false;
 		if(!canMove&&getColor()!=null){
 			setColor(getColor().brighter());
 		}
 		this.canMove = true;
 		this.fuel = (int)(getFuel());
-		this.mobility = this.maxMobility;
 		if(null!=getLocation()){//If not carried
 			this.setFuel(this.getFuel()-(this.maxMobility-mobility));
 			this.deductDailyCost();
 		}
+		this.mobility = this.maxMobility;
 
 	}
 	/**
