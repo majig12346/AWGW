@@ -9,6 +9,7 @@ import java.util.Scanner;
 import java.util.stream.Collectors;
 
 import javax.swing.ImageIcon;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 import info.gridworld.actor.Actor;

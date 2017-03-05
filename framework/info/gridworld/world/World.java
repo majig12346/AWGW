@@ -70,6 +70,7 @@ public class World<T>
         if (frame == null)
         {
             frame = new WorldFrame<T>(this);
+            frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
             frame.setVisible(true);
         }
         else
