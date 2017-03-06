@@ -528,7 +528,7 @@ public class MenuMaker<T> {
 				ArrayList<Unit> adjacentAlliedUnits = new ArrayList<>();
 				for(Terrain t:newTerrain.getAllAdjacentTerrains()){
 					Unit tOcc = (Unit) u.getGrid().get(t);
-					if(tOcc!=null&&tOcc.getOwner()==u.getOwner()){
+					if(tOcc!=null&&tOcc!=u&&tOcc.getOwner()==u.getOwner()){
 						adjacentAlliedUnits.add(tOcc);
 					}
 				}
