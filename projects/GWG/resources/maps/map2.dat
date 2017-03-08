@@ -10,7 +10,7 @@ Ocean,Ocean,Ocean,Ocean,Ocean,Mountain,Plains,Road,Road,Forest,Mountain,Plains,P
 Ocean,Ocean,Ocean,Ocean,Plains,Plains,Plains,Road,Property_neutral,Plains,Plains,Forest,Plains,Plains,Plains,Plains,Road,Mountain,Road,Road,Plains,Ocean,Reef,Reef
 Ocean,Reef,Ocean,Beach,Forest,Plains,Road,Road,Forest,Plains,Forest,Plains,Forest,Mountain,Property_neutral,Plains,Road,Plains,Road,AirPort_neutral,Ocean,Ocean,Ocean,Reef
 Ocean,Ocean,Ocean,Plains,Plains,Property_neutral,Road,Plains,Plains,Plains,Road,Forest,Road,Forest,Road,Road,Road,Road,Road,Beach,Ocean,Ocean,Ocean,Ocean
-Ocean,Ocean,Ocean,River,Bridge,River,Bridge,Ocean,Ocean,Plains,Plains,Plains,Forest,Property_neutral,Road,Plains,Road,Plains,Plains,Beach,Ocean,Ocean,Ocean,Ocean
+Ocean,Ocean,Ocean,River,Bridge,River,Bridge,River,River,Plains,Plains,Plains,Forest,Property_neutral,Road,Plains,Road,Plains,Plains,Beach,Ocean,Ocean,Ocean,Ocean
 Ocean,Ocean,Ocean,Forest,Forest,Plains,Road,Plains,Beach,Plains,Plains,Forest,Road,Forest,Plains,Plains,Road,Road,Plains,Property_neutral,Ocean,Reef,Ocean,Ocean
 Ocean,Ocean,Ocean,Ocean,Property_neutral,Plains,Road,Road,Forest,Plains,Forest,Road,Forest,Plains,Plains,Beach,Plains,Road,Plains,Forest,Forest,Ocean,Ocean,Ocean
 Reef,Ocean,Ocean,Ocean,Beach,Plains,Property_neutral,Road,Plains,Road,Property_neutral,Forest,Plains,Plains,Plains,River,River,Bridge,River,Bridge,River,Ocean,Ocean,Ocean
