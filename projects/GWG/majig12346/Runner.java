@@ -61,7 +61,6 @@ public class Runner {
 		avw.getWorldFrame().showDirectionsPopup();
 		while (allPlayersCompeting(getCompetitivePlayers())) {
 			avw.setMessage("Currently selected: none.\n\nUse your units to move. Click your factories to build. " +
-			// "DO NOT use arrow keys or Enter"+
 					"P1 money: " + players[1].getMoney() + "(+"+players[1].getNumPropertiesOwned()*MONEY_PER_PROPERTY+")  P2 money: "
 			+ players[2].getMoney()+"(+"+players[2].getNumPropertiesOwned()*MONEY_PER_PROPERTY+")");
 			avw.go();
