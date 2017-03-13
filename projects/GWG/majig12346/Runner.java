@@ -25,10 +25,6 @@ import majig12346.units.*;
 public class Runner {
 	public static Player[] players;
 
-	private enum VictoryCondition {
-		CAPTURING_HQ, ELIMINATING_ALL_UNITS;
-	}
-
 	public final static int MONEY_PER_PROPERTY = 200;
 	public static String pathToMapPic;
 
