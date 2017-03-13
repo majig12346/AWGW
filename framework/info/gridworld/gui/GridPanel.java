@@ -22,14 +22,6 @@ import info.gridworld.actor.Actor;
 import info.gridworld.grid.Grid;
 import info.gridworld.grid.Location;
 import info.gridworld.world.AVWorld;
-import majig12346.Player;
-import majig12346.Runner;
-import majig12346.TerrainGrid;
-import majig12346.terrain.Terrain;
-import majig12346.terrain.properties.Property;
-import majig12346.units.Air;
-import majig12346.units.Sea;
-import majig12346.units.Unit;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -67,6 +59,15 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import javax.swing.ToolTipManager;
+
+import cbskarmory.Player;
+import cbskarmory.Runner;
+import cbskarmory.TerrainGrid;
+import cbskarmory.terrain.Terrain;
+import cbskarmory.terrain.properties.Property;
+import cbskarmory.units.Air;
+import cbskarmory.units.Sea;
+import cbskarmory.units.Unit;
 
 /**
  * A <code>GridPanel</code> is a panel containing a graphical display of the

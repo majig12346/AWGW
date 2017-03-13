@@ -22,7 +22,6 @@ package info.gridworld.gui;
 import info.gridworld.grid.Grid;
 import info.gridworld.grid.Location;
 import info.gridworld.world.World;
-import majig12346.Runner;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -66,6 +65,8 @@ import javax.swing.JTextArea;
 import javax.swing.KeyStroke;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
+
+import cbskarmory.Runner;
 
 import java.io.IOException;
 import java.io.PrintWriter;

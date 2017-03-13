@@ -19,19 +19,6 @@ package info.gridworld.gui;
 import info.gridworld.grid.Grid;
 import info.gridworld.grid.Location;
 import info.gridworld.world.AVWorld;
-import majig12346.Player;
-import majig12346.Runner;
-import majig12346.TerrainGrid;
-import majig12346.terrain.Terrain;
-import majig12346.terrain.properties.Factory;
-import majig12346.terrain.properties.Property;
-import majig12346.units.Carry;
-import majig12346.units.HiddenUnit;
-import majig12346.units.Stealth;
-import majig12346.units.Stealth2;
-import majig12346.units.Unit;
-import majig12346.units.land.Infantry;
-import majig12346.weapons.WeaponType;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -74,6 +61,20 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+
+import cbskarmory.Player;
+import cbskarmory.Runner;
+import cbskarmory.TerrainGrid;
+import cbskarmory.terrain.Terrain;
+import cbskarmory.terrain.properties.Factory;
+import cbskarmory.terrain.properties.Property;
+import cbskarmory.units.Carry;
+import cbskarmory.units.HiddenUnit;
+import cbskarmory.units.Stealth;
+import cbskarmory.units.Stealth2;
+import cbskarmory.units.Unit;
+import cbskarmory.units.land.Infantry;
+import cbskarmory.weapons.WeaponType;
 
 /**
  * Makes the menus for constructing new occupants and grids, and for invoking

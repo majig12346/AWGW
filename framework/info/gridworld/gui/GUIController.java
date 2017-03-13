@@ -20,9 +20,6 @@ package info.gridworld.gui;
 
 import info.gridworld.grid.*;
 import info.gridworld.world.World;
-import majig12346.Runner;
-import majig12346.TerrainGrid;
-import majig12346.units.Unit;
 import sun.rmi.runtime.NewThreadAction;
 
 import java.awt.Dimension;
@@ -41,6 +38,11 @@ import java.util.TreeSet;
 
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+
+import cbskarmory.Runner;
+import cbskarmory.TerrainGrid;
+import cbskarmory.units.Unit;
+
 import javax.swing.*;
 
 /**

@@ -1,9 +1,8 @@
 package info.gridworld.world;
 
+import cbskarmory.TerrainGrid;
 import info.gridworld.grid.Grid;
 import info.gridworld.gui.WorldFrame;
-import majig12346.Runner;
-import majig12346.TerrainGrid;
 
 public class AVWorld extends MouseWorld {
 	public AVWorld(){
@@ -21,7 +20,7 @@ public class AVWorld extends MouseWorld {
 		}
 	}
 	public void go(){
-		System.out.println("starting go\n");
+//		System.out.println("starting go\n");
 		getWorldFrame().control.display.avw = this;
 		getWorldFrame().control.display.setCurrentLocation(getLocationWhenClicked());
 		getWorldFrame().control.editLocation();
